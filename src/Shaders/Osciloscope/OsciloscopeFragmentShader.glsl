@@ -20,18 +20,18 @@ void main() {
   
 
 
-  float row = getTextureRow(vUv.x);
-  float col = getTextureCol(vUv.x);
+    float row = getTextureRow(vUv.x);
+    float col = getTextureCol(vUv.x);
   
-  float audioValue = texture2D(uAudioTexture, vec2(col2, row2)).g;
-  //float audioValue = texture2D(uAudioTexture, vec2(col / 32.0, row / 32.0)).g;
+    float audioValue = texture2D(uAudioTexture, vec2(col2, row2)).g;
+    //float audioValue = texture2D(uAudioTexture, vec2(col / 32.0, row / 32.0)).g;
 
-  if (abs(vUv.y - audioValue) < .005) {
-    gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
-  } 
-  else {
-    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
-  }
+    if (abs(vUv.y - audioValue) < .005) {
+        gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+    } 
+    else {
+        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+    }
 }
 
 /*
