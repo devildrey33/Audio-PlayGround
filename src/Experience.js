@@ -1,0 +1,170 @@
+import * as THREE from 'three'
+import Sizes from "./Utils/Sizes.js";
+import Time from "./Utils/Time.js";
+import Camera from "./Camera.js"
+import Renderer from "./Renderer.js"
+import World from './World/World.js'
+import Resources from './Utils/Resources.js';
+import sources from './sources.js'
+import Debug from "./Utils/Debug.js"
+import HTMLElements from './Utils/HTMLElements.js';
+import AudioAnalizer from './Utils/AudioAnalizer.js';
+
+let experienceInstance = null;
+
+export default class Experience {
+
+    optionsExperienceByDefault = {
+        // Y position. Use 'auto' to center canvas horizontaly to the view port
+        top                     : 0,
+        // X position. Use 'auto' to center canvas verticaly to the view port
+        left                    : 0,
+        // Width in pixels. Use 'auto' to fit all viewport width
+        width                   : "auto",           
+        // Height in pixels. Use 'auto' to fit all viewport height
+        height                  : "auto",           
+        // Show framerate inside the butons frame
+        showFPS                 : true,            
+        // Show full screen buton in the buttons frame
+        buttonFullScreen        : true,            
+        // Show my logo buton in the buttons frame (that redirects to devildrey33.es)
+        buttonLogo              : true,            
+        // Element where canvas is inserted (by default is document.body)
+        // For example you can use document.getElementById() to retrieve tag inside you want to create the canvas
+        rootElement             : document.body,
+        // Anti alias (by default true)
+        antialias               : true
+    };
+
+
+    // Constructor
+    constructor(options) {
+        // Look for previous instance
+        if (experienceInstance) {
+            // return the previous instance
+            return experienceInstance;
+        }
+        experienceInstance = this;
+
+        // Setup the default options
+        this.options = this.optionsExperienceByDefault;
+        // If options is an object 
+        if (typeof(options) === "object") {
+            // Overwrite the current option in the options of the experience
+            for (let indice in options) {
+                this.options[indice] = options[indice];
+            }                        
+        }
+
+
+        // Create the html tags and insert into body (canvas, buttons, fps, loading and error messages)
+        this.htmlElements   = new HTMLElements();
+
+
+        this.sizes          = new Sizes();
+        this.canvas         = this.htmlElements.elementCanvas;
+
+        this.audioAnalizer  = new AudioAnalizer();
+        this.audioAnalizer.start(2048, () => {}, () => {});        
+//        this.audioAnalizer.loadSong("./songs/01-Handshake-with-Hell.flac");
+
+/*
+    [Grupo]             [Titulo]                               [Url jamendo]
+    JT Bruce            Battle Trance                          https://www.jamendo.com/track/1237162/battle-trance 
+    LevenRain           ActionMan Versus The CyberParasites    https://www.jamendo.com/track/1349290/actionman-versus-the-cyberparasites
+    In Camera           Nothing's Over                         https://www.jamendo.com/track/1397271/nothing-s-over
+    Fallen to Flux      One Chance                             https://www.jamendo.com/track/1155241/one-chance
+    From Sky to Abyss   Quantum Ocean                          https://www.jamendo.com/track/1284951/quantum-ocean
+    Convergence         Six Feet Under                         https://www.jamendo.com/track/80122/six-feet-under
+*/
+
+        this.audioAnalizer.loadSong("./songs/BattleTrance.mp3");
+        //this.audioAnalizer.loadSong("./songs/LevenRain_-_ActionMan_Versus_The_CyberParasites.mp3");
+        //this.audioAnalizer.loadSong("./songs/In_Camera_-_Nothing_s_Over.mp3");
+        //this.audioAnalizer.loadSong("./songs/OneChance.mp3");
+        //this.audioAnalizer.loadSong("./songs/QuantumOcean.mp3");
+        //this.audioAnalizer.loadSong("./songs/Convergence_-_Six_feet_under.mp3");
+
+//        window.addEventListener("click", () => { this.audioAnalizer.playPause(); })
+
+        this.time           = new Time();
+        this.scene          = new THREE.Scene();
+        this.resources      = new Resources(sources);
+        this.camera         = new Camera();
+        this.renderer       = new Renderer();
+        this.world          = new World();
+        this.debug          = new Debug();
+
+        
+
+        // Listen events
+        this.sizes.on('resize', () => { this.resize(); })
+        this.time.on ('tick'  , () => { this.update(); })
+
+    }
+
+
+    get loading() {
+        let Ret = this.htmlElements.elementExperience.getAttribute("loading");
+        return (Ret === "true" || Ret === true);
+    }
+
+    set loading(isLoading) {
+        this.htmlElements.elementExperience.setAttribute("loading", isLoading);
+    }
+
+    /**
+     * Function called on resize
+    */
+    resize() {
+        this.camera.resize();
+        this.renderer.resize();
+    }
+
+    /**
+     * Function called when a frame is about to update
+    */
+    update() {
+        this.camera.update();
+        this.audioAnalizer.update();
+        this.world.update();
+        this.renderer.update();
+    }
+ 
+
+
+
+    /** 
+     * This function destroy the whole scene
+     */
+    destroy() {
+        this.sizes.off('resize')
+        this.time.off('tick')
+
+        // Traverse the whole scene
+        this.scene.traverse((child) => {
+            // Test if it's a mesh
+            if(child instanceof THREE.Mesh) {
+                child.geometry.dispose()
+
+                // Loop through the material properties
+                for(const key in child.material) {
+                    const value = child.material[key]
+
+                    // Test if there is a dispose function
+                    if(value && typeof(value.dispose) === 'function') {
+                        value.dispose()
+                    }
+                }
+            }
+        })
+        // orbit
+        this.camera.controls.dispose();
+        // renderer
+        this.renderer.instance.dispose();
+        
+        if (this.debug.active) {
+            this.debug.ui.destroy();
+        }
+    }
+}    
