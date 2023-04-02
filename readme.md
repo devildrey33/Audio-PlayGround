@@ -9,3 +9,5 @@ Has a plane of 32*32 to use Frequency array and move y-axis of the mesh in a sha
 I have an aproach to an osciloscope that uses the TimeDomain in GLSL, its a start but needs more work... (green channel)
 
 You can drop a song of your hard disk into the experience to use it.
+
+![Audio-playground](https://user-images.githubusercontent.com/15678544/229359184-8299a25f-1c2f-46f6-86ed-1746620316a9.png)
