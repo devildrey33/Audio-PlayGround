@@ -4,6 +4,7 @@ import Environment from './Environment.js'
 import Floor from './Floor.js';
 import FrequencyTexture from './FrequencyTexture.js';
 import Osciloscope from './Osciloscope.js';
+import OsciloscopeSoft from './OsciloscopeSoft.js';
 
 export default class World {
     constructor() {
@@ -20,6 +21,7 @@ export default class World {
             this.floor            = new Floor(this);
             this.bars             = new Bars();
             this.osciloscope      = new Osciloscope(this);
+            this.osciloscopeSoft  = new OsciloscopeSoft(this);
             this.environment      = new Environment();
             this.ready            = true;
 //        });
@@ -31,7 +33,8 @@ export default class World {
             this.frequencyTexture.update();
             this.bars.update();
             this.floor.update();
-            this.osciloscope.update();
+//            this.osciloscope.update();
+            this.osciloscopeSoft.update();
         }
     }
 }

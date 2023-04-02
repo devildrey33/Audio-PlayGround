@@ -1,36 +1,45 @@
 //uniform float     uTime;
 //uniform vec2      uResolution;
+uniform float     uSize;
+uniform float     uAlpha;
 uniform sampler2D uAudioTexture;
-varying vec2 vUv; // Coordenadas UV del fragmento
+varying vec2      vUv; // Coordenadas UV del fragmento
 
-float getTextureRow(float x) {
+/*float getTextureRow(float x) {
   return floor(x * 32.0);
 }
 
 float getTextureCol(float x) {
-  return floor(mod(x * 32.0, 32.0));
-}
+  return (mod(x * 32.0, 32.0));
+}*/
 
 void main() {
-    float idx = vUv.x * 32.0; // índice correspondiente al valor
 
+//    float pos = vUv.x * ((1023.0) / 32.0) ;
+//    float tx = (mod(pos, 32.0));
+//    float ty = (pos / 32.0);
+//    float audioValue = texture2D(uAudioTexture, vec2(tx, ty)).g;
+
+    
+
+    
+/*    float idx = vUv.x * 32.0; // índice correspondiente al valor
     float row2 = idx / 32.0; // fila correspondiente al índice
     float col2 = mod(idx, 32.0); // columna correspondiente al índice
+    float audioValue = texture2D(uAudioTexture, vec2(row2, col2)).g;*/
 
-  
-
-
+/*
     float row = getTextureRow(vUv.x);
     float col = getTextureCol(vUv.x);
-  
-    float audioValue = texture2D(uAudioTexture, vec2(col2, row2)).g;
-    //float audioValue = texture2D(uAudioTexture, vec2(col / 32.0, row / 32.0)).g;
+    float audioValue = texture2D(uAudioTexture, vec2(col / 32.0, row / 32.0)).g;*/
 
-    if (abs(vUv.y - audioValue) < .005) {
+    float audioValue = texture2D(uAudioTexture, vec2(vUv.x, mod(vUv.x, 32.0))).g;
+
+    if (abs(vUv.y - audioValue) < uSize) {
         gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
     } 
     else {
-        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+        gl_FragColor = vec4(0.0, 0.0, 0.0, uAlpha);
     }
 }
 

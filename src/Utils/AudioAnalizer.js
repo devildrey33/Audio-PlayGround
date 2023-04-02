@@ -34,6 +34,12 @@ export default class AudioAnalizer {
         this.experience.canvas.addEventListener("dragenter", this.hEventDragEnter);
         this.experience.canvas.addEventListener("dragover" , this.hEventDragOver);
         this.experience.canvas.addEventListener("drop"     , this.hEventDrop);
+
+        //test
+        const pos = 1023;
+        const tx = Math.floor(pos % 32.0);
+        const ty = Math.floor(pos / 32.0);        
+        console.log(tx, ty);
     }
 
     

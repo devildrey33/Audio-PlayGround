@@ -78,11 +78,11 @@ export default class Experience {
     Convergence         Six Feet Under                         https://www.jamendo.com/track/80122/six-feet-under
 */
 
-        this.audioAnalizer.loadSong("./songs/BattleTrance.mp3");
+        //this.audioAnalizer.loadSong("./songs/BattleTrance.mp3");
         //this.audioAnalizer.loadSong("./songs/LevenRain_-_ActionMan_Versus_The_CyberParasites.mp3");
         //this.audioAnalizer.loadSong("./songs/In_Camera_-_Nothing_s_Over.mp3");
         //this.audioAnalizer.loadSong("./songs/OneChance.mp3");
-        //this.audioAnalizer.loadSong("./songs/QuantumOcean.mp3");
+        this.audioAnalizer.loadSong("./songs/QuantumOcean.mp3");
         //this.audioAnalizer.loadSong("./songs/Convergence_-_Six_feet_under.mp3");
 
 //        window.addEventListener("click", () => { this.audioAnalizer.playPause(); })

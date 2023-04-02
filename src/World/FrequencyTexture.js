@@ -1,6 +1,9 @@
 import Experience from "../Experience.js";
 import BufferCanvas from "../Utils/BufferCanvas.js";
 import * as THREE from 'three'
+import FrequencyTextureVertexShader from "../Shaders/FrequencyTexture/FrequencyTextureVertexShader.glsl"
+import FrequencyTextureFragmentShaderR from "../Shaders/FrequencyTexture/FrequencyTextureFragmentShaderR.glsl"
+import FrequencyTextureFragmentShaderG from "../Shaders/FrequencyTexture/FrequencyTextureFragmentShaderG.glsl"
 
 
 export default class FrequencyTexture {
@@ -18,12 +21,32 @@ export default class FrequencyTexture {
 
     setup() {
         this.geometry = new THREE.PlaneGeometry(3, 3);
-        this.material = new THREE.MeshBasicMaterial({ map: this.bufferCanvas.texture });
-        this.mesh = new THREE.Mesh(this.geometry, this.material);       
-        this.mesh.material.side = THREE.DoubleSide;
-        this.mesh.position.y += 3;
-        
-        this.scene.add(this.mesh);
+        this.materialR = new THREE.ShaderMaterial({
+            uniforms : {
+                uAudioTexture : { value : this.bufferCanvas.texture },
+            },
+            vertexShader    : FrequencyTextureVertexShader,
+            fragmentShader  : FrequencyTextureFragmentShaderR,
+        });
+
+        this.materialG = new THREE.ShaderMaterial({
+            uniforms : {
+                uAudioTexture : { value : this.bufferCanvas.texture },
+            },
+            vertexShader    : FrequencyTextureVertexShader,
+            fragmentShader  : FrequencyTextureFragmentShaderG,
+        });
+
+        // Red channel
+        this.meshR = new THREE.Mesh(this.geometry, this.materialR);       
+        this.meshR.material.side = THREE.DoubleSide;
+        this.meshR.position.y += 7;
+        this.scene.add(this.meshR);
+        // Green channel
+        this.meshG = new THREE.Mesh(this.geometry, this.materialG);       
+        this.meshG.material.side = THREE.DoubleSide;
+        this.meshG.position.y += 3;
+        this.scene.add(this.meshG);
     }
 
     update() {
