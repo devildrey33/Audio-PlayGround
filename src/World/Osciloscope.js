@@ -11,8 +11,6 @@ export default class Osciloscope {
         this.sizes                = this.experience.sizes;
         this.world                = world;
         
-        // listen resize event
-        this.sizes.on('resize', () => { this.resize(); })
         this.setup();
     }
 
@@ -39,9 +37,8 @@ export default class Osciloscope {
 
     }
 
-    resize() {
-        this.material.uniforms.uResolution.value.set(this.sizes.width, this.sizes.height);
-    }
+/*    resize() {
+    }*/
 
 /*    update() {
     }*/
