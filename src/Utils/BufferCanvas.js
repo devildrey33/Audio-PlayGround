@@ -7,8 +7,7 @@ export default class BufferCanvas {
         this.canvas.setAttribute("height", height);
         this.context = this.canvas.getContext("2d", { willReadFrequently : true }); 
         this.width   = width;
-        this.height  = height;    
-
+        this.height  = height;
     }
 
     debug_InsertCanvasIntoBody() {

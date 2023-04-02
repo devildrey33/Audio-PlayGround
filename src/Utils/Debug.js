@@ -7,15 +7,12 @@ export default class Debug {
         this.experience       = new Experience();
         this.environment      = this.experience.world.environment;
         this.osciloscope      = this.experience.world.osciloscope;
+        this.floor            = this.experience.world.floor;
         this.frequencyTexture = this.experience.world.frequencyTexture;
-
+        this.options          = this.experience.debugOptions;
+        this.floor            
         this.active = true;
         
-        this.options = {
-            osciloscopeSize  : 0.005,
-            osciloscopeAlpha : 1.0,
-            redChannel       : false      
-        };
 //        this.active = window.location.hash === '#debug';
 
         if (this.active) {
@@ -32,17 +29,32 @@ export default class Debug {
             this.debugAudio.add(this.playPauseButton, 'playPause').name("Play / Pause");
 
             /*
+             * Floor
+             */
+            this.debugFloor = this.ui.addFolder("Floor");
+            // Audio strength
+            this.debugFloor.add(this.options, "floorAudioStrength").min(1).max(20).step(0.1).name("Audio strength").onChange(() => {
+                this.floor.material.uniforms.uAudioStrength.value = this.options.floorAudioStrength;
+            });
+
+            /*
              * Osciloscope
              */
             this.debugOsciloscope = this.ui.addFolder("Osciloscope");
             // Osciloscope size
-            this.debugOsciloscope.add(this.options, "osciloscopeSize").min(0.001).max(0.2).step(0.001).onChange(() => {
+            this.debugOsciloscope.add(this.options, "osciloscopeSize").min(0.001).max(0.2).step(0.001).name("Line size").onChange(() => {
                 this.osciloscope.material.uniforms.uSize.value = this.options.osciloscopeSize;
             });
 
-            this.debugOsciloscope.add(this.options, "osciloscopeAlpha").min(0).max(1).step(0.01).onChange(() => {
+            this.debugOsciloscope.add(this.options, "osciloscopeAlpha").min(0).max(1).step(0.01).name("Background apha").onChange(() => {
                 this.osciloscope.material.uniforms.uAlpha.value = this.options.osciloscopeAlpha;
             });            
+
+            this.debugOsciloscope.add(this.options, "osciloscopeAudioStrength").min(0).max(1).step(0.01).name("Audio strength").onChange(() => {
+                this.osciloscope.material.uniforms.uAudioStrength.value = this.options.osciloscopeAudioStrength;
+            });            
+
+            
     
             // environment
            /* this.debugEnvironment = this.ui.addFolder("environment");

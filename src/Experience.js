@@ -13,6 +13,35 @@ import AudioAnalizer from './Utils/AudioAnalizer.js';
 let experienceInstance = null;
 
 export default class Experience {
+    // Songs from jamendo with name group and url
+    songs = [
+        {
+            name  : "Battle Trance",
+            group : "JT Bruce", 
+            path  : "./songs/BattleTrance.mp3", 
+            url   : "https://www.jamendo.com/track/1237162/battle-trance" 
+        }, {
+            name  : "Nothing's Over",
+            group : "In Camera", 
+            path  : "./songs/In_Camera_-_Nothing_s_Over.mp3", 
+            url   : "https://www.jamendo.com/track/1397271/nothing-s-over" 
+        }, {
+            name  : "One Chance",
+            group : "Fallen to Flux", 
+            path  : "./songs/OneChance.mp3", 
+            url   : "https://www.jamendo.com/track/1155241/one-chance" 
+        }, {
+            name  : "Quantum Ocean",
+            group : "From Sky to Abyss", 
+            path  : "./songs/QuantumOcean.mp3", 
+            url   : "https://www.jamendo.com/track/1284951/quantum-ocean" 
+        }, {
+            name  : "Six Feet Under",
+            group : "Convergence", 
+            path  : "./songs/Convergence_-_Six_feet_under.mp3", 
+            url   : "https://www.jamendo.com/track/80122/six-feet-under" 
+        }
+    ]
 
     optionsExperienceByDefault = {
         // Y position. Use 'auto' to center canvas horizontaly to the view port
@@ -26,14 +55,23 @@ export default class Experience {
         // Show framerate inside the butons frame
         showFPS                 : true,            
         // Show full screen buton in the buttons frame
-        buttonFullScreen        : true,            
+        buttonFullScreen        : false,            
         // Show my logo buton in the buttons frame (that redirects to devildrey33.es)
-        buttonLogo              : true,            
+        buttonLogo              : false,            
         // Element where canvas is inserted (by default is document.body)
         // For example you can use document.getElementById() to retrieve tag inside you want to create the canvas
         rootElement             : document.body,
         // Anti alias (by default true)
         antialias               : true
+    };
+
+
+    /* debug options for lil.gui */
+    debugOptions = {
+        osciloscopeSize          : 0.02,
+        osciloscopeAlpha         : 1.0,
+        osciloscopeAudioStrength : 0.5,
+        floorAudioStrength       : 8
     };
 
 
@@ -66,23 +104,23 @@ export default class Experience {
 
         this.audioAnalizer  = new AudioAnalizer();
         this.audioAnalizer.start(2048, () => {}, () => {});        
-//        this.audioAnalizer.loadSong("./songs/01-Handshake-with-Hell.flac");
 
-/*
-    [Grupo]             [Titulo]                               [Url jamendo]
-    JT Bruce            Battle Trance                          https://www.jamendo.com/track/1237162/battle-trance 
-    LevenRain           ActionMan Versus The CyberParasites    https://www.jamendo.com/track/1349290/actionman-versus-the-cyberparasites
-    In Camera           Nothing's Over                         https://www.jamendo.com/track/1397271/nothing-s-over
-    Fallen to Flux      One Chance                             https://www.jamendo.com/track/1155241/one-chance
-    From Sky to Abyss   Quantum Ocean                          https://www.jamendo.com/track/1284951/quantum-ocean
-    Convergence         Six Feet Under                         https://www.jamendo.com/track/80122/six-feet-under
-*/
-
+        /*
+            [Group]             [Title]                                [Url jamendo]
+            JT Bruce            Battle Trance                          https://www.jamendo.com/track/1237162/battle-trance 
+            LevenRain           ActionMan Versus The CyberParasites    https://www.jamendo.com/track/1349290/actionman-versus-the-cyberparasites
+            In Camera           Nothing's Over                         https://www.jamendo.com/track/1397271/nothing-s-over
+            Fallen to Flux      One Chance                             https://www.jamendo.com/track/1155241/one-chance
+            From Sky to Abyss   Quantum Ocean                          https://www.jamendo.com/track/1284951/quantum-ocean
+            Convergence         Six Feet Under                         https://www.jamendo.com/track/80122/six-feet-under
+        */
+        const song = this.songs[Math.floor(Math.random() * this.songs.length)];
+        this.audioAnalizer.loadSong(song.path);
         //this.audioAnalizer.loadSong("./songs/BattleTrance.mp3");
         //this.audioAnalizer.loadSong("./songs/LevenRain_-_ActionMan_Versus_The_CyberParasites.mp3");
         //this.audioAnalizer.loadSong("./songs/In_Camera_-_Nothing_s_Over.mp3");
         //this.audioAnalizer.loadSong("./songs/OneChance.mp3");
-        this.audioAnalizer.loadSong("./songs/QuantumOcean.mp3");
+//        this.audioAnalizer.loadSong("./songs/QuantumOcean.mp3");
         //this.audioAnalizer.loadSong("./songs/Convergence_-_Six_feet_under.mp3");
 
 //        window.addEventListener("click", () => { this.audioAnalizer.playPause(); })

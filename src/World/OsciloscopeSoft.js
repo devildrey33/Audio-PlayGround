@@ -20,7 +20,7 @@ export default class OsciloscopeSoft {
 
     setup() {
 
-        this.geometry = new THREE.PlaneGeometry(6, 3);
+        this.geometry = new THREE.PlaneGeometry(10, 3);
 
 
         this.material = new THREE.MeshBasicMaterial({ 
@@ -32,7 +32,7 @@ export default class OsciloscopeSoft {
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.scene.add(this.mesh);
         this.mesh.position.y += 7;
-        this.mesh.position.x -= 5;
+        this.mesh.position.x -= 7;
         this.material.side = THREE.DoubleSide;
 
 //        this.bufferCanvas.texture.wrapS = THREE.MirroredRepeatWrapping;

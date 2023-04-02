@@ -1,5 +1,6 @@
 uniform sampler2D uAudioTexture;
 uniform float uTime;
+uniform float uAudioStrength;
 
 
 //	Classic Perlin 3D Noise 
@@ -84,7 +85,7 @@ void main() {
     vec4 modelPosition      = modelMatrix       * vec4(position , 1.0);
 
     vec4 textureColor = texture2D(uAudioTexture, uv);
-    modelPosition.y +=  textureColor.r * 25.0;
+    modelPosition.y +=  textureColor.r * uAudioStrength;
 
 //    float displacement = 0.75 * cnoise(vec3(0.43 * position.x + (uTime * 0.00001), 0.43 * position.z + (uTime * 0.00003), uTime * 0.0001));
 //    float displacement2 = 0.75 * cnoise(vec3(0.53 * position.x + (uTime * 0.00007), 0.17 * position.z + (uTime * 0.0003), uTime));
