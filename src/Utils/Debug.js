@@ -10,7 +10,7 @@ export default class Debug {
         this.floor            = this.experience.world.floor;
         this.frequencyTexture = this.experience.world.frequencyTexture;
         this.options          = this.experience.debugOptions;
-        this.floor            
+        this.songs            = this.experience.songs;
         this.active = true;
         
 //        this.active = window.location.hash === '#debug';
@@ -28,6 +28,18 @@ export default class Debug {
             // Play Pause song
             this.debugAudio.add(this.playPauseButton, 'playPause').name("Play / Pause");
 
+            this.debugAudio.add(this.options, 'songName', [ this.songs[0].name, this.songs[1].name, this.songs[2].name, this.songs[3].name, this.songs[4].name]).onChange(() => {
+                for (let i = 0; i < this.songs.length; i++) {
+                    if (this.options.songName === this.songs[i].name) {
+                        this.experience.song = this.songs[i];
+                        break;
+                    }
+                }
+                
+                this.experience.audioAnalizer.loadSong(this.experience.song.path);
+                this.experience.audioAnalizer.playPause();
+            });
+
             /*
              * Floor
              */
@@ -40,7 +52,7 @@ export default class Debug {
             /*
              * Osciloscope
              */
-            this.debugOsciloscope = this.ui.addFolder("Osciloscope");
+            this.debugOsciloscope = this.ui.addFolder("Osciloscope down (shader)");
             // Osciloscope size
             this.debugOsciloscope.add(this.options, "osciloscopeSize").min(0.001).max(0.2).step(0.001).name("Line size").onChange(() => {
                 this.osciloscope.material.uniforms.uSize.value = this.options.osciloscopeSize;
@@ -54,6 +66,26 @@ export default class Debug {
                 this.osciloscope.material.uniforms.uAudioStrength.value = this.options.osciloscopeAudioStrength;
             });            
 
+            this.debugOsciloscope.add(this.options, "osciloscopeAudioZoom").min(1).max(32).step(0.1).name("Audio zoom").onChange(() => {
+                this.osciloscope.material.uniforms.uAudioZoom.value = this.options.osciloscopeAudioZoom;
+            });            
+            /*
+             * Bars
+             */
+/*            this.debugBars = this.ui.addFolder("Bars max (x*z >= 1024)");
+            this.debugBarsX = this.debugBars.add(this.options, "barsX").min(1).max(1023).step(8).name("X bars multiplier").onChange(() => {
+                const nMax = this.exponent(this.options.barsX);
+                this.debugBarsZ.max(nMax);
+                console.log(nMax);
+                this.experience.world.bars.createBars(this.options.barsX, this.options.barsZ);                
+            });            
+            this.debugBarsZ = this.debugBars.add(this.options, "barsZ").min(1).max(1023).step(8).name("X bars multiplier").onChange(() => {
+                const nMax = this.exponent(this.options.barsZ);
+                this.experience.world.bars.createBars(this.options.barsX, this.options.barsZ);
+                console.log(nMax);
+                this.debugBarsX.max(nMax);
+            });            
+            console.log(this.debugBarsX)*/
             
     
             // environment
@@ -64,5 +96,9 @@ export default class Debug {
             this.debugEnvironment.add(this.environment.sunLight.position, 'z').name('sunLightZ').min(-5).max(5).step(0.001);
 */
         }
+    }
+
+    exponent(x) {
+        return Math.floor(1024 / (2 ** (x - 1)));
     }
 }

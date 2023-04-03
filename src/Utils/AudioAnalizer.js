@@ -34,24 +34,23 @@ export default class AudioAnalizer {
         this.experience.canvas.addEventListener("dragenter", this.hEventDragEnter);
         this.experience.canvas.addEventListener("dragover" , this.hEventDragOver);
         this.experience.canvas.addEventListener("drop"     , this.hEventDrop);
-
-        //test
-        const pos = 1023;
-        const tx = Math.floor(pos % 32.0);
-        const ty = Math.floor(pos / 32.0);        
-        console.log(tx, ty);
     }
 
     
     loadSong(path) {
-
+        if (typeof this.song !== "undefined") {
+            this.song.pause();
+            this.songLoaded = false;
+            this.experience.loading = true;
+        }
+         
         this.song                = new Audio();
         this.song.controls       = true;
         this.song.crossOrigin    = "anonymous";
         this.song.src            = path;          // "/Canciones/cancion.mp3"
         this.song.addEventListener('canplay', this.canPlay.bind(this));
         this.song.addEventListener('ended'  , this.fnEnded.bind(this));                
-        this.experience.loading = true;
+        
     }
 
     loadSongDrop(files) {

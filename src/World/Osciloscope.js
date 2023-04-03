@@ -22,6 +22,7 @@ export default class Osciloscope {
             uniforms : {
                 uAudioTexture  : { value : this.world.frequencyTexture.bufferCanvasLinear.texture },
                 uAudioStrength : { value : this.experience.debugOptions.osciloscopeAudioStrength },
+                uAudioZoom     : { value : this.experience.debugOptions.osciloscopeAudioZoom },
                 uSize          : { value : this.experience.debugOptions.osciloscopeSize },
                 uAlpha         : { value : this.experience.debugOptions.osciloscopeAlpha }
 //                uTime         : { value : 0 }

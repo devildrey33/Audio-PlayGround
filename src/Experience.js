@@ -71,7 +71,11 @@ export default class Experience {
         osciloscopeSize          : 0.02,
         osciloscopeAlpha         : 1.0,
         osciloscopeAudioStrength : 0.5,
-        floorAudioStrength       : 8
+        osciloscopeAudioZoom     : 1,
+        floorAudioStrength       : 8,
+        songName                 : "",
+        barsX                    : 128,
+        barsZ                    : 1
     };
 
 
@@ -114,8 +118,10 @@ export default class Experience {
             From Sky to Abyss   Quantum Ocean                          https://www.jamendo.com/track/1284951/quantum-ocean
             Convergence         Six Feet Under                         https://www.jamendo.com/track/80122/six-feet-under
         */
-        const song = this.songs[Math.floor(Math.random() * this.songs.length)];
-        this.audioAnalizer.loadSong(song.path);
+        this.song = this.songs[Math.floor(Math.random() * this.songs.length)];
+        this.debugOptions.songName = this.song.name;
+
+        this.audioAnalizer.loadSong(this.song.path);
         //this.audioAnalizer.loadSong("./songs/BattleTrance.mp3");
         //this.audioAnalizer.loadSong("./songs/LevenRain_-_ActionMan_Versus_The_CyberParasites.mp3");
         //this.audioAnalizer.loadSong("./songs/In_Camera_-_Nothing_s_Over.mp3");

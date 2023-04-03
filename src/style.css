@@ -53,7 +53,7 @@ html, body {
 }
 
 .Experience[loading = "true"] > .Experience_Loading {
-    display:block;
+    display:table;
 }
 
 /* Group of controls (fps, button logo, button full screen) */

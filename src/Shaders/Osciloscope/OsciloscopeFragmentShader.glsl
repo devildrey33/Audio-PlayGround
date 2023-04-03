@@ -4,6 +4,7 @@ uniform float     uSize;
 uniform float     uAlpha;
 uniform sampler2D uAudioTexture;
 uniform float     uAudioStrength;
+uniform float     uAudioZoom;
 varying vec2      vUv; // Coordenadas UV del fragmento
 
 /*float getTextureRow(float x) {
@@ -35,7 +36,7 @@ void main() {
     float audioValue = texture2D(uAudioTexture, vec2(col / 32.0, row / 32.0)).g;*/
 
 //    float audioValue = texture2D(uAudioTexture, vec2(vUv.x, mod(vUv.x, 32.0))).g;
-    float audioValue = ((texture2D(uAudioTexture, vec2(vUv.x, 0.0)).g - .5) * uAudioStrength) + .5;
+    float audioValue = ((texture2D(uAudioTexture, vec2(vUv.x / uAudioZoom, 0.0)).g - .5) * uAudioStrength) + .5;
 
     if (abs(vUv.y - audioValue) < uSize) {
         gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
