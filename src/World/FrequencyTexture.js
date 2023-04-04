@@ -2,6 +2,7 @@ import Experience from "../Experience.js";
 import BufferCanvas from "../Utils/BufferCanvas.js";
 import * as THREE from 'three'
 import FrequencyTextureVertexShader from "../Shaders/FrequencyTexture/FrequencyTextureVertexShader.glsl"
+import FrequencyTextureFragmentShader from "../Shaders/FrequencyTexture/FrequencyTextureFragmentShader.glsl"
 import FrequencyTextureFragmentShaderR from "../Shaders/FrequencyTexture/FrequencyTextureFragmentShaderR.glsl"
 import FrequencyTextureFragmentShaderG from "../Shaders/FrequencyTexture/FrequencyTextureFragmentShaderG.glsl"
 
@@ -23,7 +24,51 @@ export default class FrequencyTexture {
     }
 
     setup() {
+        // Stuff to create a plus and equal simbols
+        this.simbolMaterial = new THREE.MeshBasicMaterial( { color : new THREE.Color("#ffff00") });
+        this.simbolGeometry = new THREE.BoxGeometry(0.125, 0.125, 0.1);
+
+        // Create two boxes to make a plus simbol
+        this.plus1 = new THREE.Mesh(this.simbolGeometry, this.simbolMaterial);
+        this.plus1.scale.x = 4.0;
+        this.plus2 = new THREE.Mesh(this.simbolGeometry, this.simbolMaterial);
+        this.plus2.scale.y = 4.0;
+        // Group for plus meshes
+        this.plus = new THREE.Group();
+        this.plus.add(this.plus1, this.plus2);
+        // Move plus to its position
+        this.plus.position.y += 5;
+        this.plus.position.x -= 11;
+        // Add plus group to the scene
+        this.scene.add(this.plus);
+
+        // Create two boxes to make an equal simbol
+        this.equal1 = new THREE.Mesh(this.simbolGeometry, this.simbolMaterial);
+        this.equal1.scale.x = 4.0;
+        this.equal1.position.y = 0.125;
+        this.equal2 = new THREE.Mesh(this.simbolGeometry, this.simbolMaterial);
+        this.equal2.scale.x = 4.0;
+        this.equal2.position.y = -0.125;
+        // Group for equal meshes
+        this.equal = new THREE.Group();
+        this.equal.add(this.equal1, this.equal2);
+        // Move equal to its position
+        this.equal.position.y += 3;
+        this.equal.position.x -= 9;
+        // Add equal group to the scene
+        this.scene.add(this.equal);
+
+
+
         this.geometry = new THREE.PlaneGeometry(3, 3);
+        this.material = new THREE.ShaderMaterial({
+            uniforms : {
+                uAudioTexture : { value : this.bufferCanvasSquare.texture },
+            },
+            vertexShader    : FrequencyTextureVertexShader,
+            fragmentShader  : FrequencyTextureFragmentShader,
+        });
+
         this.materialR = new THREE.ShaderMaterial({
             uniforms : {
                 uAudioTexture : { value : this.bufferCanvasSquare.texture },
@@ -43,13 +88,21 @@ export default class FrequencyTexture {
         // Red channel
         this.meshR = new THREE.Mesh(this.geometry, this.materialR);       
         this.meshR.material.side = THREE.DoubleSide;
-        this.meshR.position.y += 7;
+        this.meshR.position.y += 3;
+        this.meshR.position.x -= 11;
         this.scene.add(this.meshR);
         // Green channel
         this.meshG = new THREE.Mesh(this.geometry, this.materialG);       
         this.meshG.material.side = THREE.DoubleSide;
-        this.meshG.position.y += 3;
+        this.meshG.position.y += 7;
+        this.meshG.position.x -= 11;
         this.scene.add(this.meshG);
+        // Both channels
+        this.mesh = new THREE.Mesh(this.geometry, this.material);       
+        this.mesh.material.side = THREE.DoubleSide;
+        this.mesh.position.y += 3;
+        this.mesh.position.x -= 7;
+        this.scene.add(this.mesh);
     }
 
     update() {

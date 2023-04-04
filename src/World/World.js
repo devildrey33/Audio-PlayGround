@@ -1,10 +1,11 @@
 import Experience from '../Experience.js'
 import Bars from './Bars.js';
+import Circular from './Circular.js';
 import Environment from './Environment.js'
 import Floor from './Floor.js';
 import FrequencyTexture from './FrequencyTexture.js';
 import Osciloscope from './Osciloscope.js';
-import OsciloscopeSoft from './OsciloscopeSoft.js';
+//import OsciloscopeSoft from './OsciloscopeSoft.js';
 
 export default class World {
     constructor() {
@@ -21,7 +22,8 @@ export default class World {
             this.floor            = new Floor(this);
             this.bars             = new Bars(this);
             this.osciloscope      = new Osciloscope(this);
-            this.osciloscopeSoft  = new OsciloscopeSoft(this);
+//            this.osciloscopeSoft  = new OsciloscopeSoft(this);
+            this.circular         = new Circular(this);
             this.environment      = new Environment();
             this.ready            = true;
 //        });
@@ -31,10 +33,11 @@ export default class World {
     update() {
         if (this.ready === true) {
             this.frequencyTexture.update();
-            this.bars.update();
+//            this.bars.update();
+//            this.circular.update();
             this.floor.update();
 //            this.osciloscope.update();
-            this.osciloscopeSoft.update();
+//            this.osciloscopeSoft.update();
         }
     }
 }

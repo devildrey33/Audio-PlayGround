@@ -10,6 +10,7 @@ export default class Debug {
         this.floor            = this.experience.world.floor;
         this.frequencyTexture = this.experience.world.frequencyTexture;
         this.bars             = this.experience.world.bars;
+        this.circular         = this.experience.world.circular;
         this.options          = this.experience.debugOptions;
         this.songs            = this.experience.songs;
         this.active = true;
@@ -29,7 +30,7 @@ export default class Debug {
             // Play Pause song
             this.debugAudio.add(this.playPauseButton, 'playPause').name("Play / Pause");
 
-            this.debugAudio.add(this.options, 'songName', [ this.songs[0].name, this.songs[1].name, this.songs[2].name, this.songs[3].name, this.songs[4].name]).onChange(() => {
+            this.debugAudio.add(this.options, 'songName', [ this.songs[0].name, this.songs[1].name, this.songs[2].name, this.songs[3].name, this.songs[4].name]).name("Song name").onChange(() => {
                 for (let i = 0; i < this.songs.length; i++) {
                     if (this.options.songName === this.songs[i].name) {
                         this.experience.song = this.songs[i];
@@ -41,6 +42,18 @@ export default class Debug {
                 this.experience.audioAnalizer.playPause();
             });
 
+
+            /*
+             * Bars
+             */
+            this.debugBars = this.ui.addFolder("Bars");
+            this.debugBars.add(this.options, "barsCount").min(32).max(512).step(1).name("Count").onChange(() => {
+                this.experience.world.bars.createBars(this.options.barsCount, 1);                
+            });            
+            this.debugBars.add(this.options, "barsAudioStrength").min(0.5).max(10).step(0.1).name("Audio strength").onChange(() => {
+                this.bars.material.uniforms.uAudioStrength.value = this.options.barsAudioStrength;
+            });   
+                        
             /*
              * Floor
              */
@@ -53,10 +66,10 @@ export default class Debug {
             /*
              * Osciloscope
              */
-            this.debugOsciloscope = this.ui.addFolder("Osciloscope down (shader)");
+            this.debugOsciloscope = this.ui.addFolder("Osciloscope");
             // Osciloscope size
-            this.debugOsciloscope.add(this.options, "osciloscopeSize").min(0.001).max(0.2).step(0.001).name("Line size").onChange(() => {
-                this.osciloscope.material.uniforms.uSize.value = this.options.osciloscopeSize;
+            this.debugOsciloscope.add(this.options, "osciloscopeLineSize").min(0.001).max(0.2).step(0.001).name("Line size").onChange(() => {
+                this.osciloscope.material.uniforms.uSize.value = this.options.osciloscopeLineSize;
             });
 
             this.debugOsciloscope.add(this.options, "osciloscopeAlpha").min(0).max(1).step(0.01).name("Background apha").onChange(() => {
@@ -70,17 +83,24 @@ export default class Debug {
             this.debugOsciloscope.add(this.options, "osciloscopeAudioZoom").min(1).max(32).step(0.1).name("Audio zoom").onChange(() => {
                 this.osciloscope.material.uniforms.uAudioZoom.value = this.options.osciloscopeAudioZoom;
             });            
-            /*
-             * Bars
-             */
-            this.debugBars = this.ui.addFolder("Bars");
-            this.debugBars.add(this.options, "barsCount").min(32).max(512).step(1).name("Count").onChange(() => {
-                this.experience.world.bars.createBars(this.options.barsCount, 1);                
-            });            
-            this.debugBars.add(this.options, "barsAudioStrength").min(0.5).max(10).step(0.1).name("Audio Strength").onChange(() => {
-                this.bars.material.uniforms.uAudioStrength.value = this.options.barsAudioStrength;
-            });            
+         
             
+            /*
+             * Circular
+             */
+            this.debugCircular = this.ui.addFolder("Circular");
+            this.debugCircular.add(this.options, "circularAudioStrength").min(0.1).max(0.5).step(0.01).name("Audio strength").onChange(() => {
+                this.circular.materialR.uniforms.uAudioStrength.value = this.options.circularAudioStrength;
+                this.circular.materialG.uniforms.uAudioStrength.value = this.options.circularAudioStrength;
+                this.circular.materialDistorsion.uniforms.uAudioStrength.value = this.options.circularAudioStrength * 0.5;
+            });            
+
+            this.debugCircular.add(this.options, "circularLineSize").min(0.001).max(0.1).step(0.001).name("Line Size").onChange(() => {
+                this.circular.materialR.uniforms.uSize.value = this.options.circularLineSize;
+                this.circular.materialG.uniforms.uSize.value = this.options.circularLineSize;
+                this.circular.materialDistorsion.uniforms.uSize.value = this.options.circularLineSize;
+            });            
+
     
             // environment
            /* this.debugEnvironment = this.ui.addFolder("environment");

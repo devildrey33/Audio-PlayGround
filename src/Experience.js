@@ -68,14 +68,16 @@ export default class Experience {
 
     /* debug options for lil.gui */
     debugOptions = {
-        osciloscopeSize          : 0.02,
+        osciloscopeLineSize      : 0.02,
         osciloscopeAlpha         : 1.0,
         osciloscopeAudioStrength : 0.5,
         osciloscopeAudioZoom     : 1,
         floorAudioStrength       : 8,
         songName                 : "",
         barsAudioStrength        : 2,
-        barsCount                : 256
+        barsCount                : 256,
+        circularAudioStrength    : 0.4,
+        circularLineSize         : 0.03
     };
 
 
