@@ -15,4 +15,9 @@ Fragment shader Circular Distortion (red channel)
 
 You can drag & drop a song of your hard disk into the experience to play it.
 
-![Audio-playground](https://user-images.githubusercontent.com/15678544/229359184-8299a25f-1c2f-46f6-86ed-1746620316a9.png)
+
+
+
+https://user-images.githubusercontent.com/15678544/229850780-5f61a9ab-4900-44fc-a702-64910d9d2619.mp4
+
+live version on (https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-Experience/)
