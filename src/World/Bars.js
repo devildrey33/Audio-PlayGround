@@ -1,38 +1,55 @@
 import Experience from "../Experience";
 import * as THREE from 'three'
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js'
+import BarsVertexShader from "../Shaders/Bars/BarsVertexShader.glsl"
+import BarsFragmentShader from "../Shaders/Bars/BarsFragmentShader.glsl"
+
 
 export default class Bars {
     
-    constructor() {
+    constructor(world) {
         this.experience      = new Experience();
         this.fftSize         = this.experience.audioAnalizer.analizer.fftSize;
         this.scene           = this.experience.scene;
         this.data            = this.experience.audioAnalizer.analizerData;
-
-        this.createBars(32,32);
+        this.world           = world;
+        
+        // Could be a square but makes no sense with the floor
+        this.createBars(256,1);
     }
 
     createBars(width, height) {
         if (typeof(this.bars) !== "undefined") {
             this.scene.remove(this.bars);
-            this.mergedGeometry.dispose();
-            this.cubeMaterial.dispose();
+            this.geometry.dispose();
+            this.material.dispose();
         }
 
-        let   size       = 1;
+        let   size       = width * height;
 
         this.cubeGeometries = [];
-        this.cubeMaterial = new THREE.MeshStandardMaterial({ 
+/*        this.material = new THREE.MeshBasicMaterial({ 
             color       : new THREE.Color("rgb(10,10,90)"),
             transparent : true
+        });*/
+
+        this.material = new THREE.ShaderMaterial({
+            uniforms : {
+                uAudioTexture  : { value : this.world.frequencyTexture.bufferCanvasLinear.texture },
+                uAudioStrength : { value : this.experience.debugOptions.barsAudioStrength },
+//                uTime         : { value : 0 }
+            },
+            vertexShader    : BarsVertexShader,
+            fragmentShader  : BarsFragmentShader,
+//            transparent     : true
         });
+
 
 //        let counter = 0;
 
         for (let z = 0; z < height; z++) {
             for (let x = 0; x < width; x++) {
-                const geometry = new THREE.BoxGeometry(0.09, 0.1, 0.09);
+                const geometry = new THREE.BoxGeometry(0.07, 0.1, 0.07);
 
                 const nx = (-(width * 0.5) + x) * 0.1;
                 const nz = (-(height * 0.5) + z) * 0.1;
@@ -43,51 +60,35 @@ export default class Bars {
             }
         }
 
-        this.mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(this.cubeGeometries);
+        const numPos = 24;
+        this.idArray  = new Float32Array(size * numPos);        
+        this.geometry = BufferGeometryUtils.mergeBufferGeometries(this.cubeGeometries);
+        let count = 0;
+        // fill each cube with his id
+        for (let g = 0; g < size * numPos; g+= numPos) {
+            for (let n = 0; n < numPos; n++) {
+                this.idArray[g + n] = count / size;
+            }            
+            count++;
+        }
+        this.geometry.setAttribute('aId', new THREE.BufferAttribute(this.idArray, 1));
 
         // clear cube geometries used to create the merged geometry
-        for (let i = 0; i < this.cubeGeometries.length; i++) {
+        for (let i = 0; i < size; i++) {
             this.cubeGeometries[i].dispose();
         }
 
-        this.bars = new THREE.Mesh(this.mergedGeometry, this.cubeMaterial);
-        this.bars.castShadow = true;
-        this.bars.receiveShadow = true;
+        this.bars = new THREE.Mesh(this.geometry, this.material);
+//        this.bars.castShadow = true;
+//       this.bars.receiveShadow = true;
 
-        this.bars.position.z += 2;
+        this.bars.position.z += 3;
         this.scene.add(this.bars);
 
     }
 
-    // Updates the bars using the analizer data
+    
     update() {
-        for (let i = 0; i < this.cubeGeometries.length; i++) {
-            
-            let aprox = ((this.fftSize / 4) / this.cubeGeometries.length);
-
-            const scale = (1 + (Math.abs(this.data[Math.round(i * aprox)]) / 7.5)) * 0.05;
-//            console.log(scale);
-
-            this.mergedGeometry.attributes.position.array[(i * 72) + 1] = scale; // y
-            this.mergedGeometry.attributes.position.array[(i * 72) + 4] = scale; // y
-
-            this.mergedGeometry.attributes.position.array[(i * 72) + 13] = scale; // y
-            this.mergedGeometry.attributes.position.array[(i * 72) + 16] = scale; // y
-
-            this.mergedGeometry.attributes.position.array[(i * 72) + 49] = scale; // y
-            this.mergedGeometry.attributes.position.array[(i * 72) + 52] = scale; // y
-
-            this.mergedGeometry.attributes.position.array[(i * 72) + 61] = scale; // y
-            this.mergedGeometry.attributes.position.array[(i * 72) + 64] = scale; // y
-
-            this.mergedGeometry.attributes.position.array[(i * 72) + 25] = scale; // y
-            this.mergedGeometry.attributes.position.array[(i * 72) + 28] = scale; // y
-
-            this.mergedGeometry.attributes.position.array[(i * 72) + 31] = scale; // y
-            this.mergedGeometry.attributes.position.array[(i * 72) + 34] = scale; // y
-
-        }
-        this.mergedGeometry.attributes.position.needsUpdate = true;
     }
 
     isMobile() {

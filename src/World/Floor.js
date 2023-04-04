@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import Experience from "../Experience";
-import FloorVertexShader from "../Shaders/Floor/planeVertexShader.glsl"
-import FloorFragmentShader from "../Shaders/Floor/planeFragmentShader.glsl"
+import FloorVertexShader from "../Shaders/Floor/PlaneVertexShader.glsl"
+import FloorFragmentShader from "../Shaders/Floor/PlaneFragmentShader.glsl"
 
 export default class Floor {
     constructor(world) {

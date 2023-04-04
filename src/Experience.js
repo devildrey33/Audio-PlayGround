@@ -74,8 +74,8 @@ export default class Experience {
         osciloscopeAudioZoom     : 1,
         floorAudioStrength       : 8,
         songName                 : "",
-        barsX                    : 128,
-        barsZ                    : 1
+        barsAudioStrength        : 2,
+        barsCount                : 256
     };
 
 

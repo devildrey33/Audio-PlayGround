@@ -19,7 +19,7 @@ export default class World {
             // setup
             this.frequencyTexture = new FrequencyTexture();
             this.floor            = new Floor(this);
-            this.bars             = new Bars();
+            this.bars             = new Bars(this);
             this.osciloscope      = new Osciloscope(this);
             this.osciloscopeSoft  = new OsciloscopeSoft(this);
             this.environment      = new Environment();

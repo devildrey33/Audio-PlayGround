@@ -9,6 +9,7 @@ export default class Debug {
         this.osciloscope      = this.experience.world.osciloscope;
         this.floor            = this.experience.world.floor;
         this.frequencyTexture = this.experience.world.frequencyTexture;
+        this.bars             = this.experience.world.bars;
         this.options          = this.experience.debugOptions;
         this.songs            = this.experience.songs;
         this.active = true;
@@ -72,20 +73,13 @@ export default class Debug {
             /*
              * Bars
              */
-/*            this.debugBars = this.ui.addFolder("Bars max (x*z >= 1024)");
-            this.debugBarsX = this.debugBars.add(this.options, "barsX").min(1).max(1023).step(8).name("X bars multiplier").onChange(() => {
-                const nMax = this.exponent(this.options.barsX);
-                this.debugBarsZ.max(nMax);
-                console.log(nMax);
-                this.experience.world.bars.createBars(this.options.barsX, this.options.barsZ);                
+            this.debugBars = this.ui.addFolder("Bars");
+            this.debugBars.add(this.options, "barsCount").min(32).max(512).step(1).name("Count").onChange(() => {
+                this.experience.world.bars.createBars(this.options.barsCount, 1);                
             });            
-            this.debugBarsZ = this.debugBars.add(this.options, "barsZ").min(1).max(1023).step(8).name("X bars multiplier").onChange(() => {
-                const nMax = this.exponent(this.options.barsZ);
-                this.experience.world.bars.createBars(this.options.barsX, this.options.barsZ);
-                console.log(nMax);
-                this.debugBarsX.max(nMax);
+            this.debugBars.add(this.options, "barsAudioStrength").min(0.5).max(10).step(0.1).name("Audio Strength").onChange(() => {
+                this.bars.material.uniforms.uAudioStrength.value = this.options.barsAudioStrength;
             });            
-            console.log(this.debugBarsX)*/
             
     
             // environment
