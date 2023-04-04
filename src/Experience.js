@@ -77,7 +77,8 @@ export default class Experience {
         barsAudioStrength        : 2,
         barsCount                : 256,
         circularAudioStrength    : 0.4,
-        circularLineSize         : 0.03
+        circularLineSize         : 0.03,
+        circularAlpha            : 1.0
     };
 
 

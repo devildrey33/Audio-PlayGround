@@ -23,6 +23,7 @@ export default class Circular {
             uniforms : {
                 uAudioTexture  : { value : this.world.frequencyTexture.bufferCanvasLinear.texture },
                 uAudioStrength : { value : this.experience.debugOptions.circularAudioStrength },
+                uAlpha         : { value : this.experience.debugOptions.circularAlpha },
                 uSize          : { value : this.experience.debugOptions.circularLineSize  }
             },
             vertexShader    : CircularVertexShader,
@@ -35,6 +36,7 @@ export default class Circular {
             uniforms : {
                 uAudioTexture  : { value : this.world.frequencyTexture.bufferCanvasLinear.texture },
                 uAudioStrength : { value : this.experience.debugOptions.circularAudioStrength },
+                uAlpha         : { value : this.experience.debugOptions.circularAlpha },
                 uSize          : { value : this.experience.debugOptions.circularLineSize  }
             },
             vertexShader    : CircularVertexShader,
@@ -47,6 +49,7 @@ export default class Circular {
             uniforms : {
                 uAudioTexture  : { value : this.world.frequencyTexture.bufferCanvasLinear.texture },
                 uAudioStrength : { value : this.experience.debugOptions.circularAudioStrength * 0.5 },
+                uAlpha         : { value : this.experience.debugOptions.circularAlpha },
                 uSize          : { value : this.experience.debugOptions.circularLineSize  }
             },
             vertexShader    : CircularVertexShader,

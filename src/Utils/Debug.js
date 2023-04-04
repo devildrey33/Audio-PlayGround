@@ -53,7 +53,7 @@ export default class Debug {
             this.debugBars.add(this.options, "barsAudioStrength").min(0.5).max(10).step(0.1).name("Audio strength").onChange(() => {
                 this.bars.material.uniforms.uAudioStrength.value = this.options.barsAudioStrength;
             });   
-                        
+
             /*
              * Floor
              */
@@ -67,22 +67,23 @@ export default class Debug {
              * Osciloscope
              */
             this.debugOsciloscope = this.ui.addFolder("Osciloscope");
-            // Osciloscope size
+            // Osciloscope audio strength
+            this.debugOsciloscope.add(this.options, "osciloscopeAudioStrength").min(0).max(1).step(0.01).name("Audio strength").onChange(() => {
+                this.osciloscope.material.uniforms.uAudioStrength.value = this.options.osciloscopeAudioStrength;
+            });            
+            // Osciloscope audio zoom
+            this.debugOsciloscope.add(this.options, "osciloscopeAudioZoom").min(1).max(32).step(0.1).name("Audio zoom").onChange(() => {
+                this.osciloscope.material.uniforms.uAudioZoom.value = this.options.osciloscopeAudioZoom;
+            });            
+            // Osciloscope background alpha
+            this.debugOsciloscope.add(this.options, "osciloscopeAlpha").min(0).max(1).step(0.01).name("Background apha").onChange(() => {
+                this.osciloscope.material.uniforms.uAlpha.value = this.options.osciloscopeAlpha;
+            });            
+            // Osciloscope line size
             this.debugOsciloscope.add(this.options, "osciloscopeLineSize").min(0.001).max(0.2).step(0.001).name("Line size").onChange(() => {
                 this.osciloscope.material.uniforms.uSize.value = this.options.osciloscopeLineSize;
             });
 
-            this.debugOsciloscope.add(this.options, "osciloscopeAlpha").min(0).max(1).step(0.01).name("Background apha").onChange(() => {
-                this.osciloscope.material.uniforms.uAlpha.value = this.options.osciloscopeAlpha;
-            });            
-
-            this.debugOsciloscope.add(this.options, "osciloscopeAudioStrength").min(0).max(1).step(0.01).name("Audio strength").onChange(() => {
-                this.osciloscope.material.uniforms.uAudioStrength.value = this.options.osciloscopeAudioStrength;
-            });            
-
-            this.debugOsciloscope.add(this.options, "osciloscopeAudioZoom").min(1).max(32).step(0.1).name("Audio zoom").onChange(() => {
-                this.osciloscope.material.uniforms.uAudioZoom.value = this.options.osciloscopeAudioZoom;
-            });            
          
             
             /*
@@ -93,6 +94,12 @@ export default class Debug {
                 this.circular.materialR.uniforms.uAudioStrength.value = this.options.circularAudioStrength;
                 this.circular.materialG.uniforms.uAudioStrength.value = this.options.circularAudioStrength;
                 this.circular.materialDistorsion.uniforms.uAudioStrength.value = this.options.circularAudioStrength * 0.5;
+            });            
+            // Osciloscope background alpha
+            this.debugCircular.add(this.options, "circularAlpha").min(0).max(1).step(0.01).name("Background apha").onChange(() => {
+                this.circular.materialR.uniforms.uAlpha.value = this.options.circularAlpha;
+                this.circular.materialG.uniforms.uAlpha.value = this.options.circularAlpha;
+                this.circular.materialDistorsion.uniforms.uAlpha.value = this.options.circularAlpha;
             });            
 
             this.debugCircular.add(this.options, "circularLineSize").min(0.001).max(0.1).step(0.001).name("Line Size").onChange(() => {

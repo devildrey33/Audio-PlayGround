@@ -1,6 +1,7 @@
 uniform sampler2D uAudioTexture;
 uniform float     uAudioStrength;
 uniform float     uSize;
+uniform float     uAlpha;
 varying vec2      vUv;
 
 #define PI   3.14159265
@@ -35,78 +36,15 @@ void main() {
         gl_FragColor = vec4(0.75, 0.0, 0.0, 1.0);
     }
     else {
-        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+        gl_FragColor = vec4(0.0, 0.0, 0.0, uAlpha);
     }
 }
-
-
-/* Simple version */
-/*void main() {
-    float radius    = 0.25;
-    float thickness = 0.03;
-    vec2  center    = vUv - 0.5;
-    float dist      = length(center);
-
-    float audioValue = texture2D(uAudioTexture, vec2(vUv.x * radius, 0.5)).r; // Obtiene el valor del canal rojo de la textura
-    dist -= audioValue * radius;
-
-    if (dist > radius - thickness && dist < radius) {
-        gl_FragColor = vec4(0.75, 0.0, 0.0, 1.0);
-    }
-    else {
-        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
-    }
-}*/
-
-
-/*void main() {
-  float radius = 0.125;
-  float thickness = 0.01;
-  vec2 position = vUv - 0.5;
-  float distance = length(position);
-  float alpha = smoothstep(radius - thickness, radius, distance);
-  alpha -= smoothstep(radius, radius + thickness, distance);
-
-  float audioValue = texture2D(uAudioTexture, vec2(vUv.x, 0.5)).r; // Obtiene el valor del canal rojo de la textura
-  float angle = (vUv.x - 0.5) * 180.0; // Calcula el ángulo a partir de la posición del fragmento
-
-  // Aplica la deformación al círculo
-  if (angle >= 0.0 && angle <= 180.0) {
-    float deformation = 1.0 + audioValue * -1.0; // Define el factor de deformación
-    position *= deformation; // Aplica la deformación
-  }
-
-  // Calcula la nueva distancia y alpha
-  distance = length(position);
-  alpha = smoothstep(radius - thickness, radius, distance);
-  alpha -= smoothstep(radius, radius + thickness, distance);
-
-  gl_FragColor = vec4(1.0, 1.0, 1.0, alpha);
-}*/
 
 
 
 
 /*
-void main() {
-  float radius = 0.25;
-  float thickness = 0.01;
-  vec2 position = vUv - 0.5;
-  float distance = length(position);
-  
-  float alpha = smoothstep(radius - thickness, radius, distance);
-  alpha -= smoothstep(radius, radius + thickness, distance);
-  
-  gl_FragColor = vec4(1.0, 1.0, 1.0, alpha);
-}
-
-
-
-
-
-
-
-/*
+ nice chatgpt attempt
 void main() {
   vec2 st = vUv;
   vec2 pos = vec2(0.5, 0.5);
