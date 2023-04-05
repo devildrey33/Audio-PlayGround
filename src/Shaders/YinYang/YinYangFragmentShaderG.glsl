@@ -57,7 +57,8 @@ void main() {
     }
 
     // Usar la textura para obtener el radio basado en el ángulo
-    float audioValue = texture2D(uAudioTexture, vec2(normAngle, 0.0)).r * 0.25;
+    float audioValue = (texture2D(uAudioTexture, vec2(normAngle, 0.0)).g - 0.5) * 0.75;
+//    float audioValue = texture2D(uAudioTexture, vec2(normAngle, 0.0)).r * 0.25;
     dist -= audioValue;
 
     if (dist < radius) { // fill
