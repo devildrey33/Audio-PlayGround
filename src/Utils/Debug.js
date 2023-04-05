@@ -12,6 +12,7 @@ export default class Debug {
         this.bars             = this.experience.world.bars;
         this.circular         = this.experience.world.circular;
         this.yinYang          = this.experience.world.yinYang;
+        this.bloomPass        = this.experience.renderer.bloomPass;
         this.options          = this.experience.debugOptions;
         this.songs            = this.experience.songs;
         this.active = true;
@@ -31,7 +32,12 @@ export default class Debug {
             // Play Pause song
             this.debugAudio.add(this.playPauseButton, 'playPause').name("Play / Pause");
             // song name
-            this.debugAudio.add(this.options, 'songName', [ this.songs[0].name, this.songs[1].name, this.songs[2].name, this.songs[3].name, this.songs[4].name]).name("Song name").onChange(() => {
+            this.songNames = [];
+            for (let s = 0; s < this.songs.length; s++) {
+                this.songNames.push(this.songs[s].name);
+            }
+
+            this.debugAudio.add(this.options, 'songName', this.songNames).name("Song name").onChange(() => {
                 for (let i = 0; i < this.songs.length; i++) {
                     if (this.options.songName === this.songs[i].name) {
                         this.experience.song = this.songs[i];
@@ -51,7 +57,7 @@ export default class Debug {
             /*
              * Bars
              */
-            this.debugBars = this.ui.addFolder("Bars");
+            this.debugBars = this.ui.addFolder("Bars").open(false);;
             // Visible
 /*            this.debugBars.add(this.options, "barsVisible").name("Visible").onChange(() => {
                 this.bars.visible(this.options.barsVisible);
@@ -68,7 +74,7 @@ export default class Debug {
             /*
              * Floor
              */
-            this.debugFloor = this.ui.addFolder("Floor");
+            this.debugFloor = this.ui.addFolder("Floor").open(false);;
             // Visible
 /*            this.debugFloor.add(this.options, "floorVisible").name("Visible").onChange(() => {
                 this.floor.visible(this.options.floorVisible);
@@ -81,7 +87,7 @@ export default class Debug {
             /*
              * Osciloscope
              */
-            this.debugOsciloscope = this.ui.addFolder("Osciloscope");
+            this.debugOsciloscope = this.ui.addFolder("Osciloscope").open(false);;
             // Visible
 /*            this.debugOsciloscope.add(this.options, "osciloscopeVisible").name("Visible").onChange(() => {
                 this.osciloscope.visible(this.options.osciloscopeVisible);
@@ -108,7 +114,7 @@ export default class Debug {
             /*
              * Circular
              */
-            this.debugCircular = this.ui.addFolder("Circular");
+            this.debugCircular = this.ui.addFolder("Circular").open(false);;
 
             // Circle Bars Visible
 /*            this.debugCircular.add(this.options, "circularRVisible").name("Circle bars visible").onChange(() => {
@@ -145,7 +151,7 @@ export default class Debug {
             /*
              * Yin Yang
              */
-            this.debugYinYang = this.ui.addFolder("Yin Yang");
+            this.debugYinYang = this.ui.addFolder("Yin Yang").open(false);;
             // Osciloscope background alpha
             this.debugYinYang.add(this.options, "yinYangAlpha").min(0).max(1).step(0.01).name("Background apha").onChange(() => {
                 this.yinYang.material.uniforms.uAlpha.value = this.options.yinYangAlpha;
@@ -156,6 +162,29 @@ export default class Debug {
                 this.yinYang.material.uniforms.uRotate.value = this.options.yinYangRotate;
             });
     
+
+            /*
+            * Bloom
+            */
+            this.debugBloom = this.ui.addFolder("Bloom (postprocessing)").open(false);
+            // Enable / disable bloom
+            this.debugBloom.add(this.options, "bloomEnabled").onChange(() => {
+                this.bloomPass.enabled = this.options.bloomEnabled;
+            });
+            // Bloom Threshold
+            this.debugBloom.add(this.options, "bloomThreshold").min(-2).max(2).step(0.01).name("Threshold").onChange(() => {
+                this.bloomPass.threshold = this.options.bloomThreshold;
+            });
+            // Bloom Radius
+            this.debugBloom.add(this.options, "bloomRadius").min(-2).max(2).step(0.01).name("Radius").onChange(() => {
+                this.bloomPass.radius = this.options.bloomRadius;
+            });
+            // Bloom Strength
+            this.debugBloom.add(this.options, "bloomStrength").min(0).max(1).step(0.01).name("Strength").onChange(() => {
+                this.bloomPass.strength = this.options.bloomStrength;
+                console.log(this.experience.renderer.bloomPass.strength);
+            });            
+
             // environment
            /* this.debugEnvironment = this.ui.addFolder("environment");
             this.debugEnvironment.add(this.environment.sunLight, 'intensity').min(0).max(10).step(0.001);

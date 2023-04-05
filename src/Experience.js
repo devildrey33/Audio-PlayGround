@@ -100,7 +100,10 @@ export default class Experience {
         circularDistorsionVisible : true,
         yinYangAlpha              : 1.0,
         yinYangRotate             : true,
-
+        bloomThreshold            : 0.0,
+        bloomStrength             : 0.1,
+        bloomRadius               : 0.0,
+        bloomEnabled              : false,
         frequencyTextureVisible   : true
     };
 

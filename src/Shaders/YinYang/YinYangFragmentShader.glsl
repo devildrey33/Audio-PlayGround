@@ -61,7 +61,7 @@ void main() {
     dist -= audioValue;
 
     if (dist < radius) { // fill
-    //if (dist > radius - thickness && dist < radius) { // Line
+    //if (dist > radius - 0.3 && dist < radius) { // Line
         if (rad > 0.0) {
             color = vec4(1.0, 1.0, 1.0, 1.0);
         }

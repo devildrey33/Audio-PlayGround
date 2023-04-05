@@ -1,6 +1,10 @@
 import * as THREE from 'three'
 import Experience from "./Experience";
 
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
 export default class Renderer {
     // Costructor
     constructor() {
@@ -32,6 +36,26 @@ export default class Renderer {
         this.instance.setClearColor('#211d20');
         this.instance.setSize(this.sizes.width, this.sizes.height);
         this.instance.setPixelRatio(this.sizes.pixelRatio);
+
+        /**
+         * Post processing
+         */
+        this.effectComposer = new EffectComposer(this.instance);
+        this.effectComposer.setSize(this.sizes.width, this.sizes.height);
+        this.effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // first pass 
+        this.renderPass = new RenderPass(this.scene, this.camera.instance);
+        this.effectComposer.addPass(this.renderPass);
+
+        this.bloomPass = new UnrealBloomPass( new THREE.Vector2( this.sizes.width, this.sizes.height ), 1.5, 0.4, 0.85 );
+        this.bloomPass.threshold = this.experience.debugOptions.bloomThreshold;
+        this.bloomPass.strength  = this.experience.debugOptions.bloomStrength;
+        this.bloomPass.radius    = this.experience.debugOptions.bloomRadius;        
+
+        this.effectComposer.addPass(this.bloomPass);   
+        
+        this.bloomPass.enabled = this.experience.debugOptions.bloomEnabled;     
     }
 
     /**
@@ -46,6 +70,7 @@ export default class Renderer {
      * Function called on update
     */
     update() {
-        this.instance.render(this.scene, this.camera.instance)
+        this.effectComposer.render();
+        //this.instance.render(this.scene, this.camera.instance)
     }
 }
