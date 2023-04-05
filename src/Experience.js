@@ -15,6 +15,19 @@ let experienceInstance = null;
 export default class Experience {
     // Songs from jamendo with name group and url
     songs = [
+        
+        {
+            name  : "Cyberpunk Metal",
+            group : "Вихлянцев Евгений", 
+            path  : "./songs/Вихлянцев_Евгений_-_Cyberpunk_Metal(Game,Videos).mp3", 
+            url   : "https://www.jamendo.com/track/1892989/cyberpunk-metal-game-videos"             
+        },
+        {
+            name  : "Kill City Kills",
+            group : "Ride into the Badlands", 
+            path  : "./songs/Kill_City_Kills_-_Ride_into_the_Badlands_-_Kill_City_Kills.mp3", 
+            url   : "https://www.jamendo.com/track/1901190/kill-city-kills-ride-into-the-badlands"             
+        },
         {
             name  : "Battle Trance",
             group : "JT Bruce", 
@@ -68,17 +81,27 @@ export default class Experience {
 
     /* debug options for lil.gui */
     debugOptions = {
-        osciloscopeLineSize      : 0.02,
-        osciloscopeAlpha         : 1.0,
-        osciloscopeAudioStrength : 0.5,
-        osciloscopeAudioZoom     : 1,
-        floorAudioStrength       : 8,
-        songName                 : "",
-        barsAudioStrength        : 2,
-        barsCount                : 256,
-        circularAudioStrength    : 0.4,
-        circularLineSize         : 0.03,
-        circularAlpha            : 1.0
+        songName                  : "",
+        osciloscopeLineSize       : 0.02,
+        osciloscopeAlpha          : 1.0,
+        osciloscopeAudioStrength  : 0.5,
+        osciloscopeAudioZoom      : 1,
+        osciloscopeVisible        : true,
+        floorAudioStrength        : 8,
+        floorVisible              : true,
+        barsAudioStrength         : 2,
+        barsCount                 : 256,
+        barsVisible               : true,
+        circularAudioStrength     : 0.4,
+        circularLineSize          : 0.03,
+        circularAlpha             : 1.0,
+        circularRVisible          : true,
+        circularGVisible          : true,
+        circularDistorsionVisible : true,
+        yinYangAlpha              : 1.0,
+        yinYangRotate             : true,
+
+        frequencyTextureVisible   : true
     };
 
 

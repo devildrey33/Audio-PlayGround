@@ -80,6 +80,21 @@ export default class Circular {
         this.scene.add(this.meshDistorsion);
     }
 
+    visibleR(show) {
+        if (show === true) this.scene.add(this.meshR);
+        else               this.scene.remove(this.meshR);
+    }
+
+    visibleG(show) {
+        if (show === true) this.scene.add(this.meshG);
+        else               this.scene.remove(this.meshG);
+    }
+
+    visibleD(show) {
+        if (show === true) this.scene.add(this.meshDistorsion);
+        else               this.scene.remove(this.meshDistorsion);
+    }
+
     update() {
     }
 }

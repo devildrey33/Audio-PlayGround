@@ -136,16 +136,15 @@ export default class AudioAnalizer {
                 pos++;
             }
             total[pos] ++;
-            values[pos] += this.analizerData[i];
-            
+            values[pos] += this.analizerData[i];            
             values[4] += this.analizerData[i];
         }
         
-        return [ values[0] / total[0], 
-                 values[1] / total[1],
-                 values[2] / total[2],
-                 values[3] / total[3],
-                 values[4] / totalFreq ];
+        return [ values[0] / total[0],    // High
+                 values[1] / total[1],    // Medium
+                 values[2] / total[2],    // Low
+                 values[3] / total[3],    // Inaudible
+                 values[4] / totalFreq ]; // Total average
     }
 
 

@@ -14,6 +14,12 @@ export default class Osciloscope {
         this.setup();
     }
 
+    visible(show) {
+        if (show === true) this.scene.add(this.mesh);
+        else               this.scene.remove(this.mesh);
+    }
+
+
     setup() {
 
         this.geometry = new THREE.PlaneGeometry(7, 3);

@@ -11,7 +11,7 @@ void main() {
   vec2  center       = vec2(0.65, 0.5); // projected center of the circle a bit down of the uv center
   float radius       = 0.2;
   float thickness    = uSize;
-  float centerRadius = 0.2;
+//  float centerRadius = 0.2;
   
   float dist = length(vUv - center);
   // get angle in rads of current position from center
@@ -34,6 +34,6 @@ void main() {
   if (dist > radius - thickness && dist < radius) { // Line
       gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
   } else {
-      gl_FragColor = vec4(0.0, 0.0, 0.0, uAlpha);
+      gl_FragColor = vec4(0.25, 0.25, 0.25, uAlpha);
   }
 }

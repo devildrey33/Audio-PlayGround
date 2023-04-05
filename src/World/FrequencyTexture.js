@@ -105,6 +105,23 @@ export default class FrequencyTexture {
         this.scene.add(this.mesh);
     }
 
+    visible(show) {
+        if (show === true) {
+            this.scene.add(this.plus);
+            this.scene.add(this.equal);
+            this.scene.add(this.meshR);
+            this.scene.add(this.meshG);
+            this.scene.add(this.mesh);
+        }
+        else {
+            this.scene.remove(this.plus);
+            this.scene.remove(this.equal);
+            this.scene.remove(this.meshR);
+            this.scene.remove(this.meshG);
+            this.scene.remove(this.mesh);
+        }   
+    }
+
     update() {
         for (let y = 0; y < this.audioAnalizer.square; y++) {
             for (let x = 0; x < this.audioAnalizer.square * 2; x++) {

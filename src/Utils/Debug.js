@@ -11,6 +11,7 @@ export default class Debug {
         this.frequencyTexture = this.experience.world.frequencyTexture;
         this.bars             = this.experience.world.bars;
         this.circular         = this.experience.world.circular;
+        this.yinYang          = this.experience.world.yinYang;
         this.options          = this.experience.debugOptions;
         this.songs            = this.experience.songs;
         this.active = true;
@@ -29,7 +30,7 @@ export default class Debug {
             }}                    
             // Play Pause song
             this.debugAudio.add(this.playPauseButton, 'playPause').name("Play / Pause");
-
+            // song name
             this.debugAudio.add(this.options, 'songName', [ this.songs[0].name, this.songs[1].name, this.songs[2].name, this.songs[3].name, this.songs[4].name]).name("Song name").onChange(() => {
                 for (let i = 0; i < this.songs.length; i++) {
                     if (this.options.songName === this.songs[i].name) {
@@ -41,15 +42,25 @@ export default class Debug {
                 this.experience.audioAnalizer.loadSong(this.experience.song.path);
                 this.experience.audioAnalizer.playPause();
             });
+            // Audio textures visible
+/*            this.debugAudio.add(this.options, "frequencyTextureVisible").name("Audio textures visible").onChange(() => {
+                this.frequencyTexture.visible(this.options.frequencyTextureVisible);
+            });*/
 
 
             /*
              * Bars
              */
             this.debugBars = this.ui.addFolder("Bars");
+            // Visible
+/*            this.debugBars.add(this.options, "barsVisible").name("Visible").onChange(() => {
+                this.bars.visible(this.options.barsVisible);
+            });*/
+            // Count
             this.debugBars.add(this.options, "barsCount").min(32).max(512).step(1).name("Count").onChange(() => {
                 this.experience.world.bars.createBars(this.options.barsCount, 1);                
-            });            
+            });        
+            // Audio Strength    
             this.debugBars.add(this.options, "barsAudioStrength").min(0.5).max(10).step(0.1).name("Audio strength").onChange(() => {
                 this.bars.material.uniforms.uAudioStrength.value = this.options.barsAudioStrength;
             });   
@@ -58,6 +69,10 @@ export default class Debug {
              * Floor
              */
             this.debugFloor = this.ui.addFolder("Floor");
+            // Visible
+/*            this.debugFloor.add(this.options, "floorVisible").name("Visible").onChange(() => {
+                this.floor.visible(this.options.floorVisible);
+            });*/
             // Audio strength
             this.debugFloor.add(this.options, "floorAudioStrength").min(1).max(20).step(0.1).name("Audio strength").onChange(() => {
                 this.floor.material.uniforms.uAudioStrength.value = this.options.floorAudioStrength;
@@ -67,6 +82,10 @@ export default class Debug {
              * Osciloscope
              */
             this.debugOsciloscope = this.ui.addFolder("Osciloscope");
+            // Visible
+/*            this.debugOsciloscope.add(this.options, "osciloscopeVisible").name("Visible").onChange(() => {
+                this.osciloscope.visible(this.options.osciloscopeVisible);
+            });*/
             // Osciloscope audio strength
             this.debugOsciloscope.add(this.options, "osciloscopeAudioStrength").min(0).max(1).step(0.01).name("Audio strength").onChange(() => {
                 this.osciloscope.material.uniforms.uAudioStrength.value = this.options.osciloscopeAudioStrength;
@@ -90,6 +109,21 @@ export default class Debug {
              * Circular
              */
             this.debugCircular = this.ui.addFolder("Circular");
+
+            // Circle Bars Visible
+/*            this.debugCircular.add(this.options, "circularRVisible").name("Circle bars visible").onChange(() => {
+                this.circular.visibleR(this.options.circularRVisible);
+            });
+            // Circle Osci Visible
+            this.debugCircular.add(this.options, "circularGVisible").name("Circle osciloscope visible").onChange(() => {
+                this.circular.visibleG(this.options.circularGVisible);
+            });
+            // Circle deformed Visible
+            this.debugCircular.add(this.options, "circularDistorsionVisible").name("Circle distorsion visible").onChange(() => {
+                this.circular.visibleD(this.options.circularDistorsionVisible);
+            });*/
+            
+
             this.debugCircular.add(this.options, "circularAudioStrength").min(0.1).max(0.5).step(0.01).name("Audio strength").onChange(() => {
                 this.circular.materialR.uniforms.uAudioStrength.value = this.options.circularAudioStrength;
                 this.circular.materialG.uniforms.uAudioStrength.value = this.options.circularAudioStrength;
@@ -108,6 +142,19 @@ export default class Debug {
                 this.circular.materialDistorsion.uniforms.uSize.value = this.options.circularLineSize;
             });            
 
+            /*
+             * Yin Yang
+             */
+            this.debugYinYang = this.ui.addFolder("Yin Yang");
+            // Osciloscope background alpha
+            this.debugYinYang.add(this.options, "yinYangAlpha").min(0).max(1).step(0.01).name("Background apha").onChange(() => {
+                this.yinYang.material.uniforms.uAlpha.value = this.options.yinYangAlpha;
+            });            
+
+            // Circle deformed Visible
+            this.debugYinYang.add(this.options, "yinYangRotate").name("Rotate").onChange(() => {
+                this.yinYang.material.uniforms.uRotate.value = this.options.yinYangRotate;
+            });
     
             // environment
            /* this.debugEnvironment = this.ui.addFolder("environment");

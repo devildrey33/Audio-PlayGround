@@ -18,6 +18,11 @@ export default class Bars {
         this.createBars(256,1);
     }
 
+    visible(show) {
+        if (show === true) this.scene.add(this.bars);
+        else               this.scene.remove(this.bars);
+    }
+
     createBars(width, height) {
         if (typeof(this.bars) !== "undefined") {
             this.scene.remove(this.bars);
@@ -84,7 +89,6 @@ export default class Bars {
 
         this.bars.position.z += 3;
         this.scene.add(this.bars);
-
     }
 
     
