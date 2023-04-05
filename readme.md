@@ -1,4 +1,4 @@
-# Audio-Experience
+# Audio-PlayGround
  
 First i want to see how hard i can push a mobile device, i need to replicate the screens of [EspectroAudible](https://github.com/devildrey33/EspectroAudible) in GLSL
 
