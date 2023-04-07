@@ -14,8 +14,12 @@ Red channel has the Frequency, and green channel the TimeDomain of the song.
 
 You can drag & drop a song of your hard disk into the experience to play it.
 
-live version : [Audio-Experience](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-Experience/)
+live version : [Audio-PlayGround](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/)
 
 
-https://user-images.githubusercontent.com/15678544/229850780-5f61a9ab-4900-44fc-a702-64910d9d2619.mp4
+
+
+
+
+https://user-images.githubusercontent.com/15678544/230649698-09674235-3edc-4172-abf6-710d72f46db2.mp4
 
