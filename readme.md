@@ -17,9 +17,10 @@ You can drag & drop a song of your hard disk into the experience to play it.
 live version : [Audio-PlayGround](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/)
 
 
+https://user-images.githubusercontent.com/15678544/230650466-6b22554a-bf5b-4d75-b6c5-36470e5088a0.mp4
 
 
 
 
-https://user-images.githubusercontent.com/15678544/230649698-09674235-3edc-4172-abf6-710d72f46db2.mp4
+
 
