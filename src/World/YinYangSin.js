@@ -1,9 +1,9 @@
 import Experience from "../Experience";
 import YinYangVertexShader from "../Shaders/YinYang/YinYangVertexShader.glsl"
-import YinYangFragmentShader from "../Shaders/YinYang/YinYangFragmentShader.glsl"
+import YinYangSinFragmentShader from "../Shaders/YinYang/YinYangSinFragmentShader.glsl"
 import * as THREE from "three"
 
-export default class YinYang {
+export default class YinYangSin {
     constructor(world) {
         this.experience    = new Experience();
         this.scene         = this.experience.scene;
@@ -17,6 +17,7 @@ export default class YinYang {
     setup() {
         this.geometry = new THREE.PlaneGeometry(3, 3);
 
+
         this.material = new THREE.ShaderMaterial({
             uniforms : {
                 uAudioTexture  : { value : this.world.frequencyTexture.bufferCanvasLinear.texture },
@@ -29,19 +30,16 @@ export default class YinYang {
                 uColorStrength : { value : 0   }
             },
             vertexShader    : YinYangVertexShader,
-            fragmentShader  : YinYangFragmentShader,
+            fragmentShader  : YinYangSinFragmentShader,
             transparent     : true, 
             side            : THREE.DoubleSide
         });
-
-
         this.mesh = new THREE.Mesh(this.geometry, this.material);
-        this.mesh.rotation.z = -Math.PI;
-        this.mesh.position.y += 3;
+        this.mesh.position.y += 7;
         this.mesh.position.x += 1;
-        this.mesh.name = "YinYang";
-        this.scene.add(this.mesh);
+        this.mesh.name = "YinYangSin";
 
+        this.scene.add(this.mesh);
 
     }
 

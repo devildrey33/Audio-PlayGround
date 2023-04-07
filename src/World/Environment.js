@@ -9,9 +9,9 @@ export default class Environment {
         this.debug      = this.experience.debug;
 
 
-        this.setSunLight();
+//        this.setSunLight();
         //this.setSunLight2();
-//        this.setEnvironmentMap();
+        this.setEnvironmentMap();
 //        this.setSpotLight();
     }
 
@@ -39,19 +39,19 @@ export default class Environment {
     }
 
     setSunLight() {
-        this.sunLight = new THREE.DirectionalLight('#ffffff', 1)
+        this.sunLight = new THREE.DirectionalLight('#ffffff', 2)
         this.sunLight.castShadow = true
-        this.sunLight.shadow.camera.far = 15
-        this.sunLight.shadow.mapSize.set(1024, 1024)
-        this.sunLight.shadow.normalBias = 0.05
-        this.sunLight.position.set(-6, 6, -7)
+        this.sunLight.shadow.camera.far = 100
+        this.sunLight.shadow.mapSize.set(1024, 1024);
+        this.sunLight.shadow.normalBias = 0.05;
+        this.sunLight.position.set(-6, 12, 14);
         this.scene.add(this.sunLight)
 
         //debug
-/*        if (this.debug.active) {
+        if (this.debug.active) {
             this.sunLightHelper = new THREE.DirectionalLightHelper(this.sunLight, 1);
             this.scene.add(this.sunLightHelper);
-        }*/
+        }
     }
 
     setSunLight2() {
@@ -75,13 +75,14 @@ export default class Environment {
         }*/
     }
 
-/*    setEnvironmentMap() {
+    setEnvironmentMap() {
         this.environmentMap                     = {};
-        this.environmentMap.intensity           = 0.4;
+        this.environmentMap.intensity           = 1.0;
         this.environmentMap.texture             = this.resources.items.environmentMapTexture;
         this.environmentMap.texture.encoding    = THREE.sRGBEncoding;
 
-        this.scene.environment = this.environmentMap.texture;
+        this.scene.background = this.environmentMap.texture;
+        this.scene.environment = this.environmentMap;
 
         this.environmentMap.updateMaterials = () => {
             this.scene.traverse((child) => {
@@ -94,10 +95,11 @@ export default class Environment {
         }
         this.environmentMap.updateMaterials();
 
-        //debug
-        if (this.debug.active) {
-            this.debugFolder.add(this.environmentMap, 'intensity').name('envMapIntensity').min(0).max(4).step(0.001).onChange(this.environmentMap.updateMaterials)
-        }
 
-    }*/
+        //debug
+/*        if (this.debug.active) {
+            this.debugFolder.add(this.environmentMap, 'intensity').name('envMapIntensity').min(0).max(4).step(0.001).onChange(this.environmentMap.updateMaterials)
+        }*/
+
+    }
 }

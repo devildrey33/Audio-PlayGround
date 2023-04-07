@@ -1,6 +1,7 @@
 import Experience from "../Experience";
 import * as THREE from 'three'
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js'
+import BarsStandardVertexShader from "../Shaders/Bars/BarsStandardVertexShader.glsl"
 import BarsVertexShader from "../Shaders/Bars/BarsVertexShader.glsl"
 import BarsFragmentShader from "../Shaders/Bars/BarsFragmentShader.glsl"
 
@@ -33,12 +34,20 @@ export default class Bars {
         let   size       = width * height;
 
         this.cubeGeometries = [];
-/*        this.material = new THREE.MeshBasicMaterial({ 
-            color       : new THREE.Color("rgb(10,10,90)"),
-            transparent : true
-        });*/
 
-        this.material = new THREE.ShaderMaterial({
+        this.material = new THREE.MeshStandardMaterial({
+            color : new THREE.Color("#dd0000"),
+            onBeforeCompile : (shader) => {
+                // Add uniforms
+                shader.uniforms.uAudioTexture  = { value : this.world.frequencyTexture.bufferCanvasLinear.texture };
+                shader.uniforms.uAudioStrength = { value : this.experience.debugOptions.barsAudioStrength };
+                // New vertex shader
+                shader.vertexShader = BarsStandardVertexShader;                
+            }
+        })
+
+
+/*        this.material = new THREE.ShaderMaterial({
             uniforms : {
                 uAudioTexture  : { value : this.world.frequencyTexture.bufferCanvasLinear.texture },
                 uAudioStrength : { value : this.experience.debugOptions.barsAudioStrength },
@@ -47,7 +56,7 @@ export default class Bars {
             vertexShader    : BarsVertexShader,
             fragmentShader  : BarsFragmentShader,
 //            transparent     : true
-        });
+        });*/
 
 
 //        let counter = 0;
@@ -84,8 +93,8 @@ export default class Bars {
         }
 
         this.mesh = new THREE.Mesh(this.geometry, this.material);
-//        this.bars.castShadow = true;
-//       this.bars.receiveShadow = true;
+        this.bars.castShadow = true;
+        this.bars.receiveShadow = true;
 
         this.mesh.position.z += 3;
         this.mesh.name = "Bars";

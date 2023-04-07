@@ -1,5 +1,5 @@
 {
-  "name": "threejs-journey-exercise",
+  "name": "audio-playground",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,6 +12,7 @@
     "vite-plugin-glsl": "^1.1.2"
   },
   "dependencies": {
+    "gsap": "^3.11.5",
     "lil-gui": "^0.17.0",
     "three": "^0.148.0"
   }

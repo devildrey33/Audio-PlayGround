@@ -34,6 +34,8 @@ export default class OsciloscopeSoft {
         this.mesh.position.y += 7;
         this.mesh.position.x -= 7;
         this.material.side = THREE.DoubleSide;
+        this.mesh.name = "OsciloscopeSoft";
+
 
 //        this.bufferCanvas.texture.wrapS = THREE.MirroredRepeatWrapping;
 //        this.bufferCanvas.texture.repeat.x = 20;

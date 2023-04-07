@@ -1,3 +1,6 @@
+/* 
+ * Perlin noise audio floor globals
+ */
 uniform sampler2D uAudioTexture;
 uniform float uTime;
 uniform float uAudioStrength;
@@ -78,42 +81,70 @@ float cnoise(vec3 P) {
   return 2.2 * n_xyz;
 }
 
+/* 
+ * Three.js globals
+ */
+#define STANDARD
+varying vec3 vViewPosition;
+#ifdef USE_TRANSMISSION
+	varying vec3 vWorldPosition;
+#endif
+#include <common>
+#include <uv_pars_vertex>
+#include <uv2_pars_vertex>
+#include <displacementmap_pars_vertex>
+#include <color_pars_vertex>
+#include <fog_pars_vertex>
+#include <normal_pars_vertex>
+#include <morphtarget_pars_vertex>
+#include <skinning_pars_vertex>
+#include <shadowmap_pars_vertex>
+#include <logdepthbuf_pars_vertex>
+#include <clipping_planes_pars_vertex>
 
+/* 
+ * Three.js main
+ */
 void main() {
+	#include <uv_vertex>
+	#include <uv2_vertex>
+	#include <color_vertex>
+	#include <morphcolor_vertex>
+	#include <beginnormal_vertex>
+	#include <morphnormal_vertex>
+	#include <skinbase_vertex>
+	#include <skinnormal_vertex>
+	#include <defaultnormal_vertex>
+	#include <normal_vertex>
+	#include <begin_vertex>
 
-    
-    vec4 modelPosition      = modelMatrix       * vec4(position , 1.0);
-
+    /* 
+     * Perlin noise audio floor main
+     */
+    // Audio value on Y axis
     vec4 textureColor = texture2D(uAudioTexture, uv);
-    modelPosition.y +=  textureColor.r * uAudioStrength;
+    transformed.z += textureColor.r * uAudioStrength * 4.0;
 
-//    float displacement = 0.75 * cnoise(vec3(0.43 * position.x + (uTime * 0.00001), 0.43 * position.z + (uTime * 0.00003), uTime * 0.0001));
-//    float displacement2 = 0.75 * cnoise(vec3(0.53 * position.x + (uTime * 0.00007), 0.17 * position.z + (uTime * 0.0003), uTime));
-//    float strength = cnoise(vec3(displacement, displacement, uTime *0.00004));
-//    modelPosition.x = position.x + displacement;
-//    modelPosition.y = position.y + normal.y + displacement+ textureColor.r * 25.0;
-//    modelPosition.z = position.y + displacement; 
-
+    // Perlin noise displacement
     vec2 displacement = uv + cnoise(vec3(uv * .3, uTime * 0.0001)) * 1.0;
     float strength = cnoise(vec3(displacement, uTime *0.0004));
+    transformed.x += strength;
+    transformed.y += strength;
 
-//    strength = strength + step(-0.1, strength) * 0.8; 
-    modelPosition.x += strength;
-    modelPosition.z += strength;
-
- 
-    vec4 viewPosition       = viewMatrix        * modelPosition;
-    vec4 projectionPosition = projectionMatrix  * viewPosition;
-
-    gl_Position = projectionPosition;
-
-//    gl_Position.x += displacement;
-//    gl_Position.z += displacement
-
-    // Adapt point size to pixel ratio and random scale
-//    gl_PointSize = 100.0 * 1.0 * 1.0;
-
-    // Size attenuation
-//    gl_PointSize *= (1.0 / - viewPosition.z);
-
+    /*
+     * Three.js main end
+     */
+	#include <morphtarget_vertex>
+	#include <skinning_vertex>
+	#include <displacementmap_vertex>
+	#include <project_vertex>
+	#include <logdepthbuf_vertex>
+	#include <clipping_planes_vertex>
+	vViewPosition = - mvPosition.xyz;
+	#include <worldpos_vertex>
+	#include <shadowmap_vertex>
+	#include <fog_vertex>
+#ifdef USE_TRANSMISSION
+	vWorldPosition = worldPosition.xyz;
+#endif
 }

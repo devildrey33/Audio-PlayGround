@@ -1,10 +1,10 @@
 import CircularVertexShader from "../Shaders/Circular/CircularVertexShader.glsl"
-import CircularFragmentShader from "../Shaders/Circular/CircularFragmentShader.glsl"
+import CircularDistorsionFragmentShader from "../Shaders/Circular/CircularDistorsionFragmentShader.glsl"
 
 import Experience from "../Experience";
 import * as THREE from 'three'
 
-export default class Circular {
+export default class CircularDistorsion {
     constructor(world) {
         this.experience = new Experience();
         this.scene      = this.experience.scene;
@@ -20,26 +20,26 @@ export default class Circular {
         this.material = new THREE.ShaderMaterial({
             uniforms : {
                 uAudioTexture  : { value : this.world.frequencyTexture.bufferCanvasLinear.texture },
-                uAudioStrength : { value : this.experience.debugOptions.circularAudioStrength },
+                uAudioStrength : { value : this.experience.debugOptions.circularAudioStrength * 0.5 },
                 uAlpha         : { value : this.experience.debugOptions.circularAlpha },
                 uSize          : { value : this.experience.debugOptions.circularLineSize },
                 uTime          : { value : 0 },
                 uHover         : { value : 0.0 },
             },
             vertexShader    : CircularVertexShader,
-            fragmentShader  : CircularFragmentShader,
+            fragmentShader  : CircularDistorsionFragmentShader,
             transparent     : true, 
             side            : THREE.DoubleSide
         });
 
         this.material.alphaTest = 0;
 
-        // Plane for the red channel circular shader
+        // Plane for the green channel circular distorsion shader
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.mesh.rotation.z = -Math.PI * 0.5;
         this.mesh.position.y += 3;
-        this.mesh.position.x -= 3;
-        this.mesh.name = "Circular";
+        this.mesh.position.x -= 7;
+        this.mesh.name = "CircularDistorsion";
         this.scene.add(this.mesh);
 
     }

@@ -4,17 +4,20 @@ import * as THREE from 'three'
 
 export default class Debug {
     constructor() {
-        this.experience       = new Experience();
-        this.environment      = this.experience.world.environment;
-        this.osciloscope      = this.experience.world.osciloscope;
-        this.floor            = this.experience.world.floor;
-        this.frequencyTexture = this.experience.world.frequencyTexture;
-        this.bars             = this.experience.world.bars;
-        this.circular         = this.experience.world.circular;
-        this.yinYang          = this.experience.world.yinYang;
-        this.bloomPass        = this.experience.renderer.bloomPass;
-        this.options          = this.experience.debugOptions;
-        this.songs            = this.experience.songs;
+        this.experience         = new Experience();
+        this.environment        = this.experience.world.environment;
+        this.osciloscope        = this.experience.world.osciloscope;
+        this.floor              = this.experience.world.floor;
+        this.frequencyTexture   = this.experience.world.frequencyTexture;
+        this.bars               = this.experience.world.bars;
+        this.circular           = this.experience.world.circular;
+        this.circularSin        = this.experience.world.circularSin;
+        this.circularDistorsion = this.experience.world.circularDistorsion;
+        this.yinYang            = this.experience.world.yinYang;
+        this.yinYangSin         = this.experience.world.yinYangSin;
+        this.bloomPass          = this.experience.renderer.bloomPass;
+        this.options            = this.experience.debugOptions;
+        this.songs              = this.experience.songs;
         this.active = true;
         
 //        this.active = window.location.hash === '#debug';
@@ -131,21 +134,21 @@ export default class Debug {
             
 
             this.debugCircular.add(this.options, "circularAudioStrength").min(0.1).max(0.5).step(0.01).name("Audio strength").onChange(() => {
-                this.circular.materialR.uniforms.uAudioStrength.value = this.options.circularAudioStrength;
-                this.circular.materialG.uniforms.uAudioStrength.value = this.options.circularAudioStrength;
-                this.circular.materialDistorsion.uniforms.uAudioStrength.value = this.options.circularAudioStrength * 0.5;
+                this.circular.material.uniforms.uAudioStrength.value = this.options.circularAudioStrength;
+                this.circularSin.material.uniforms.uAudioStrength.value = this.options.circularAudioStrength;
+                this.circularDistorsion.material.uniforms.uAudioStrength.value = this.options.circularAudioStrength * 0.5;
             });            
             // Osciloscope background alpha
             this.debugCircular.add(this.options, "circularAlpha").min(0).max(1).step(0.01).name("Background apha").onChange(() => {
-                this.circular.materialR.uniforms.uAlpha.value = this.options.circularAlpha;
-                this.circular.materialG.uniforms.uAlpha.value = this.options.circularAlpha;
-                this.circular.materialDistorsion.uniforms.uAlpha.value = this.options.circularAlpha;
+                this.circular.material.uniforms.uAlpha.value = this.options.circularAlpha;
+                this.circularSin.material.uniforms.uAlpha.value = this.options.circularAlpha;
+                this.circularDistorsion.material.uniforms.uAlpha.value = this.options.circularAlpha;
             });            
 
             this.debugCircular.add(this.options, "circularLineSize").min(0.001).max(0.1).step(0.001).name("Line Size").onChange(() => {
-                this.circular.materialR.uniforms.uSize.value = this.options.circularLineSize;
-                this.circular.materialG.uniforms.uSize.value = this.options.circularLineSize;
-                this.circular.materialDistorsion.uniforms.uSize.value = this.options.circularLineSize;
+                this.circular.material.uniforms.uSize.value = this.options.circularLineSize;
+                this.circularSin.material.uniforms.uSize.value = this.options.circularLineSize;
+                this.circularDistorsion.material.uniforms.uSize.value = this.options.circularLineSize;
             });            
 
             /*
@@ -155,11 +158,13 @@ export default class Debug {
             // Osciloscope background alpha
             this.debugYinYang.add(this.options, "yinYangAlpha").min(0).max(1).step(0.01).name("Background apha").onChange(() => {
                 this.yinYang.material.uniforms.uAlpha.value = this.options.yinYangAlpha;
+                this.yinYangSin.material.uniforms.uAlpha.value = this.options.yinYangAlpha;
             });            
 
             // Circle deformed Visible
             this.debugYinYang.add(this.options, "yinYangRotate").name("Rotate").onChange(() => {
                 this.yinYang.material.uniforms.uRotate.value = this.options.yinYangRotate;
+                this.yinYangSin.material.uniforms.uRotate.value = this.options.yinYangRotate;
             });
     
 

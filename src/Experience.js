@@ -83,7 +83,7 @@ export default class Experience {
     debugOptions = {
         songName                  : "",
         osciloscopeLineSize       : 0.02,
-        osciloscopeAlpha          : 1.0,
+        osciloscopeAlpha          : 0.0,
         osciloscopeAudioStrength  : 0.5,
         osciloscopeAudioZoom      : 1,
         osciloscopeVisible        : true,
@@ -94,16 +94,16 @@ export default class Experience {
         barsVisible               : true,
         circularAudioStrength     : 0.4,
         circularLineSize          : 0.03,
-        circularAlpha             : 1.0,
+        circularAlpha             : 0.0,
         circularRVisible          : true,
         circularGVisible          : true,
         circularDistorsionVisible : true,
-        yinYangAlpha              : 1.0,
+        yinYangAlpha              : 0.0,
         yinYangRotate             : true,
         bloomThreshold            : 0.0,
-        bloomStrength             : 0.1,
+        bloomStrength             : 1.0,
         bloomRadius               : 0.0,
-        bloomEnabled              : false,
+        bloomEnabled              : true,
         frequencyTextureVisible   : true
     };
 

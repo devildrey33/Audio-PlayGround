@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-import Experience from '../Experience.js';
+import Experience from '../Experience.js'
 import EventEmitter from './EventEmitter.js'
 
 
@@ -52,7 +52,7 @@ export default class Resources extends EventEmitter {
         if (this.toLoad === 0) {
             // hide the loading 
             this.experience.loading = false;
-            this.trigger('ready')
+            this.trigger('ready');
         }
     }
 
@@ -64,7 +64,7 @@ export default class Resources extends EventEmitter {
         if (this.loaded === this.toLoad) {
             // hide the loading 
             this.experience.loading = false;
-            this.trigger('ready')
+            this.trigger('ready');
         }
     }
 }

@@ -25,7 +25,7 @@ export default class FrequencyTexture {
 
     setup() {
         // Stuff to create a plus and equal simbols
-        this.simbolMaterial = new THREE.MeshBasicMaterial( { color : new THREE.Color("#ffff00") });
+/*        this.simbolMaterial = new THREE.MeshBasicMaterial( { color : new THREE.Color("#ffff00") });
         this.simbolGeometry = new THREE.BoxGeometry(0.125, 0.125, 0.1);
 
         // Create two boxes to make a plus simbol
@@ -56,33 +56,37 @@ export default class FrequencyTexture {
         this.equal.position.y += 3;
         this.equal.position.x -= 9;
         // Add equal group to the scene
-        this.scene.add(this.equal);
+        this.scene.add(this.equal);*/
 
 
 
         this.geometry = new THREE.PlaneGeometry(3, 3);
-        this.material = new THREE.ShaderMaterial({
+/*        this.material = new THREE.ShaderMaterial({
             uniforms : {
                 uAudioTexture : { value : this.bufferCanvasSquare.texture },
             },
             vertexShader    : FrequencyTextureVertexShader,
             fragmentShader  : FrequencyTextureFragmentShader,
-        });
+        });*/
 
         this.materialR = new THREE.ShaderMaterial({
             uniforms : {
                 uAudioTexture : { value : this.bufferCanvasSquare.texture },
+                uHover        : { value : 0.0 },
             },
             vertexShader    : FrequencyTextureVertexShader,
             fragmentShader  : FrequencyTextureFragmentShaderR,
+            transparent     : true
         });
 
         this.materialG = new THREE.ShaderMaterial({
             uniforms : {
                 uAudioTexture : { value : this.bufferCanvasSquare.texture },
+                uHover        : { value : 0.0 },
             },
             vertexShader    : FrequencyTextureVertexShader,
             fragmentShader  : FrequencyTextureFragmentShaderG,
+            transparent     : true
         });
 
         // Red channel
@@ -90,19 +94,22 @@ export default class FrequencyTexture {
         this.meshR.material.side = THREE.DoubleSide;
         this.meshR.position.y += 3;
         this.meshR.position.x -= 11;
+        this.meshR.name = "FrequencyTexture";
+
         this.scene.add(this.meshR);
         // Green channel
         this.meshG = new THREE.Mesh(this.geometry, this.materialG);       
         this.meshG.material.side = THREE.DoubleSide;
         this.meshG.position.y += 7;
         this.meshG.position.x -= 11;
+        this.meshG.name = "FrequencyTextureSin";
         this.scene.add(this.meshG);
         // Both channels
-        this.mesh = new THREE.Mesh(this.geometry, this.material);       
+/*        this.mesh = new THREE.Mesh(this.geometry, this.material);       
         this.mesh.material.side = THREE.DoubleSide;
         this.mesh.position.y += 3;
         this.mesh.position.x -= 7;
-        this.scene.add(this.mesh);
+        this.scene.add(this.mesh);*/
     }
 
     visible(show) {

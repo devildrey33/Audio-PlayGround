@@ -1,10 +1,12 @@
 import CircularVertexShader from "../Shaders/Circular/CircularVertexShader.glsl"
-import CircularFragmentShader from "../Shaders/Circular/CircularFragmentShader.glsl"
+//import CircularFragmentShaderR from "../Shaders/Circular/CircularFragmentShaderR.glsl"
+import CircularSinFragmentShader from "../Shaders/Circular/CircularSinFragmentShader.glsl"
+//import CircularDistorsionFragmentShader from "../Shaders/Circular/CircularDistorsionFragmentShader.glsl"
 
 import Experience from "../Experience";
 import * as THREE from 'three'
 
-export default class Circular {
+export default class CircularSin {
     constructor(world) {
         this.experience = new Experience();
         this.scene      = this.experience.scene;
@@ -27,7 +29,7 @@ export default class Circular {
                 uHover         : { value : 0.0 },
             },
             vertexShader    : CircularVertexShader,
-            fragmentShader  : CircularFragmentShader,
+            fragmentShader  : CircularSinFragmentShader,
             transparent     : true, 
             side            : THREE.DoubleSide
         });
@@ -37,12 +39,13 @@ export default class Circular {
         // Plane for the red channel circular shader
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.mesh.rotation.z = -Math.PI * 0.5;
-        this.mesh.position.y += 3;
+        this.mesh.position.y += 7;
         this.mesh.position.x -= 3;
-        this.mesh.name = "Circular";
+        this.mesh.name = "CircularSin";
         this.scene.add(this.mesh);
 
     }
+
 
     visible(show) {
         if (show === true) this.scene.add(this.mesh);

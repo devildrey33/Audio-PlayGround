@@ -1,17 +1,19 @@
 export default [
-/*    {
+    {
         name: 'environmentMapTexture',
         type: 'cubeTexture',
         path:
         [
-            'textures/environmentMap/px.jpg',
-            'textures/environmentMap/nx.jpg',
-            'textures/environmentMap/py.jpg',
-            'textures/environmentMap/ny.jpg',
-            'textures/environmentMap/pz.jpg',
-            'textures/environmentMap/nz.jpg'
+            'textures/environmentMap/5/px.jpg',
+            'textures/environmentMap/5/nx.jpg',
+            'textures/environmentMap/5/py.jpg',
+            'textures/environmentMap/5/ny.jpg',
+            'textures/environmentMap/5/pz.jpg',
+            'textures/environmentMap/5/nz.jpg'
         ]
-    }/*,
+    },
+    
+    /*,
     {
         name : 'grassColorTexture',
         type : 'texture',

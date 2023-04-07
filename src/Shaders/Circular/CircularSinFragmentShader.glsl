@@ -5,6 +5,7 @@ uniform float     uAlpha;
 uniform float     uHover;
 varying vec2      vUv;
 
+#define PI   3.14159265
 
 // Function to make a round rectangle when the 2d plane is hover
 vec4 borderRoundRect(vec4 currentColor, vec2 size, float radius) {
@@ -25,25 +26,38 @@ vec4 borderRoundRect(vec4 currentColor, vec2 size, float radius) {
 }
 
 void main() {
-    float radius    = 0.25;
+    float radius    = 0.2;
     float thickness = uSize;
-    vec2  center    = vUv - 0.5;
+    float space     = 0.5 - (thickness * 2.0) - radius;
+    vec2  center    = vec2(vUv.x - 0.5, vUv.y - 0.5);
     float dist      = length(center);
 
-    float audioValue = texture2D(uAudioTexture, vec2(vUv.x * radius, 0.5)).r; // Obtiene el valor del canal rojo de la textura
+    float rad = atan(vUv.y - 0.5, vUv.x - 0.5);
+    // normalize angle 0 to 1    
+    float normAngle = 0.0;
+    // rad its greater than 0
+    if (rad < 0.0) {
+        normAngle = (rad + PI) / PI;
+    }
+    // rad its below 0
+    else {
+        // Invert the normalized angle        
+        normAngle = 1.0 - (1.0 + ((rad - PI) / PI));
+    }
+ 
+    // Get the audio value from linear audio data texture (1024*1)
+    // Red channel has the frequency that starts from 0 to 1
+    float audioValue = texture2D(uAudioTexture, vec2(normAngle, 0.0)).g; 
     dist -= audioValue * uAudioStrength;
 
-    // base color
     vec4 color = vec4(0.25, 0.25, 0.25, (uAlpha + uHover) * 0.125);
 
     if (dist > radius - thickness && dist < radius) {
-        color = vec4(0.75, 0.0, 0.0, 1.0);
+        color = vec4(0.0, 0.75, 0.0, 1.0);
     }
 
     // Apply the round hover border
     color = borderRoundRect(color, vec2(1.0, 1.0), 0.125);
 
     gl_FragColor = color;
-
 }
-

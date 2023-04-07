@@ -1,31 +1,33 @@
 uniform sampler2D uAudioTexture;
-varying vec2      vUv; // Coordenadas UV del fragmento
-/* second Attempt to pass a 1024*1 texture to 32*32
+uniform float     uHover;
+varying vec2      vUv;           // uv coordinates from fragment
+
+
+
+// Function to make a round rectangle when the 2d plane is hover
+vec4 borderRoundRect(vec4 currentColor, vec2 size, float radius) {
+    vec2  position   = vUv * size;
+    vec2  rounded    = vec2(clamp(position.x, radius, size.x - radius), clamp(position.y, radius, size.y - radius));
+    vec2  difference = position - rounded;
+    float dist       = length(difference);
+    vec4  color      = vec4(1.0, 1.0, 1.0, uHover); // Border color
+    float borderSize = 0.015;                       // Border size
+    float alpha      = step(0.2, smoothstep(radius - borderSize, radius- borderSize, dist) - smoothstep(radius, radius + borderSize, dist));
+    color.a = alpha * uHover;
+    // Its inside
+    if (dist > radius - borderSize) {
+        return color;
+    }
+    // Its outside
+    return currentColor;
+}
+
 void main() {
-  // Escala las coordenadas de textura de 0-1 a 0-32
-  vec2 scaledUV = vUv * vec2(32.0, 32.0);
+    float audioValue = texture2D(uAudioTexture, vUv).r;
+    vec4 color = vec4(audioValue, 0.0, 0.0, 1.0);
 
-  // Redondea las coordenadas a los valores más cercanos en un espacio discreto de 32x32
-  vec2 discreteUV = floor(scaledUV + 0.5) / vec2(32.0, 32.0);
+    // Apply the round hover border
+    color = borderRoundRect(color, vec2(1.0, 1.0), 0.125);
 
-  // Escala las coordenadas de textura de 0-32 a 0-1 para muestrear la textura original
-  vec2 sampledUV = discreteUV / vec2(1024.0, 1.0);
-
-  // Obtener el color de la textura original en las coordenadas transformadas
-  vec4 color = texture2D(uAudioTexture, sampledUV);
-
-  // Asignar el color al fragmento actual
-  gl_FragColor = color;
-}*/
-
-
-void main() {
-    // Attempt to pass a 1024*1 texture to 32*32
-/*    float textureSize = 32.0;
-    vec2 uv = vUv * vec2(textureSize);
-    uv = (uv + 0.5) / textureSize;    
-    float color = texture2D(uAudioTexture, uv).r;*/
-
-    float color = texture2D(uAudioTexture, vUv).r;
-    gl_FragColor = vec4(color, 0.0, 0.0, 1.0);
+    gl_FragColor = color;
 }

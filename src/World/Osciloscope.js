@@ -22,7 +22,7 @@ export default class Osciloscope {
 
     setup() {
 
-        this.geometry = new THREE.PlaneGeometry(7, 3);
+        this.geometry = new THREE.PlaneGeometry(3, 3);
 
         this.material = new THREE.ShaderMaterial({
             uniforms : {
@@ -30,18 +30,20 @@ export default class Osciloscope {
                 uAudioStrength : { value : this.experience.debugOptions.osciloscopeAudioStrength },
                 uAudioZoom     : { value : this.experience.debugOptions.osciloscopeAudioZoom },
                 uSize          : { value : this.experience.debugOptions.osciloscopeLineSize },
-                uAlpha         : { value : this.experience.debugOptions.osciloscopeAlpha }
+                uAlpha         : { value : this.experience.debugOptions.osciloscopeAlpha },
+                uHover         : { value : 0.0 },
 //                uTime         : { value : 0 }
             },
             vertexShader    : OsciloscopeVertexShader,
             fragmentShader  : OsciloscopeFragmentShader,
-            transparent     : true
+            transparent     : true,
+            side            : THREE.DoubleSide
         });
         this.mesh = new THREE.Mesh(this.geometry, this.material);
-        this.scene.add(this.mesh);
         this.mesh.position.y += 7;
-        this.mesh.position.x -= 5;
-        this.material.side = THREE.DoubleSide;
+        this.mesh.position.x -= 7;
+        this.mesh.name = "Osciloscope";
+        this.scene.add(this.mesh);
 
     }
 

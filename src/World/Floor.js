@@ -1,13 +1,12 @@
 import * as THREE from 'three'
 import Experience from "../Experience";
-import FloorVertexShader from "../Shaders/Floor/PlaneVertexShader.glsl"
-import FloorFragmentShader from "../Shaders/Floor/PlaneFragmentShader.glsl"
+import FloorVertexShader from "../Shaders/Floor/FloorVertexShader.glsl"
+import FloorFragmentShader from "../Shaders/Floor/FloorFragmentShader.glsl"
 
 export default class Floor {
     constructor(world) {
         this.experience   = new Experience();
         this.scene        = this.experience.scene;
-//        this.audioTexture = new THREE.CanvasTexture(this.experience.audioAnalizer.bufferCanvas.canvas);
         this.time         = this.experience.time;
         this.world        = world;
         this.setup();
@@ -20,6 +19,7 @@ export default class Floor {
 
     setup() {
         this.geometry = new THREE.PlaneGeometry(32, 32, 32, 32);
+        //this.geometry = new THREE.BoxGeometry(32, 1, 32, 32, 1, 32);
         
         this.material = new THREE.ShaderMaterial({
             uniforms : {
@@ -29,13 +29,15 @@ export default class Floor {
             },
             vertexShader    : FloorVertexShader,
             fragmentShader  : FloorFragmentShader, 
-            wireframe       : true
+            wireframe       : false,
+            transparent     : true
         });
 
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.mesh.rotation.x = - Math.PI * 0.5
-//        this.mesh.receiveShadow = true;
-        this.mesh.position.y = -5.050;
+        this.mesh.position.y = -5.00;
+        this.mesh.name = "Floor";
+
         this.scene.add(this.mesh);
 
     }
