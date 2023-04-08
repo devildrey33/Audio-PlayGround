@@ -2,7 +2,7 @@ import Experience from "../Experience.js";
 import BufferCanvas from "../Utils/BufferCanvas.js";
 import * as THREE from 'three'
 import FrequencyTextureVertexShader from "../Shaders/FrequencyTexture/FrequencyTextureVertexShader.glsl"
-import FrequencyTextureFragmentShader from "../Shaders/FrequencyTexture/FrequencyTextureFragmentShader.glsl"
+//import FrequencyTextureFragmentShader from "../Shaders/FrequencyTexture/FrequencyTextureFragmentShader.glsl"
 import FrequencyTextureFragmentShaderR from "../Shaders/FrequencyTexture/FrequencyTextureFragmentShaderR.glsl"
 import FrequencyTextureFragmentShaderG from "../Shaders/FrequencyTexture/FrequencyTextureFragmentShaderG.glsl"
 
@@ -19,6 +19,15 @@ export default class FrequencyTexture {
         this.bufferCanvasLinear         = new BufferCanvas(1024, 1);
         this.bufferCanvasLinear.texture = new THREE.CanvasTexture(this.bufferCanvasLinear.canvas);
         this.imageDataLinear            = this.bufferCanvasLinear.context.createImageData(1024, 1);
+
+
+        this.bufferCanvasSquare.texture.generateMipMaps = false;
+        this.bufferCanvasSquare.texture.minFilter = THREE.NearestFilter;
+        this.bufferCanvasSquare.texture.magFilter = THREE.NearestFilter;
+
+        this.bufferCanvasLinear.texture.generateMipMaps = false;
+        this.bufferCanvasLinear.texture.minFilter = THREE.NearestFilter;
+        this.bufferCanvasLinear.texture.magFilter = THREE.NearestFilter;
 
         this.setup();
     }

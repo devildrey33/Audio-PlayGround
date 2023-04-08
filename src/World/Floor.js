@@ -30,7 +30,8 @@ export default class Floor {
             vertexShader    : FloorVertexShader,
             fragmentShader  : FloorFragmentShader, 
             wireframe       : false,
-            transparent     : true
+            transparent     : true,
+            side            : THREE.DoubleSide
         });
 
         this.mesh = new THREE.Mesh(this.geometry, this.material);

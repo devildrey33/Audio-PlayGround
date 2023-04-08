@@ -29,10 +29,11 @@ export default class CircularDistorsion {
             vertexShader    : CircularVertexShader,
             fragmentShader  : CircularDistorsionFragmentShader,
             transparent     : true, 
-            side            : THREE.DoubleSide
+            side            : THREE.DoubleSide,
+            depthWrite      : false,
         });
 
-        this.material.alphaTest = 0;
+//        this.material.alphaTest = 0;
 
         // Plane for the green channel circular distorsion shader
         this.mesh = new THREE.Mesh(this.geometry, this.material);

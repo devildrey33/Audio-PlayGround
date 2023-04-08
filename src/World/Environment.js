@@ -77,12 +77,12 @@ export default class Environment {
 
     setEnvironmentMap() {
         this.environmentMap                     = {};
-        this.environmentMap.intensity           = 1.0;
+        this.environmentMap.intensity           = 0.5;
         this.environmentMap.texture             = this.resources.items.environmentMapTexture;
         this.environmentMap.texture.encoding    = THREE.sRGBEncoding;
 
-        this.scene.background = this.environmentMap.texture;
-        this.scene.environment = this.environmentMap;
+        this.scene.background  = this.environmentMap.texture;
+        this.scene.environment = this.environmentMap.texture;
 
         this.environmentMap.updateMaterials = () => {
             this.scene.traverse((child) => {

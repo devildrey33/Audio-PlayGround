@@ -82,7 +82,7 @@ export default class Experience {
     /* debug options for lil.gui */
     debugOptions = {
         songName                  : "",
-        osciloscopeLineSize       : 0.02,
+        osciloscopeLineSize       : 0.07,
         osciloscopeAlpha          : 0.0,
         osciloscopeAudioStrength  : 0.5,
         osciloscopeAudioZoom      : 1,
@@ -93,7 +93,7 @@ export default class Experience {
         barsCount                 : 256,
         barsVisible               : true,
         circularAudioStrength     : 0.4,
-        circularLineSize          : 0.03,
+        circularLineSize          : 0.07,
         circularAlpha             : 0.0,
         circularRVisible          : true,
         circularGVisible          : true,
@@ -101,7 +101,7 @@ export default class Experience {
         yinYangAlpha              : 0.0,
         yinYangRotate             : true,
         bloomThreshold            : 0.0,
-        bloomStrength             : 1.0,
+        bloomStrength             : 0.5,
         bloomRadius               : 0.0,
         bloomEnabled              : true,
         frequencyTextureVisible   : true

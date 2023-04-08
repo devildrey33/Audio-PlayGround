@@ -93,7 +93,7 @@ void main() {
         normAngle = (1.0 + ((rad - PI) / PI));
     }
 
-    normAngle = mod(normAngle + uTime *0.25, 1.0);
+    normAngle = mod(normAngle + uTime * 0.25, 1.0);
     
     // Use the audio texture to obtain the radius based in the angle
     float audioValue = (texture2D(uAudioTexture, vec2(normAngle, 0.0)).g - 0.5) * 0.55;
@@ -102,7 +102,7 @@ void main() {
 
     if (dist < radius) { // fill
     //if (dist > radius - 0.3 && dist < radius) { // Line
-        if (rad > 0.0) {
+        if (rad >= 0.0) {
             color = vec4(1.0, 1.0, 1.0, 1.0);
         }
         else {
@@ -111,7 +111,7 @@ void main() {
     } 
 
     // First big circle black / white
-    color = circleBW(color, finalCoords, center, 0.25);
+   // color = circleBW(color, finalCoords, center, 0.25);    
     // White left circle 
     color = circle(color, finalCoords, vec2(0.25 + 0.125, 0.5), 0.125, vec3(1.0, 1.0, 1.0));
     // Black right circle

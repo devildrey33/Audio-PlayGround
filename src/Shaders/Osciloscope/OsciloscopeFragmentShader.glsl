@@ -37,7 +37,7 @@ void main() {
     vec4 color = vec4(0.25, 0.25, 0.25, (uAlpha + uHover) * 0.125);
 
     if (abs(vUv.y - audioValue) < uSize) {
-        color = vec4(0.0, 1.0, 0.0, 1.0);
+        color = vec4(0.0, 0.75, 0.0, 1.0);
     }
 
     // Apply the round hover border

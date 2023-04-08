@@ -28,7 +28,7 @@ export default class World {
     }
 
     setup() {
-        // setup
+        // Objects of the scene
         this.frequencyTexture   = new FrequencyTexture();
         this.floor              = new Floor(this);
         this.bars               = new Bars(this);
@@ -36,9 +36,13 @@ export default class World {
         this.circular           = new Circular(this);
         this.circularSin        = new CircularSin(this);
         this.circularDistorsion = new CircularDistorsion(this);
-
         this.yinYang            = new YinYang(this);
         this.yinYangSin         = new YinYangSin(this);
+
+        // Last camera position
+        this.lastCameraPosition = this.camera.position.clone();
+        // Camera focus, if not free is one of the panels
+        this.cameraFocus = "free";
 
         // Raycaster
         this.raycaster = new THREE.Raycaster();
@@ -57,15 +61,15 @@ export default class World {
         // Setup the objects
         this.objects = {
 //            bars                : { name : "Bars"                , hover : false, material : this.bars.material }, },
-            circular            : { name : "Circular"            ,hover : false, material : this.circular.material },
-            circularSin         : { name : "CircularSin"         ,hover : false, material : this.circularSin.material },
-            circularDistorsion  : { name : "CircularDistorsion"  ,hover : false, material : this.circularDistorsion.material },
+            circular            : { name : "Circular"            ,hover : false, material : this.circular.material          , object : this.circular          , mesh : this.circular.mesh },
+            circularSin         : { name : "CircularSin"         ,hover : false, material : this.circularSin.material       , object : this.circularSin       , mesh : this.circularSin.mesh },
+            circularDistorsion  : { name : "CircularDistorsion"  ,hover : false, material : this.circularDistorsion.material, object : this.circularDistorsion, mesh : this.circularDistorsion.mesh },
 //            floor               : { name : "Floor"               , hover : false, material : this.floor.material }, },
-            frequencyTexture    : { name : "FrequencyTexture"    ,hover : false, material : this.frequencyTexture.materialR },
-            frequencyTextureSin : { name : "FrequencyTextureSin" ,hover : false, material : this.frequencyTexture.materialG },
-            osciloscope         : { name : "Osciloscope"         ,hover : false, material : this.osciloscope.material },
-            yinYang             : { name : "YinYang"             ,hover : false, material : this.yinYang.material },
-            yinYangSin          : { name : "YinYangSin"          ,hover : false, material : this.yinYangSin.material },
+            frequencyTexture    : { name : "FrequencyTexture"    ,hover : false, material : this.frequencyTexture.materialR, object : this.frequencyTexture   , mesh : this.frequencyTexture.meshR },
+            frequencyTextureSin : { name : "FrequencyTextureSin" ,hover : false, material : this.frequencyTexture.materialG, object : this.frequencyTexture   , mesh : this.frequencyTexture.meshG },
+            osciloscope         : { name : "Osciloscope"         ,hover : false, material : this.osciloscope.material      , object : this.osciloscope        , mesh : this.osciloscope.mesh },
+            yinYang             : { name : "YinYang"             ,hover : false, material : this.yinYang.material          , object : this.yinYang            , mesh : this.yinYang.mesh },
+            yinYangSin          : { name : "YinYangSin"          ,hover : false, material : this.yinYangSin.material       , object : this.yinYangSin         , mesh : this.yinYangSin.mesh },
         }
         // last hover object name
         this.lastHover = "";
@@ -90,6 +94,65 @@ export default class World {
     // Click event
     eventClick(event) {
         event.preventDefault();
+        // Camera is free
+        if (this.cameraFocus === "free") {
+            if (this.hover !== "") {
+                this.cameraFocus = this.hover;
+                let position;
+                let target;
+                for (const object in this.objects) {
+                    if (this.objects[object].name === this.hover) {
+                        position = this.objects[object].mesh.position;
+                    }
+                }
+
+                this.lastCameraPosition = this.camera.position.clone();
+                console.log(position);
+                // Camera position
+                gsap.to(this.camera.position, {
+                    duration : 0.5, 
+                    x        : position.x ,
+                    y        : position.y ,
+                    z        : position.z + 8,
+                    ease     : "ease-out",
+                    onUpdate : () => {
+                        this.experience.camera.controls.target.set(position.x, position.y, position.z);
+//                        this.camera.lookAt(new THREE.Vector3(position.x, position.y, position.z + 10));
+                        this.experience.camera.controls.update();
+                    }
+                });
+                // Camera target 
+/*                gsap.to(this.experience.camera.controls.target.position, {
+                    duration : 0.5, 
+                    x        : position.x,
+                    y        : position.y,
+                    z        : position.z,
+                    ease     : "ease-out",
+                    onUpdate : (g) => {
+//                        this.experience.camera.controls.target.set(g.x, g.y, g.z);
+                        this.experience.camera.controls.target.set(position.x, position.y, position.z);
+//                        this.camera.lookAt(new THREE.Vector3(position.x, position.y, position.z + 10));
+                        this.experience.camera.controls.update();
+                    }
+                });*/
+            }
+        }
+        else {
+            gsap.to(this.camera.position, {
+                duration : 0.5, 
+                x        : this.lastCameraPosition.x,
+                y        : this.lastCameraPosition.y,
+                z        : this.lastCameraPosition.z,
+                ease     : "ease-out",
+                onUpdate : () => {
+                    this.experience.camera.controls.target.set(0, 0, 0);
+                    this.experience.camera.controls.update();
+                }
+            });
+            this.cameraFocus = "free";
+        }
+
+        
     }
 
 

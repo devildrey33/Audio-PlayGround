@@ -29,10 +29,11 @@ export default class Circular {
             vertexShader    : CircularVertexShader,
             fragmentShader  : CircularFragmentShader,
             transparent     : true, 
-            side            : THREE.DoubleSide
+            side            : THREE.DoubleSide,
+            depthWrite      : false,
         });
 
-        this.material.alphaTest = 0;
+//        this.material.alphaTest = 0;
 
         // Plane for the red channel circular shader
         this.mesh = new THREE.Mesh(this.geometry, this.material);

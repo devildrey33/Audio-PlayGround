@@ -32,7 +32,8 @@ export default class YinYangSin {
             vertexShader    : YinYangVertexShader,
             fragmentShader  : YinYangSinFragmentShader,
             transparent     : true, 
-            side            : THREE.DoubleSide
+            side            : THREE.DoubleSide,
+            depthWrite      : false
         });
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.mesh.position.y += 7;

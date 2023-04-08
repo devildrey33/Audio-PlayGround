@@ -9,23 +9,6 @@ varying vec2      vUv; // Coordenadas UV del fragmento
 
 #define PI   3.14159265
 
-// Make a black and white circle
-vec4 circleBW(vec4 currentColor, vec2 st, vec2 center, float radius) {
-    float dist = length(st - center);
-
-    if (dist < radius) {
-        vec3 color = vec3(0.0);
-        if (st.y > center.y) {
-            color += vec3(1.0);
-        }
-        if (st.y < center.y) {
-            color += vec3(uColorStrength, 0.0, 0.0);
-        }
-        return vec4(color, 1.0);
-    } else {
-        return currentColor;
-    }
-}
 
 // Make a circle
 vec4 circle(vec4 currentColor, vec2 st, vec2 center, float radius, vec3 color) {
@@ -53,6 +36,21 @@ vec4 borderRoundRect(vec4 currentColor, vec2 size, float radius) {
         return color;
     }
     // Its outside
+    return currentColor;
+}
+
+
+vec4 arc(vec4 currentColor, float radius, float startAngle, float endAngle, vec4 color) {
+    vec2 fragmentToCenter = vUv - vec2(0.5, 0.5);
+    float distanceToCenter = length(fragmentToCenter);
+
+    if (distanceToCenter < radius) {
+        float angle = atan(fragmentToCenter.y, fragmentToCenter.x);
+        angle = mod(angle - startAngle, 2.0 * 3.14159265358979323846); // normalize angle
+        if (angle <= (endAngle - startAngle)) {
+            return color;
+        }
+    }
     return currentColor;
 }
 
@@ -85,9 +83,10 @@ void main() {
     // Divide the circle into two halfs and make a mirror 
     // I use linear audio textute form 0 to 1 in one half and in the other half i use the audio texture from 1 to 0.
     if (rad < 0.0) {
-        normAngle = (rad + PI) / PI;
-    } else {
-        normAngle = (1.0 + ((rad - PI) / PI));
+        normAngle = (rad + PI) / PI;            // red part
+    } 
+    else {
+        normAngle = (1.0 + ((rad - PI) / PI));  // white part
     }
 
     
@@ -97,18 +96,18 @@ void main() {
 
     if (dist < radius) { // fill
     //if (dist > radius - 0.3 && dist < radius) { // Line
-        // white part
-        if (rad > 0.0) {
-            color = vec4(1.0, 1.0, 1.0, 1.0);
-        }
-        // Black part
-        else {
+        // red part
+        if (rad < 0.0) {
             color = vec4(uColorStrength, 0.0, 0.0, 1.0);
+//            color = arc(color, audioValue * 5.0, rad, rad + (PI * 0.25), vec4(uColorStrength, 0.0, 0.0, 1.0));
+        }
+        // white part
+        else {
+            color = vec4(1.0, 1.0, 1.0, 1.0);
+//            color = arc(color, audioValue * 5.0, rad, rad + (PI * 0.25), vec4(1.0, 1.0, 1.0, 1.0));
         }
     } 
 
-    // First big circle black / white
-    color = circleBW(color, finalCoords, center, radius);
     // White left circle 
     color = circle(color, finalCoords, vec2(0.25 + 0.125, 0.5), 0.125, vec3(1.0, 1.0, 1.0));
     // Black right circle
@@ -124,7 +123,8 @@ void main() {
     // Apply the round hover border
     color = borderRoundRect(color, vec2(1.0, 1.0), 0.125);
     
-    
+//    color = arc(color, 1.0, rad, rad + (PI * 0.5), vec4(0, uColorStrength, uColorStrength, 1.0));
+
     // Set the final color
     gl_FragColor = color;
 }

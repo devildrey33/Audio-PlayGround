@@ -31,7 +31,9 @@ export default class YinYang {
             vertexShader    : YinYangVertexShader,
             fragmentShader  : YinYangFragmentShader,
             transparent     : true, 
-            side            : THREE.DoubleSide
+            side            : THREE.DoubleSide,
+            depthWrite      : false,
+
         });
 
 
