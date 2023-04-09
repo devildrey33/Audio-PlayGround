@@ -11,7 +11,7 @@ export default class Environment {
 
 //        this.setSunLight();
         //this.setSunLight2();
-        this.setEnvironmentMap();
+//        this.setEnvironmentMap();
 //        this.setSpotLight();
     }
 
@@ -81,7 +81,7 @@ export default class Environment {
         this.environmentMap.texture             = this.resources.items.environmentMapTexture;
         this.environmentMap.texture.encoding    = THREE.sRGBEncoding;
 
-        this.scene.background  = this.environmentMap.texture;
+      // this.scene.background  = this.environmentMap.texture;
         this.scene.environment = this.environmentMap.texture;
 
         this.environmentMap.updateMaterials = () => {

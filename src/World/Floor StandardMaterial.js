@@ -89,8 +89,8 @@ export default class Floor {
 
     update() {
         if (typeof this.material.uniforms !== "undefined") {
-            this.material.uniforms.uTime.value += this.time.delta;
-            this.materialWire.uniforms.uTime.value += this.time.delta;
+            this.material.uniforms.uTime.value     += this.time.delta / 1000;
+            this.materialWire.uniforms.uTime.value += this.time.delta / 1000;
         }
 //        console.log(this.time.delta);
     }

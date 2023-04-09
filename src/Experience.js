@@ -78,27 +78,28 @@ export default class Experience {
         antialias               : true
     };
 
+    panelAlpha = 0.75;
 
     /* debug options for lil.gui */
     debugOptions = {
         songName                  : "",
         osciloscopeLineSize       : 0.07,
-        osciloscopeAlpha          : 0.0,
+        osciloscopeAlpha          : this.panelAlpha,
         osciloscopeAudioStrength  : 0.5,
         osciloscopeAudioZoom      : 1,
         osciloscopeVisible        : true,
-        floorAudioStrength        : 8,
+        floorAudioStrength        : 5,
         floorVisible              : true,
         barsAudioStrength         : 2,
         barsCount                 : 256,
         barsVisible               : true,
         circularAudioStrength     : 0.4,
         circularLineSize          : 0.07,
-        circularAlpha             : 0.0,
+        circularAlpha             : this.panelAlpha,
         circularRVisible          : true,
         circularGVisible          : true,
         circularDistorsionVisible : true,
-        yinYangAlpha              : 0.0,
+        yinYangAlpha              : this.panelAlpha,
         yinYangRotate             : true,
         bloomThreshold            : 0.0,
         bloomStrength             : 0.5,

@@ -85,7 +85,8 @@ export default class FrequencyTexture {
             },
             vertexShader    : FrequencyTextureVertexShader,
             fragmentShader  : FrequencyTextureFragmentShaderR,
-            transparent     : true
+            transparent     : true,
+            depthWrite      : false
         });
 
         this.materialG = new THREE.ShaderMaterial({
@@ -95,7 +96,8 @@ export default class FrequencyTexture {
             },
             vertexShader    : FrequencyTextureVertexShader,
             fragmentShader  : FrequencyTextureFragmentShaderG,
-            transparent     : true
+            transparent     : true,
+            depthWrite      : false
         });
 
         // Red channel
@@ -147,7 +149,7 @@ export default class FrequencyTexture {
                 let rValue = Math.clamp(this.audioAnalizer.analizerData[pos], 0, 255);       // R
                 let gValue = Math.clamp(this.audioAnalizer.analizerDataSin[pos], 0, 255);
                 // position for a 4098 array
-                pos = pos * 4 ;
+                pos = pos * 4;
                 // fill the 32*32 image
                 this.imageDataSquare.data[pos]     = rValue;
                 this.imageDataSquare.data[pos + 1] = gValue;

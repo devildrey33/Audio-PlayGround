@@ -67,7 +67,7 @@ export default class Bars {
 
         const numPos = 24;
         this.idArray  = new Float32Array(size * numPos);        
-        this.geometry = BufferGeometryUtils.mergeBufferGeometries(this.cubeGeometries);
+        this.geometry = BufferGeometryUtils.mergeGeometries(this.cubeGeometries);
         let count = 0;
         // fill each cube with his id
         for (let g = 0; g < size * numPos; g+= numPos) {
@@ -87,7 +87,7 @@ export default class Bars {
 //        this.bars.castShadow = true;
 //       this.bars.receiveShadow = true;
 
-        this.mesh.position.z += 3;
+        this.mesh.position.z += 4;
         this.mesh.name = "Bars";
 
         this.scene.add(this.mesh);

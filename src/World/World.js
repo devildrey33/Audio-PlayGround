@@ -11,6 +11,7 @@ import YinYang from './YinYang.js';
 import YinYangSin from './YinYangSin.js';
 import * as THREE from 'three'
 import { gsap } from "gsap";
+import PerlinSun from './PerlinSun.js';
 //import OsciloscopeSoft from './OsciloscopeSoft.js';
 
 export default class World {
@@ -38,6 +39,7 @@ export default class World {
         this.circularDistorsion = new CircularDistorsion(this);
         this.yinYang            = new YinYang(this);
         this.yinYangSin         = new YinYangSin(this);
+        this.perlinSun          = new PerlinSun(this);
 
         // Last camera position
         this.lastCameraPosition = this.camera.position.clone();
@@ -70,16 +72,17 @@ export default class World {
             osciloscope         : { name : "Osciloscope"         ,hover : false, material : this.osciloscope.material      , object : this.osciloscope        , mesh : this.osciloscope.mesh },
             yinYang             : { name : "YinYang"             ,hover : false, material : this.yinYang.material          , object : this.yinYang            , mesh : this.yinYang.mesh },
             yinYangSin          : { name : "YinYangSin"          ,hover : false, material : this.yinYangSin.material       , object : this.yinYangSin         , mesh : this.yinYangSin.mesh },
+            perlinSun           : { name : "PerlinSun"           ,hover : false, material : this.perlinSun.material        , object : this.perlinSun          , mesh : this.perlinSun.mesh },
         }
         // last hover object name
         this.lastHover = "";
         this.hover     = "";
 
         // wait for resources
-        this.resources.on('ready', () => {
+        //this.resources.on('ready', () => {
             this.environment      = new Environment();
             this.ready            = true;
-        });
+        //});
 
         // hover animations with gsap
         
@@ -99,53 +102,56 @@ export default class World {
             if (this.hover !== "") {
                 this.cameraFocus = this.hover;
                 let position;
-                let target;
+                let geo;
                 for (const object in this.objects) {
                     if (this.objects[object].name === this.hover) {
                         position = this.objects[object].mesh.position;
+                        geo = this.objects[object].mesh.geometry;
                     }
                 }
 
                 this.lastCameraPosition = this.camera.position.clone();
-                console.log(position);
-                // Camera position
+                this.camera.position.tx = 0;
+                this.camera.position.ty = 0;
+                this.camera.position.tz = 0;
+                
+                geo.computeBoundingBox();
+                const width = geo.boundingBox.max.x - geo.boundingBox.min.x;
+                let nz = (this.camera.position.z > position.z) ? 2.5 * width : -2.5 * width;
+
+                console.log(nz);
+                
+                // Camera position and target animation
                 gsap.to(this.camera.position, {
                     duration : 0.5, 
                     x        : position.x ,
                     y        : position.y ,
-                    z        : position.z + 8,
+                    z        : position.z + nz,
+                    tx       : position.x,
+                    ty       : position.y, 
+                    tz       : position.z,
                     ease     : "ease-out",
                     onUpdate : () => {
-                        this.experience.camera.controls.target.set(position.x, position.y, position.z);
+                        this.experience.camera.controls.target.set(this.camera.position.tx, this.camera.position.ty, this.camera.position.tz);
 //                        this.camera.lookAt(new THREE.Vector3(position.x, position.y, position.z + 10));
                         this.experience.camera.controls.update();
                     }
                 });
-                // Camera target 
-/*                gsap.to(this.experience.camera.controls.target.position, {
-                    duration : 0.5, 
-                    x        : position.x,
-                    y        : position.y,
-                    z        : position.z,
-                    ease     : "ease-out",
-                    onUpdate : (g) => {
-//                        this.experience.camera.controls.target.set(g.x, g.y, g.z);
-                        this.experience.camera.controls.target.set(position.x, position.y, position.z);
-//                        this.camera.lookAt(new THREE.Vector3(position.x, position.y, position.z + 10));
-                        this.experience.camera.controls.update();
-                    }
-                });*/
             }
         }
         else {
+            // Return to camera free animation
             gsap.to(this.camera.position, {
                 duration : 0.5, 
                 x        : this.lastCameraPosition.x,
                 y        : this.lastCameraPosition.y,
                 z        : this.lastCameraPosition.z,
+                tx       : 0,
+                ty       : 0, 
+                tz       : 0,
                 ease     : "ease-out",
                 onUpdate : () => {
-                    this.experience.camera.controls.target.set(0, 0, 0);
+                    this.experience.camera.controls.target.set(this.camera.position.tx, this.camera.position.ty, this.camera.position.tz);
                     this.experience.camera.controls.update();
                 }
             });
@@ -187,7 +193,7 @@ export default class World {
                     gsap.to(o.material.uniforms.uHover, {
                         duration : 0.5, 
                         value    : 1.0,
-                        ease     : "ease-in"                        
+                        ease     : "ease-in-out"                        
                     });
                 }
             }
@@ -222,13 +228,16 @@ export default class World {
 
 
             this.frequencyTexture.update();
+            // Floor need to be updated / painted first
+            this.floor.update();
 //            this.bars.update();
             this.circular.update();
             this.circularSin.update();
             this.circularDistorsion.update();
             this.yinYang.update();
             this.yinYangSin.update();
-            this.floor.update();
+            this.perlinSun.update();
+
 
 //            this.osciloscope.update();
 //            this.osciloscopeSoft.update();

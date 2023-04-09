@@ -34,7 +34,7 @@ void main() {
     float audioValue = ((texture2D(uAudioTexture, vec2(vUv.x / uAudioZoom, 0.0)).g - .5) * uAudioStrength) + .5;
 
     // Base color
-    vec4 color = vec4(0.25, 0.25, 0.25, (uAlpha + uHover) * 0.125);
+    vec4 color = vec4(0.0, 0.0, 0.0, (uAlpha + uHover) * 0.80);
 
     if (abs(vUv.y - audioValue) < uSize) {
         color = vec4(0.0, 0.75, 0.0, 1.0);

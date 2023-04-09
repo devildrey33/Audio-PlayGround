@@ -16,9 +16,8 @@ vec4 circle(vec4 currentColor, vec2 st, vec2 center, float radius, vec3 color) {
 
     if (dist < radius) {
         return vec4(color, 1.0);
-    } else {
-        return currentColor;
-    }
+    } 
+    return currentColor;
 }
 
 // Function to make a round rectangle when the 2d plane is hover
@@ -61,7 +60,7 @@ void main() {
     vec2 center = vec2(0.5, 0.5);
 
     // Calculate rotation matrix based on uTime (do 16 cycles and then reverse)
-    float angle = sin(uTime * 0.00005) * 32.0 * 3.14159265;  // 2pi radiants are 360deg, so whe are rotating 16 times
+    float angle = -sin(uTime * 0.025) * 32.0 * 3.14159265;  // 2pi radiants are 360deg, so whe are rotating 16 times
     mat2 rotation = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
     // Translate coordinates to the center of the object
     vec2 translated = vUv - center;
@@ -73,7 +72,7 @@ void main() {
     // yin yang circle radius
     float radius = 0.25;
     // Base color
-    vec4 color = vec4(0.25, 0.25, 0.25, (uAlpha + uHover) * 0.125);
+    vec4 color = vec4(0.0, 0.0, 0.0, (uAlpha + uHover) * 0.80);
 
     float dist = length(finalCoords - center);
     // get angle in rads of current position from center

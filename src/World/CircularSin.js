@@ -54,6 +54,6 @@ export default class CircularSin {
     }
 
     update() {
-        this.material.uniforms.uTime.value += this.time.delta;
+        this.material.uniforms.uTime.value += this.time.delta / 1000;
     }
 }

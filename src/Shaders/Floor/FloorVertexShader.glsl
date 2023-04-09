@@ -89,8 +89,8 @@ void main() {
     modelPosition.y +=  vAudioValue * uAudioStrength;
 
     // Perlin noise displacement
-    vec2 displacement = uv + cnoise(vec3(uv * .3, uTime * 0.0001)) * 1.0;
-    float strength = cnoise(vec3(displacement, uTime *0.0004));
+    vec2 displacement = uv + cnoise(vec3(uv * 1.5, uTime * 0.125)) * 1.0;
+    float strength = cnoise(vec3(displacement, uTime *0.07));
     modelPosition.x += strength;
     modelPosition.z += strength;
  

@@ -52,6 +52,6 @@ export default class YinYang {
         this.material.uniforms.uHighFrequency.value = (255 - this.audioAnalizer.averageFrequency[2]) / 5024;
         this.material.uniforms.uLowFrequency.value  = this.audioAnalizer.averageFrequency[2] / 5024;
         this.material.uniforms.uColorStrength.value = 0.125 + this.audioAnalizer.averageFrequency[2] / 192;
-        this.material.uniforms.uTime.value         += this.time.delta;
+        this.material.uniforms.uTime.value         += this.time.delta / 1000;
     }
 }

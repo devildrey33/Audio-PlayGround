@@ -23,14 +23,14 @@ void main() {
     
     float gridLineSize = 0.05;
     vec2 uv = vUv * vec2(32.0, 32.0) - gridLineSize * 0.5; // Escala la posición para crear una cuadrícula de 32x32
-    vec4 color = vec4(0.0, 0.0, 0.5, .5); // Establece el color de la cuadrícula en blanco
+    vec4 color = vec4(0.0, 0.0, 0.5, 1.0); // Establece el color de la cuadrícula en blanco
 
     float lineOffset = lineWidth / 2.0;
 
     float gridLineStrength = step(1.0 - gridLineSize, mod(uv.x, 1.0));
     gridLineStrength += step(1.0 - gridLineSize, mod(uv.y, 1.0));
 
-    color.b = gridLineStrength  + vAudioValue * .25;
+    color.b = gridLineStrength  + vAudioValue * .125;
 //    color.a = gridLineStrength;
 
     // Dibuja la cuadrícula

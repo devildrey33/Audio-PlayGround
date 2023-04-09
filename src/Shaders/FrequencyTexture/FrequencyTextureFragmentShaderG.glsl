@@ -24,7 +24,7 @@ vec4 borderRoundRect(vec4 currentColor, vec2 size, float radius) {
 
 void main() {
     float audioValue = texture2D(uAudioTexture, vUv).g;
-    vec4 color = vec4(0.0, audioValue, 0.0, 1.0);
+    vec4 color = vec4(0.0, audioValue * 0.125, 0.0, 1.0);
 
     // Apply the round hover border
     color = borderRoundRect(color, vec2(1.0, 1.0), 0.125);

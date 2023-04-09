@@ -51,6 +51,7 @@ export default class Resources extends EventEmitter {
             }
             else if (source.type === "hdrTexture") {
                 this.loaders.rgbeLoader.load(source.path, (texture) =>{
+                    texture.mapping = THREE.EquirectangularReflectionMapping;
                     this.sourceLoaded(source, texture);
                 })
 
