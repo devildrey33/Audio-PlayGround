@@ -16,16 +16,19 @@ export default class PerlinSun {
     setup() {
         this.geometry = new THREE.PlaneGeometry(7, 7);
 
+        console.log(this.experience.debugOptions.perlinSunColorFrequency);
         this.material = new THREE.ShaderMaterial({
             uniforms : {
-                uAudioTexture  : { value : this.world.frequencyTexture.bufferCanvasLinear.texture },
-                uHighFrequency : { value : 0 },
-                uLowFrequency  : { value : 0 },
-                uTime          : { value : 0 },
-                uAlpha         : { value : this.experience.debugOptions.yinYangAlpha },
-                uRotate        : { value : 1.0 },
-                uHover         : { value : 0.0 },
-                uColorStrength : { value : 0   }
+                uAudioTexture   : { value : this.world.frequencyTexture.bufferCanvasLinear.texture },
+//                uHighFrequency  : { value : 0 },
+//                uLowFrequency   : { value : 0 },
+                uTime           : { value : 0 },
+                uAlpha          : { value : this.experience.debugOptions.yinYangAlpha },
+                uRotate         : { value : 1.0 },
+                uHover          : { value : 0.0 },
+//                uColorStrength  : { value : 0   },
+                uColorFrequency : { value : this.experience.debugOptions.perlinSunColorFrequency },
+                uColorSin       : { value : this.experience.debugOptions.perlinSunColorSin }
             },
             vertexShader    : PerlinSunVertexShader,
             fragmentShader  : PerlinSunFragmentShader,
@@ -46,8 +49,8 @@ export default class PerlinSun {
 
     update() {
         // Divided by 1024 to get values from 0.0 to 0.25
-        this.material.uniforms.uHighFrequency.value = this.audioAnalizer.averageFrequency[0] / 255;
-        this.material.uniforms.uLowFrequency.value  = this.audioAnalizer.averageFrequency[2] / 255;
+//        this.material.uniforms.uHighFrequency.value = this.audioAnalizer.averageFrequency[0] / 255;
+//        this.material.uniforms.uLowFrequency.value  = this.audioAnalizer.averageFrequency[2] / 255;
 //        this.material.uniforms.uColorStrength.value = 0.125 + this.audioAnalizer.averageFrequency[2] / 192;
         this.material.uniforms.uTime.value         += this.time.delta / 1000;    }
 }

@@ -36,7 +36,8 @@ export default class Floor {
 
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.mesh.rotation.x = - Math.PI * 0.5
-        this.mesh.position.y = -6.00;
+        this.mesh.position.y = -8.00;
+        this.mesh.position.z = -12;
         this.mesh.name = "Floor";
 
         this.scene.add(this.mesh);

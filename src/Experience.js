@@ -78,12 +78,12 @@ export default class Experience {
         antialias               : true
     };
 
-    panelAlpha = 0.75;
+    panelAlpha = 0.0;
 
     /* debug options for lil.gui */
     debugOptions = {
         songName                  : "",
-        osciloscopeLineSize       : 0.07,
+        osciloscopeLineSize       : 0.02,
         osciloscopeAlpha          : this.panelAlpha,
         osciloscopeAudioStrength  : 0.5,
         osciloscopeAudioZoom      : 1,
@@ -101,9 +101,11 @@ export default class Experience {
         circularDistorsionVisible : true,
         yinYangAlpha              : this.panelAlpha,
         yinYangRotate             : true,
-        bloomThreshold            : 0.0,
+        perlinSunColorFrequency   : new THREE.Color("#972020"), //new THREE.Color("rgb(25, 0, 25)"),
+        perlinSunColorSin         : new THREE.Color("#fb7832"),  //new THREE.Color("rgb(50, 50, 250)"),
+        bloomThreshold            : -7.8,
+        bloomRadius               : -8.32,
         bloomStrength             : 0.5,
-        bloomRadius               : 0.0,
         bloomEnabled              : true,
         frequencyTextureVisible   : true
     };

@@ -24,6 +24,11 @@ export default class World {
         this.sizes      = this.experience.sizes;
         // World ready
         this.ready      = false;
+        // animation time
+        this.ani = {
+            duration : 0.5,
+            ease     : "slowmo"
+        }   
         // setup
         this.setup();                
     }
@@ -99,57 +104,71 @@ export default class World {
         event.preventDefault();
         // Camera is free
         if (this.cameraFocus === "free") {
-            if (this.hover !== "") {
-                this.cameraFocus = this.hover;
-                let position;
-                let geo;
-                for (const object in this.objects) {
-                    if (this.objects[object].name === this.hover) {
-                        position = this.objects[object].mesh.position;
-                        geo = this.objects[object].mesh.geometry;
-                    }
+            this.cameraFocus = this.hover;
+            let position;
+            let geo;
+            for (const object in this.objects) {
+                if (this.objects[object].name === this.hover) {
+                    position = this.objects[object].mesh.position;
+                    geo = this.objects[object].mesh.geometry;
                 }
-
-                this.lastCameraPosition = this.camera.position.clone();
-                this.camera.position.tx = 0;
-                this.camera.position.ty = 0;
-                this.camera.position.tz = 0;
-                
-                geo.computeBoundingBox();
-                const width = geo.boundingBox.max.x - geo.boundingBox.min.x;
-                let nz = (this.camera.position.z > position.z) ? 2.5 * width : -2.5 * width;
-
-                console.log(nz);
-                
-                // Camera position and target animation
-                gsap.to(this.camera.position, {
-                    duration : 0.5, 
-                    x        : position.x ,
-                    y        : position.y ,
-                    z        : position.z + nz,
-                    tx       : position.x,
-                    ty       : position.y, 
-                    tz       : position.z,
-                    ease     : "ease-out",
-                    onUpdate : () => {
-                        this.experience.camera.controls.target.set(this.camera.position.tx, this.camera.position.ty, this.camera.position.tz);
-//                        this.camera.lookAt(new THREE.Vector3(position.x, position.y, position.z + 10));
-                        this.experience.camera.controls.update();
-                    }
-                });
             }
+
+            this.lastCameraPosition = this.camera.position.clone();
+            this.camera.position.tx = 0;
+            this.camera.position.ty = 0;
+            this.camera.position.tz = 0;
+            
+            geo.computeBoundingBox();
+            const width = geo.boundingBox.max.x - geo.boundingBox.min.x;
+            let nz = (this.camera.position.z > position.z) ? 2.5 * width : -2.5 * width;
+
+            console.log(nz);
+            
+            // Camera position and target animation
+            gsap.to(this.camera.position, {
+                duration : this.ani.duration, 
+                ease     : this.ani.ease,
+                x        : position.x ,
+                y        : position.y ,
+                z        : position.z + nz,
+                tx       : position.x,
+                ty       : position.y, 
+                tz       : position.z,
+                onUpdate : () => {
+                    this.experience.camera.controls.target.set(this.camera.position.tx, this.camera.position.ty, this.camera.position.tz);
+//                        this.camera.lookAt(new THREE.Vector3(position.x, position.y, position.z + 10));
+                    this.experience.camera.controls.update();
+                }
+            });
         }
         else {
+            let position;
+            let geo;
+            let found = false;
+            for (const object in this.objects) {
+                if (this.objects[object].name === this.hover) {
+                    position = this.objects[object].mesh.position;
+                    geo      = this.objects[object].mesh.geometry;
+                    found    = true;
+                }
+            }
+
+            
+            if (found === true) {
+
+            }
+
             // Return to camera free animation
             gsap.to(this.camera.position, {
-                duration : 0.5, 
+                duration : this.ani.duration, 
+                ease     : this.ani.ease,
                 x        : this.lastCameraPosition.x,
                 y        : this.lastCameraPosition.y,
                 z        : this.lastCameraPosition.z,
                 tx       : 0,
                 ty       : 0, 
                 tz       : 0,
-                ease     : "ease-out",
                 onUpdate : () => {
                     this.experience.camera.controls.target.set(this.camera.position.tx, this.camera.position.ty, this.camera.position.tz);
                     this.experience.camera.controls.update();
@@ -191,9 +210,9 @@ export default class World {
                 // if the object is not hover, start the animation
                 if (o.material.uniforms.uHover.value < 0.01) {
                     gsap.to(o.material.uniforms.uHover, {
-                        duration : 0.5, 
+                        duration : this.ani.duration, 
+                        ease     : this.ani.ease,
                         value    : 1.0,
-                        ease     : "ease-in-out"                        
                     });
                 }
             }
@@ -205,9 +224,9 @@ export default class World {
                 const o = this.objects[object];
                 if (o.name === this.lastHover) {
                     gsap.to(o.material.uniforms.uHover, {
-                        duration : 0.5, 
+                        duration : this.ani.duration, 
+                        ease     : this.ani.ease,
                         value    : 0.0,
-                        ease     : "ease-out"
                     });
                     break;
                 }

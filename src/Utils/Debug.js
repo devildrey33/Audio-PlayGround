@@ -15,6 +15,7 @@ export default class Debug {
         this.circularDistorsion = this.experience.world.circularDistorsion;
         this.yinYang            = this.experience.world.yinYang;
         this.yinYangSin         = this.experience.world.yinYangSin;
+        this.perlinSun          = this.experience.world.perlinSun;
         this.bloomPass          = this.experience.renderer.bloomPass;
         this.options            = this.experience.debugOptions;
         this.songs              = this.experience.songs;
@@ -154,7 +155,7 @@ export default class Debug {
             /*
              * Yin Yang
              */
-            this.debugYinYang = this.ui.addFolder("Yin Yang").open(false);;
+            this.debugYinYang = this.ui.addFolder("Yin Yang").open(false);
             // Osciloscope background alpha
             this.debugYinYang.add(this.options, "yinYangAlpha").min(0).max(1).step(0.01).name("Background apha").onChange(() => {
                 this.yinYang.material.uniforms.uAlpha.value = this.options.yinYangAlpha;
@@ -167,6 +168,18 @@ export default class Debug {
                 this.yinYangSin.material.uniforms.uRotate.value = this.options.yinYangRotate;
             });
     
+            /*
+             * Perlin sun
+             */
+            this.debugPerlinSun = this.ui.addFolder("Perlin sun").open(false);
+            this.debugPerlinSun.addColor(this.options, "perlinSunColorFrequency").name("Color freq.").onChange(() => {
+                this.perlinSun.material.uniforms.perlinSunColorFrequency = new THREE.Color(this.options.perlinSunColorFrequency);
+            });
+
+            this.debugPerlinSun.addColor(this.options, "perlinSunColorSin").name("Color sin").onChange(() => {
+                this.perlinSun.material.uniforms.perlinSunColorFrequency = new THREE.Color(this.options.perlinSunColorSin);
+            });
+
 
             /*
             * Bloom
@@ -177,11 +190,11 @@ export default class Debug {
                 this.bloomPass.enabled = this.options.bloomEnabled;
             });
             // Bloom Threshold
-            this.debugBloom.add(this.options, "bloomThreshold").min(-2).max(2).step(0.01).name("Threshold").onChange(() => {
+            this.debugBloom.add(this.options, "bloomThreshold").min(-20).max(20).step(0.01).name("Threshold").onChange(() => {
                 this.bloomPass.threshold = this.options.bloomThreshold;
             });
             // Bloom Radius
-            this.debugBloom.add(this.options, "bloomRadius").min(-2).max(2).step(0.01).name("Radius").onChange(() => {
+            this.debugBloom.add(this.options, "bloomRadius").min(-20).max(20).step(0.01).name("Radius").onChange(() => {
                 this.bloomPass.radius = this.options.bloomRadius;
             });
             // Bloom Strength

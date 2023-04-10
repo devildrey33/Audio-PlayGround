@@ -18,8 +18,9 @@ export default class Camera {
 
     setInstance() {
         this.instance = new THREE.PerspectiveCamera(35, this.sizes.width / this.sizes.height, 0.1, 1000);
-        const z = (this.sizes.width > this.sizes.height) ? 20 : 50;
-        this.instance.position.set(-z,16,z);
+        // Adapt camera to view port
+        const xz = (this.sizes.width > this.sizes.height) ? 25 : 50;
+        this.instance.position.set(-xz * 0.5,13,xz);
         this.scene.add(this.instance);
     }
 
