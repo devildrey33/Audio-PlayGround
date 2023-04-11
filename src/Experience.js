@@ -90,7 +90,7 @@ export default class Experience {
         osciloscopeVisible        : true,
         floorAudioStrength        : 5,
         floorVisible              : true,
-        floorColorBackground      : new THREE.Color("#000000"),
+        floorColorBackground      : new THREE.Color("#000007"),
         floorColorGrid            : new THREE.Color("#1a1aff"),
         barsAudioStrength         : 2,
         barsCount                 : 256,

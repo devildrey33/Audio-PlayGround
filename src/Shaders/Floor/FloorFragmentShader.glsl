@@ -25,7 +25,7 @@ void main() {
     
     float gridLineSize = 0.025;
     vec2 uv = vUv * vec2(32.0, 32.0) - gridLineSize * 0.5; // Escala la posición para crear una cuadrícula de 32x32
-    vec4 color = vec4(0.025, 0.025, 0.05, 1.0); // Establece el color de la cuadrícula en blanco
+    vec4 color = vec4(uColorBackground, 1.0); // Establece el color de la cuadrícula en blanco
 
 //    float lineOffset = lineWidth / 2.0;
 
@@ -34,10 +34,6 @@ void main() {
     if (gridLineStrength > 0.0) {
         color = vec4(uColorGrid, 1.0);
     }
-    else {
-        color = vec4(uColorBackground, 1.0);
-    }
-//    color.b = gridLineStrength  + vAudioValue * .125;
 
 
     gl_FragColor = color; // Establece el color del fragmento

@@ -66,20 +66,6 @@ export default class World {
         this.hEventMouseMove = this.eventMouseMouve.bind(this);
         this.canvas.addEventListener("mousemove", this.hEventMouseMove);
 
-        // Setup the objects
-        this.objects = {
-//            bars                : { name : "Bars"                , hover : false, material : this.bars.material }, },
-            circular            : { name : "Circular"            ,hover : false, material : this.circular.material          , object : this.circular          , mesh : this.circular.mesh },
-            circularSin         : { name : "CircularSin"         ,hover : false, material : this.circularSin.material       , object : this.circularSin       , mesh : this.circularSin.mesh },
-            circularDistorsion  : { name : "CircularDistorsion"  ,hover : false, material : this.circularDistorsion.material, object : this.circularDistorsion, mesh : this.circularDistorsion.mesh },
-//            floor               : { name : "Floor"               , hover : false, material : this.floor.material }, },
-            frequencyTexture    : { name : "FrequencyTexture"    ,hover : false, material : this.frequencyTexture.materialR, object : this.frequencyTexture   , mesh : this.frequencyTexture.meshR },
-            frequencyTextureSin : { name : "FrequencyTextureSin" ,hover : false, material : this.frequencyTexture.materialG, object : this.frequencyTexture   , mesh : this.frequencyTexture.meshG },
-            osciloscope         : { name : "Osciloscope"         ,hover : false, material : this.osciloscope.material      , object : this.osciloscope        , mesh : this.osciloscope.mesh },
-            yinYang             : { name : "YinYang"             ,hover : false, material : this.yinYang.material          , object : this.yinYang            , mesh : this.yinYang.mesh },
-            yinYangSin          : { name : "YinYangSin"          ,hover : false, material : this.yinYangSin.material       , object : this.yinYangSin         , mesh : this.yinYangSin.mesh },
-            perlinSun           : { name : "PerlinSun"           ,hover : false, material : this.perlinSun.material        , object : this.perlinSun          , mesh : this.perlinSun.mesh },
-        }
         // last hover object name
         this.lastHover = "";
         this.hover     = "";
@@ -87,8 +73,27 @@ export default class World {
         // wait for resources
         this.resources.on('ready', () => {
             this.environment      = new Environment();
-            this.audioInfo          = new AudioInfo(this);
+            this.audioInfo        = new AudioInfo(this);
+
+            // Setup the objects
+            this.objects = {
+    //            bars                : { name : "Bars"                , hover : false, material : this.bars.material }, },
+                circular            : { name : "Circular"            ,hover : false, material : this.circular.material          , object : this.circular          , mesh : this.circular.mesh },
+                circularSin         : { name : "CircularSin"         ,hover : false, material : this.circularSin.material       , object : this.circularSin       , mesh : this.circularSin.mesh },
+                circularDistorsion  : { name : "CircularDistorsion"  ,hover : false, material : this.circularDistorsion.material, object : this.circularDistorsion, mesh : this.circularDistorsion.mesh },
+    //            floor               : { name : "Floor"               , hover : false, material : this.floor.material }, },
+                frequencyTexture    : { name : "FrequencyTexture"    ,hover : false, material : this.frequencyTexture.materialR, object : this.frequencyTexture   , mesh : this.frequencyTexture.meshR },
+                frequencyTextureSin : { name : "FrequencyTextureSin" ,hover : false, material : this.frequencyTexture.materialG, object : this.frequencyTexture   , mesh : this.frequencyTexture.meshG },
+                osciloscope         : { name : "Osciloscope"         ,hover : false, material : this.osciloscope.material      , object : this.osciloscope        , mesh : this.osciloscope.mesh },
+                yinYang             : { name : "YinYang"             ,hover : false, material : this.yinYang.material          , object : this.yinYang            , mesh : this.yinYang.mesh },
+                yinYangSin          : { name : "YinYangSin"          ,hover : false, material : this.yinYangSin.material       , object : this.yinYangSin         , mesh : this.yinYangSin.mesh },
+                perlinSun           : { name : "PerlinSun"           ,hover : false, material : this.perlinSun.material        , object : this.perlinSun          , mesh : this.perlinSun.mesh },
+                audioInfo           : { name : "AudioInfo"           ,hover : false, material : this.audioInfo.material        , object : this.audioInfo          , mesh : this.audioInfo.mesh },
+    
+            }
+
             this.ready            = true;
+            
         });
 
         // hover animations with gsap
@@ -99,11 +104,28 @@ export default class World {
     eventMouseMouve(event) {
         this.mouse.x = event.clientX / this.sizes.width    * 2 - 1;
         this.mouse.y = - (event.clientY / this.sizes.height) * 2 + 1;
+        if (this.hover !== "") {
+            this.canvas.style.cursor = "pointer";
+        }
+        else {
+            this.canvas.style.cursor = "auto";
+        }
     }
 
     // Click event
     eventClick(event) {
         event.preventDefault();
+
+        if (this.hover === "AudioInfo") {
+            for (const object in this.objects) {
+                if (this.objects[object].name === this.hover) {
+                    window.open(this.experience.song.url, '_blank');
+                    return;
+                }
+            }
+            
+        }
+
         // Camera is free
         if (this.cameraFocus === "free") {
             let position;
@@ -210,7 +232,7 @@ export default class World {
         // Check if whe have new hover objects
         for (const object in this.objects) {
             const o = this.objects[object];
-            if (o.hover === true) {
+            if (o.hover === true && o.name !== "AudioInfo") {
                 // if the object is not hover, start the animation
                 if (o.material.uniforms.uHover.value < 0.01) {
                     gsap.to(o.material.uniforms.uHover, {
@@ -226,7 +248,7 @@ export default class World {
         if (this.lastHover !== this.hover) {
             for (const object in this.objects) {
                 const o = this.objects[object];
-                if (o.name === this.lastHover) {
+                if (o.name === this.lastHover && o.name !== "AudioInfo" ) {
                     gsap.to(o.material.uniforms.uHover, {
                         duration : this.ani.duration, 
                         ease     : this.ani.ease,
