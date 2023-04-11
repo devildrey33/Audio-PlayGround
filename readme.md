@@ -11,14 +11,11 @@ Red channel has the Frequency, and green channel the TimeDomain of the song.
 - Fragment shader Circular Frequency (red channel)
 - Fragment shader Circular TimeDomain (green channel)
 - Fragment shader Circular Distortion (red channel)
+- Fragment shader Perlin sun (a mix of circular freuency + circular time domain + perlin noise)
 
 You can drag & drop a song of your hard disk into the experience to play it.
 
 live version : [Audio-PlayGround](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/)
-
-
-
-
 
 
 
