@@ -91,7 +91,6 @@ varying vec3 vViewPosition;
 #endif
 #include <common>
 #include <uv_pars_vertex>
-#include <uv2_pars_vertex>
 #include <displacementmap_pars_vertex>
 #include <color_pars_vertex>
 #include <fog_pars_vertex>
@@ -107,7 +106,6 @@ varying vec3 vViewPosition;
  */
 void main() {
 	#include <uv_vertex>
-	#include <uv2_vertex>
 	#include <color_vertex>
 	#include <morphcolor_vertex>
 	#include <beginnormal_vertex>
@@ -123,7 +121,7 @@ void main() {
      */
     // Audio value on Y axis
     vec4 textureColor = texture2D(uAudioTexture, uv);
-    transformed.z += textureColor.r * uAudioStrength * 4.0;
+    transformed.z += textureColor.r * uAudioStrength;
 
     // Perlin noise displacement
     vec2 displacement = uv + cnoise(vec3(uv * .3, uTime * 0.0001)) * 1.0;
@@ -134,6 +132,8 @@ void main() {
     /*
      * Three.js main end
      */
+
+
 	#include <morphtarget_vertex>
 	#include <skinning_vertex>
 	#include <displacementmap_vertex>
@@ -148,3 +148,5 @@ void main() {
 	vWorldPosition = worldPosition.xyz;
 #endif
 }
+
+

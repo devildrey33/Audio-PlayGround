@@ -1,4 +1,9 @@
 export default [
+    {
+        name : "jsonFont",
+        type : "jsonFont",
+        path : "./fonts/helvetiker_regular.typeface.json"
+    }
    /* {
         name: 'environmentMapTexture',
         type: 'cubeTexture',

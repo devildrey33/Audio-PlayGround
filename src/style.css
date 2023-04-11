@@ -8,7 +8,7 @@
 html, body {
     overflow: hidden;
     font-family:'Orbitron',sans-serif;
-    font-size:max(1vw, 1vh); 
+    font-size:14px; 
 }
 
 
@@ -45,11 +45,13 @@ html, body {
 
 .Experience > .Experience_Loading {
     padding:0.6em;
-    width:4em;
+/*    width:4em;*/
     margin:auto;
     top: calc(50vh - 10px);
     height: 18px;
     display:none;
+    font-family:'Orbitron',sans-serif;
+    font-size:max(1.5vw, 1.5vh); 
 }
 
 .Experience[loading = "true"] > .Experience_Loading {
@@ -75,4 +77,103 @@ html, body {
 
 .Experience_FPS {
     font-size:max(1.7vw, 1.7vh);
+}
+
+.Experience_TxtFPS {
+    font-size:max(1.1vw, 1.1vh);
+}
+
+
+/* 
+ * Audio controls
+ */
+.Experience_AudioControls {
+    user-select: none;
+    position:fixed;
+    display:flex;
+    flex-flow: row;
+    flex-direction:column;
+/*    flex-wrap: wrap;*/
+    bottom:1vh;
+/*    height:80px;*/
+    width:75vw;
+    left:12.5vw;
+/*    padding:0 0 min(1vw, 1vh) 0 0;*/
+    pointer-events: none;
+}
+
+.Experience_AudioControls label, .Experience_AudioControls button {
+    font-size:14px !important;
+    font-family:'Orbitron',sans-serif;
+}
+
+.Experience_AC_Play {
+/*    margin:max(0.5vw, 0.5vh);*/
+    flex-basis:32px;
+}
+
+    
+
+.Experience_AC_Play > button {
+    width:62px;
+    height:62px;
+    border-radius: 100px;
+    background-color: rgba(30, 30, 150, 1.0);
+    cursor:pointer;
+    color:#fff;
+    transition:background-color 0.5s;
+    pointer-events:all;
+}
+
+.Experience_AC_Play > button:hover {
+    background-color: rgb(49, 49, 255);
+}
+
+.Experience_AC_Songs {
+    flex: 3 0 10%; 
+/*    margin:max(0.5vw, 0.5vh);*/
+    position:relative;
+/*    top:6px;*/
+    
+/*    flex-basis:176px;*/
+flex-basis:32px;
+}
+
+.Experience_AC_Songs > select {
+    position:relative;
+    left:5px;
+    height: 22px;
+    pointer-events:all;
+}
+
+.Experience_AC_Volume {
+    flex-basis:32px;
+/*    margin:max(0.5vw, 0.5vh);*/
+    
+/*    flex-basis:150px;*/
+}
+
+.Experience_AC_Volume > input {
+    position:relative;
+    left:5px;
+    top:5px;
+    pointer-events:all;
+}
+
+.Experience_AC_Time {
+    flex-basis:32px;
+/*    margin:max(0.5vw, 0.5vh);*/
+}
+
+.Experience_AC_Time > input {
+    position:relative;
+    left:5px;
+    top:5px;
+    width: calc(100% - 10px);
+    pointer-events:all;
+}
+
+td {
+    color:#ffffff;
+    text-shadow: 1px 1px #000000;
 }

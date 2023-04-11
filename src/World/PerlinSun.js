@@ -16,14 +16,14 @@ export default class PerlinSun {
     setup() {
         this.geometry = new THREE.PlaneGeometry(7, 7);
 
-        console.log(this.experience.debugOptions.perlinSunColorFrequency);
+//        console.log(this.experience.debugOptions.perlinSunColorFrequency);
         this.material = new THREE.ShaderMaterial({
             uniforms : {
                 uAudioTexture   : { value : this.world.frequencyTexture.bufferCanvasLinear.texture },
 //                uHighFrequency  : { value : 0 },
 //                uLowFrequency   : { value : 0 },
                 uTime           : { value : 0 },
-                uAlpha          : { value : this.experience.debugOptions.yinYangAlpha },
+                uAlpha          : { value : this.experience.debugOptions.perlinSunAlpha },
                 uRotate         : { value : 1.0 },
                 uHover          : { value : 0.0 },
 //                uColorStrength  : { value : 0   },

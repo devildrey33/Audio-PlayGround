@@ -1,4 +1,6 @@
 
+uniform vec3  uColorBackground;
+uniform vec3  uColorGrid;
 varying vec2  vUv;
 varying float vAudioValue;
 
@@ -29,12 +31,12 @@ void main() {
 
     float gridLineStrength = step(1.0 - gridLineSize, mod(uv.x, 1.0));
     gridLineStrength += step(1.0 - gridLineSize, mod(uv.y, 1.0));
-//    if (gridLineStrength > 0.0) {
-        color.b = gridLineStrength ;
-/*    }
+    if (gridLineStrength > 0.0) {
+        color = vec4(uColorGrid, 1.0);
+    }
     else {
-        color.a = 0.5;        
-    }*/
+        color = vec4(uColorBackground, 1.0);
+    }
 //    color.b = gridLineStrength  + vAudioValue * .125;
 
 

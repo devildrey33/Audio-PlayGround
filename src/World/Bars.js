@@ -84,7 +84,7 @@ export default class Bars {
         }
 
         this.mesh = new THREE.Mesh(this.geometry, this.material);
-//        this.bars.castShadow = true;
+        this.mesh.castShadow = true;
 //       this.bars.receiveShadow = true;
 
         this.mesh.position.z += 4;

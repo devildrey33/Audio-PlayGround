@@ -9,6 +9,7 @@ export default class AudioAnalizer {
         this.audioSourceDD  = { context : { currentTime : 0 } };
         this.context        = new AudioContext();
         this.songLoaded     = false;
+        this.htmlElements   = this.experience.htmlElements;
 //        this.songList       = [];
     
 //        start();
@@ -22,6 +23,7 @@ export default class AudioAnalizer {
         this.analizerData    = new Uint8Array(fftSize * 0.5);
         this.analizerDataSin = new Uint8Array(fftSize * 0.5);
 
+        this.gainNode                         = this.context.createGain();
         this.analizer                         = this.context.createAnalyser();
         this.analizer.fftSize                 = fftSize;
         this.analizer.smoothingTimeConstant   = 0.8; // 
@@ -49,7 +51,10 @@ export default class AudioAnalizer {
         this.song.crossOrigin    = "anonymous";
         this.song.src            = path;          // "/Canciones/cancion.mp3"
         this.song.addEventListener('canplay', this.canPlay.bind(this));
-        this.song.addEventListener('ended'  , this.fnEnded.bind(this));                
+        this.song.addEventListener('ended'  , () => { 
+            this.experience.htmlElements.elementAudioPlay.innerHTML = "Play";
+            this.fnEnded.bind(this);
+        });                
         
     }
 
@@ -68,7 +73,10 @@ export default class AudioAnalizer {
         this.song.src            = URL.createObjectURL(files[0]); 
 
         this.song.addEventListener('canplay', this.canPlayDrop.bind(this));
-        this.song.addEventListener('ended'  , this.fnEnded.bind(this));                
+        this.song.addEventListener('ended'  , () => { 
+            this.experience.htmlElements.elementAudioPlay.innerHTML = "Play";
+            this.fnEnded.bind(this);
+        });                
     }
 
     // Función que detecta si está en play o en pausa, y asigna el estado contrario
@@ -85,8 +93,11 @@ export default class AudioAnalizer {
             this.songLoaded         = true;
             this.audioSource        = this.context.createMediaElementSource(this.song);
             this.audioSource.connect(this.analizer);
-            this.analizer.connect(this.context.destination);
+            this.analizer.connect(this.gainNode);
+            this.gainNode.connect(this.context.destination);
             this.fnReady();
+
+            this.htmlElements.elementAudioTime.setAttribute("max", this.song.duration);
         }
     }
 
@@ -119,6 +130,11 @@ export default class AudioAnalizer {
 
         // get average frequency
         this.averageFrequency = this.getAverageFrequency();
+
+        // set the current time if the user its not changin it
+        if (this.htmlElements.dragTime === false) {
+            this.htmlElements.elementAudioTime.value = this.song.currentTime;
+        }
     }
 
     getAverageFrequency() {

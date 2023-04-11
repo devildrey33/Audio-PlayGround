@@ -2,8 +2,8 @@ uniform float     uAlpha;
 uniform sampler2D uAudioTexture;
 uniform float     uTime;
 uniform float     uHover;
-uniform float     uHighFrequency;
-uniform float     uLowFrequency;
+//uniform float     uHighFrequency;
+//uniform float     uLowFrequency;
 uniform vec3      uColorFrequency;
 uniform vec3      uColorSin;
 
@@ -147,7 +147,7 @@ vec4 circleSin(vec4 currentColor, vec2 center, float radius, vec3 color) {
 
     float audioValue = (texture2D(uAudioTexture, vec2(normAngle, 0.0)).g - 0.5) * .5;
     // Perlin noise
-    float strength = cnoise(vec3(rad * TAU * 5.0, dist * 100.0,  uTime + color.b)) * radius * 0.1;
+    float strength = 0.0; //cnoise(vec3(rad * TAU * 5.0, dist * 100.0,  uTime + color.b)) * radius * 0.1;
 
     if (dist - audioValue + strength < radius) {
         color.g += 1.0 - audioValue;

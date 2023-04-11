@@ -9,7 +9,7 @@ export default class Environment {
         this.debug      = this.experience.debug;
 
 
-//        this.setSunLight();
+        this.setSunLight();
         //this.setSunLight2();
 //        this.setEnvironmentMap();
 //        this.setSpotLight();

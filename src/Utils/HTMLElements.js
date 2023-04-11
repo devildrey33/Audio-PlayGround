@@ -9,8 +9,77 @@ export default class HTMLElements {
         this.experience = new Experience();
         this.options    = this.experience.options;
         this.sizes      = this.experience.sizes;
+        this.songs      = this.experience.songs;
+        this.song       = this.experience.song;
         
         this.create();
+
+        this.setupAudioControlEvents();
+//        this.createAudioControls();
+    }
+
+    setupAudioControlEvents() {
+        // Time bar its changing by the user
+        this.dragTime = false;
+
+        // Audio songs select option element
+        this.elementAudioSongs.addEventListener('change', (e) => {
+            for (let i = 0; i < this.songs.length; i++) {
+                if (e.currentTarget.value === this.songs[i].name) {
+                    this.experience.song = this.songs[i];
+                    break;
+                }
+            }
+            
+            this.experience.audioAnalizer.loadSong(this.experience.song.path);
+            this.experience.audioAnalizer.playPause();
+            this.experience.world.audioInfo.setup();
+        });
+        // Audio play / pause button element
+        this.elementAudioPlay.addEventListener('click', (e) => { 
+            if (this.experience.audioAnalizer.playPause() == false) {
+                this.elementAudioPlay.innerHTML = "Play";
+            }
+            else {
+                this.elementAudioPlay.innerHTML = "Pause";
+            }
+        });
+        // Audio volume slider element
+        this.elementAudioVolume.addEventListener('input', (e) => { 
+            this.experience.audioAnalizer.gainNode.gain.value = e.currentTarget.value;
+        }); 
+        // Audio time slider element mousedown
+        this.elementAudioTime.addEventListener('mousedown', (e) => { 
+            this.dragTime = true;
+        }); 
+
+        // Audio time slider element touchstart
+        this.elementAudioTime.addEventListener('touchstart', (e) => { 
+            this.dragTime = true;
+        }); 
+        // Audio time slider element mouseup
+        this.elementAudioTime.addEventListener('mouseup', (e) => { 
+            this.dragTime = false;
+        }); 
+        // Audio time slider element touchend
+        this.elementAudioTime.addEventListener('touchend', (e) => { 
+            this.dragTime = false;
+        }); 
+
+        this.elementAudioTime.addEventListener('change', (e) => { 
+            this.experience.audioAnalizer.song.currentTime = this.elementAudioTime.value;
+        }); 
+
+    }
+
+    createAudioControls() {
+        let audioControls = "<div class='Experience_AudioControls Experience_Panel'>";
+        audioControls +=    "</div>";
+        document.body.innerHTML = document.body.innerHTML + audioControls;
+
+        // Obtengo la etiqueta del marco para los controles
+        this.elementAudioControls = document.querySelector("#" + this.elementExperience.id + " > .Experience_AudioControls");
+
     }
 
     create() {
@@ -54,10 +123,47 @@ export default class HTMLElements {
             }
             // Cierro el div .Experience_Controls
             strHTML += '</div>';
-            
+
+            /* 
+             * AudioControls
+             */
+            strHTML += "<div class='Experience_AudioControls'>";
+            strHTML += "<table style='width:300px'><tr><td style='width:70px'>";
+            strHTML +=      "<div class='Experience_AC_Play'><button>Play</button></div>";
+            strHTML += "</td><td style='width:200px'><table><tr><td><span>song</span></td><td>";
+            strHTML +=      "<div class='Experience_AC_Songs'><select name='songs'>";
+            for (let i = 0; i < this.songs.length; i++) {
+                strHTML += (this.songs[i].name === this.song.name) ? "<option selected>" : "<option>";
+                strHTML += this.songs[i].name + "</option>";
+            }
+            strHTML +=      "</select></div></td></tr><tr><td>volume</td><td>";
+            strHTML +=      "<div class='Experience_AC_Volume'><input type='range' name='volume' min='0' max='2' value='1' step='0.01' ></input></div>" ;
+            strHTML +=      "</td></tr></table></td>";
+//            strHTML +=      "<td><div class='Experience_AC_Info'>txt</div></td>";
+            strHTML +=      "</tr></table>";
+            strHTML +=      "<div class='Experience_AC_Time'><input type='range'></input></div>" ;
+            strHTML += "</div>";
+
             // Añado el string con todas las nuevas etiquetas al DOOM dentro de la etiqueta OCanvas
             this.elementExperience.innerHTML = strHTML;
 
+
+            // Audio controls element
+            this.elementAudioControls = document.querySelector("#" + this.elementExperience.id + " > .Experience_AudioControls");
+            // Audio songs select option element
+            this.elementAudioSongs = document.querySelector("#" + this.elementExperience.id + " > .Experience_AudioControls  .Experience_AC_Songs select");
+            // Audio play button element
+            this.elementAudioPlay = document.querySelector("#" + this.elementExperience.id + " > .Experience_AudioControls  .Experience_AC_Play button");
+            // Audio volume slider element
+            this.elementAudioVolume = document.querySelector("#" + this.elementExperience.id + " > .Experience_AudioControls  .Experience_AC_Volume input");
+            // Audio time slider element
+            this.elementAudioTime = document.querySelector("#" + this.elementExperience.id + " > .Experience_AudioControls > .Experience_AC_Time > input");
+            // Audio time slider element
+            this.elementAudioInfo = document.querySelector("#" + this.elementExperience.id + " > .Experience_AudioControls  .Experience_AC_Info");
+
+
+
+        
             // Obtengo la etiqueta del canvas 
             this.elementCanvas = document.querySelector("#" + this.elementExperience.id + " > .Experience_Canvas")
             // Obtengo la etiqueta del marco para la carga

@@ -19,9 +19,9 @@ export default class Debug {
         this.bloomPass          = this.experience.renderer.bloomPass;
         this.options            = this.experience.debugOptions;
         this.songs              = this.experience.songs;
-        this.active = true;
+//        this.active = true;
         
-//        this.active = window.location.hash === '#debug';
+        this.active = window.location.hash === '#debug';
 
         if (this.active) {
             this.ui = new dat.GUI()
@@ -79,10 +79,15 @@ export default class Debug {
              * Floor
              */
             this.debugFloor = this.ui.addFolder("Floor").open(false);;
-            // Visible
-/*            this.debugFloor.add(this.options, "floorVisible").name("Visible").onChange(() => {
-                this.floor.visible(this.options.floorVisible);
-            });*/
+            // Color grid
+            this.debugFloor.addColor(this.options, "floorColorGrid").name("Grid color").onChange(() => {
+                this.perlinSun.material.uniforms.uColorGrid = new THREE.Color(this.options.floorColorGrid);
+            });
+            // Color background
+            this.debugFloor.addColor(this.options, "floorColorBackground").name("Background color").onChange(() => {
+                this.perlinSun.material.uniforms.uColorBackground = new THREE.Color(this.options.floorColorBackground);
+            });
+
             // Audio strength
             this.debugFloor.add(this.options, "floorAudioStrength").min(1).max(20).step(0.1).name("Audio strength").onChange(() => {
                 this.floor.material.uniforms.uAudioStrength.value = this.options.floorAudioStrength;
@@ -156,13 +161,13 @@ export default class Debug {
              * Yin Yang
              */
             this.debugYinYang = this.ui.addFolder("Yin Yang").open(false);
-            // Osciloscope background alpha
+            // Yinyang background alpha
             this.debugYinYang.add(this.options, "yinYangAlpha").min(0).max(1).step(0.01).name("Background apha").onChange(() => {
                 this.yinYang.material.uniforms.uAlpha.value = this.options.yinYangAlpha;
                 this.yinYangSin.material.uniforms.uAlpha.value = this.options.yinYangAlpha;
             });            
 
-            // Circle deformed Visible
+            // Yinyang rotation enabled
             this.debugYinYang.add(this.options, "yinYangRotate").name("Rotate").onChange(() => {
                 this.yinYang.material.uniforms.uRotate.value = this.options.yinYangRotate;
                 this.yinYangSin.material.uniforms.uRotate.value = this.options.yinYangRotate;
@@ -172,6 +177,11 @@ export default class Debug {
              * Perlin sun
              */
             this.debugPerlinSun = this.ui.addFolder("Perlin sun").open(false);
+            // PerlinSun background alpha
+            this.debugPerlinSun.add(this.options, "perlinSunAlpha").min(0).max(1).step(0.01).name("Background apha").onChange(() => {
+                this.perlinSun.material.uniforms.uAlpha.value = this.options.perlinSunAlpha;
+                this.perlinSun.material.uniforms.uAlpha.value = this.options.perlinSunAlpha;
+            });            
             this.debugPerlinSun.addColor(this.options, "perlinSunColorFrequency").name("Color freq.").onChange(() => {
                 this.perlinSun.material.uniforms.perlinSunColorFrequency = new THREE.Color(this.options.perlinSunColorFrequency);
             });
@@ -200,7 +210,6 @@ export default class Debug {
             // Bloom Strength
             this.debugBloom.add(this.options, "bloomStrength").min(0).max(1).step(0.01).name("Strength").onChange(() => {
                 this.bloomPass.strength = this.options.bloomStrength;
-                console.log(this.experience.renderer.bloomPass.strength);
             });            
 
             // environment

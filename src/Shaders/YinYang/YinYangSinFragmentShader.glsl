@@ -5,6 +5,7 @@ uniform float     uHighFrequency;
 uniform float     uLowFrequency;
 uniform float     uColorStrength;
 uniform float     uHover;
+uniform float     uRotate;
 varying vec2      vUv; // Coordenadas UV del fragmento
 
 #define PI   3.14159265
@@ -62,7 +63,7 @@ void main() {
     vec2 center = vec2(0.5, 0.5);
 
     // Calculate rotation matrix based on uTime (do 16 cycles and then reverse)
-    float angle = sin(uTime * 0.025) * 32.0 * 3.14159265;  // 2pi radiants are 360deg, so whe are rotating 16 times
+    float angle = sin(uTime * 0.025) * 32.0 * 3.14159265 * uRotate;  // 2pi radiants are 360deg, so whe are rotating 16 times
     mat2 rotation = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
     // Translate coordinates to the center of the object
     vec2 translated = vUv - center;

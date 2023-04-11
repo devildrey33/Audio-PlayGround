@@ -90,6 +90,8 @@ export default class Experience {
         osciloscopeVisible        : true,
         floorAudioStrength        : 5,
         floorVisible              : true,
+        floorColorBackground      : new THREE.Color("#000000"),
+        floorColorGrid            : new THREE.Color("#1a1aff"),
         barsAudioStrength         : 2,
         barsCount                 : 256,
         barsVisible               : true,
@@ -101,8 +103,9 @@ export default class Experience {
         circularDistorsionVisible : true,
         yinYangAlpha              : this.panelAlpha,
         yinYangRotate             : true,
+        perlinSunAlpha            : this.panelAlpha,
         perlinSunColorFrequency   : new THREE.Color("#972020"), //new THREE.Color("rgb(25, 0, 25)"),
-        perlinSunColorSin         : new THREE.Color("#fb7832"),  //new THREE.Color("rgb(50, 50, 250)"),
+        perlinSunColorSin         : new THREE.Color("#1e1f33"),  //new THREE.Color("rgb(50, 50, 250)"),
         bloomThreshold            : -7.8,
         bloomRadius               : -8.32,
         bloomStrength             : 0.5,
@@ -130,9 +133,13 @@ export default class Experience {
             }                        
         }
 
+        // select a random song
+        this.song = this.songs[Math.floor(Math.random() * this.songs.length)];
+        this.debugOptions.songName = this.song.name;
 
         // Create the html tags and insert into body (canvas, buttons, fps, loading and error messages)
         this.htmlElements   = new HTMLElements();
+
 
 
         this.sizes          = new Sizes();
@@ -150,8 +157,6 @@ export default class Experience {
             From Sky to Abyss   Quantum Ocean                          https://www.jamendo.com/track/1284951/quantum-ocean
             Convergence         Six Feet Under                         https://www.jamendo.com/track/80122/six-feet-under
         */
-        this.song = this.songs[Math.floor(Math.random() * this.songs.length)];
-        this.debugOptions.songName = this.song.name;
 
         this.audioAnalizer.loadSong(this.song.path);
         //this.audioAnalizer.loadSong("./songs/BattleTrance.mp3");

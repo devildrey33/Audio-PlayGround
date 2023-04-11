@@ -23,9 +23,11 @@ export default class Floor {
         
         this.material = new THREE.ShaderMaterial({
             uniforms : {
-                uAudioTexture  : { value : this.world.frequencyTexture.bufferCanvasSquare.texture },
-                uAudioStrength : { value : this.experience.debugOptions.floorAudioStrength },
-                uTime          : { value : 0 }
+                uAudioTexture    : { value : this.world.frequencyTexture.bufferCanvasSquare.texture },
+                uAudioStrength   : { value : this.experience.debugOptions.floorAudioStrength },
+                uTime            : { value : 0 },
+                uColorGrid       : { value : this.experience.debugOptions.floorColorGrid },
+                uColorBackground : { value : this.experience.debugOptions.floorColorBackground }
             },
             vertexShader    : FloorVertexShader,
             fragmentShader  : FloorFragmentShader, 

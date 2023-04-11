@@ -12,6 +12,7 @@ import YinYangSin from './YinYangSin.js';
 import * as THREE from 'three'
 import { gsap } from "gsap";
 import PerlinSun from './PerlinSun.js';
+import AudioInfo from './AudioInfo.js';
 //import OsciloscopeSoft from './OsciloscopeSoft.js';
 
 export default class World {
@@ -84,10 +85,11 @@ export default class World {
         this.hover     = "";
 
         // wait for resources
-        //this.resources.on('ready', () => {
+        this.resources.on('ready', () => {
             this.environment      = new Environment();
+            this.audioInfo          = new AudioInfo(this);
             this.ready            = true;
-        //});
+        });
 
         // hover animations with gsap
         
@@ -104,7 +106,6 @@ export default class World {
         event.preventDefault();
         // Camera is free
         if (this.cameraFocus === "free") {
-            this.cameraFocus = this.hover;
             let position;
             let geo;
             for (const object in this.objects) {
@@ -118,12 +119,15 @@ export default class World {
             this.camera.position.tx = 0;
             this.camera.position.ty = 0;
             this.camera.position.tz = 0;
-            
+            // No hover items            
+            if (typeof geo === "undefined") return;
+            this.cameraFocus = this.hover;
+
             geo.computeBoundingBox();
             const width = geo.boundingBox.max.x - geo.boundingBox.min.x;
             let nz = (this.camera.position.z > position.z) ? 2.5 * width : -2.5 * width;
 
-            console.log(nz);
+//            console.log(nz);
             
             // Camera position and target animation
             gsap.to(this.camera.position, {
@@ -145,7 +149,7 @@ export default class World {
         else {
             let position;
             let geo;
-            let found = false;
+/*            let found = false;
             for (const object in this.objects) {
                 if (this.objects[object].name === this.hover) {
                     position = this.objects[object].mesh.position;
@@ -157,7 +161,7 @@ export default class World {
             
             if (found === true) {
 
-            }
+            }*/
 
             // Return to camera free animation
             gsap.to(this.camera.position, {

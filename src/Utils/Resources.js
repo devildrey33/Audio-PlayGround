@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 
 import Experience from '../Experience.js'
 import EventEmitter from './EventEmitter.js'
@@ -28,7 +29,8 @@ export default class Resources extends EventEmitter {
             gltfLoader          : new GLTFLoader(),
             textureLoader       : new THREE.TextureLoader(),
             cubeTextureLoader   : new THREE.CubeTextureLoader(),
-            rgbeLoader          : new RGBELoader()
+            rgbeLoader          : new RGBELoader(),
+            fontLoader          : new FontLoader()
         }
     }
 
@@ -54,7 +56,12 @@ export default class Resources extends EventEmitter {
                     texture.mapping = THREE.EquirectangularReflectionMapping;
                     this.sourceLoaded(source, texture);
                 })
-
+            }
+            else if (source.type === "jsonFont") { 
+                this.loaders.fontLoader.load(source.path, (font) => {
+                    console.log(font);
+                    this.sourceLoaded(source, font);
+                })
             }
         }
 
