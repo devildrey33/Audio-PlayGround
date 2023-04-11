@@ -18,5 +18,9 @@ live version : [Audio-PlayGround](https://devildrey33.es/Ejemplos/Three.js-Journ
 
 
 
-https://user-images.githubusercontent.com/15678544/230804451-97bfa7f5-ae3c-4101-8697-2732b63c3b3a.mp4
+
+
+
+
+https://user-images.githubusercontent.com/15678544/231241903-63c07007-e20d-4e32-abef-6c86786b8484.mp4
 
