@@ -23,3 +23,7 @@ live version : [Audio-PlayGround](https://devildrey33.es/Ejemplos/Three.js-Journ
 
 https://user-images.githubusercontent.com/15678544/231241903-63c07007-e20d-4e32-abef-6c86786b8484.mp4
 
+
+You need run [code]npm install[/code] once to get all dependencies.
+
+And then you can use [code]npm run dev[/code] to start the local test server.
