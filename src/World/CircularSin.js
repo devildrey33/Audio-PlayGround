@@ -43,6 +43,7 @@ export default class CircularSin {
         this.mesh.position.y += 7;
         this.mesh.position.x -= 3;
         this.mesh.name = "CircularSin";
+        this.mesh.castShadow = true;
         this.scene.add(this.mesh);
 
     }

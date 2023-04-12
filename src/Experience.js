@@ -18,7 +18,7 @@ export default class Experience {
         
         {
             name  : "Cyberpunk Metal",
-            group : "Вихлянцев Евгений", 
+            group : "Vikhlyantsev Evgeny", // Вихлянцев_Евгений
             path  : "./songs/Вихлянцев_Евгений_-_Cyberpunk_Metal(Game,Videos).mp3", 
             url   : "https://www.jamendo.com/track/1892989/cyberpunk-metal-game-videos"             
         },

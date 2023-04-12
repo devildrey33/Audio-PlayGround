@@ -4,6 +4,9 @@ import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUti
 import BarsVertexShader from "../Shaders/Bars/BarsVertexShader.glsl"
 import BarsFragmentShader from "../Shaders/Bars/BarsFragmentShader.glsl"
 
+/*
+ * Bars are merged and uses ShaderMaterial
+ */
 
 export default class Bars {
     
@@ -89,6 +92,12 @@ export default class Bars {
 
         this.mesh.position.z += 4;
         this.mesh.name = "Bars";
+
+        this.mesh.customDepthMaterial = new THREE.MeshDepthMaterial({ 
+            alphaTest: 0.5,
+            depthPacking: THREE.RGBADepthPacking,
+        });
+        this.mesh.customDepth = true;        
 
         this.scene.add(this.mesh);
     }

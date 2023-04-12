@@ -44,6 +44,7 @@ export default class Osciloscope {
         this.mesh.position.y += 7;
         this.mesh.position.x -= 7;
         this.mesh.name = "Osciloscope";
+        this.mesh.castShadow = true;
         this.scene.add(this.mesh);
 
     }

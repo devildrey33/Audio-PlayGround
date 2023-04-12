@@ -41,6 +41,7 @@ export default class CircularDistorsion {
         this.mesh.position.y += 3;
         this.mesh.position.x -= 7;
         this.mesh.name = "CircularDistorsion";
+        this.mesh.castShadow = true;
         this.scene.add(this.mesh);
 
     }

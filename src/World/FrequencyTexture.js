@@ -106,14 +106,16 @@ export default class FrequencyTexture {
         this.meshR.position.y += 3;
         this.meshR.position.x -= 11;
         this.meshR.name = "FrequencyTexture";
-
+        this.meshR.castShadow = true;
         this.scene.add(this.meshR);
+
         // Green channel
         this.meshG = new THREE.Mesh(this.geometry, this.materialG);       
         this.meshG.material.side = THREE.DoubleSide;
         this.meshG.position.y += 7;
         this.meshG.position.x -= 11;
         this.meshG.name = "FrequencyTextureSin";
+        this.meshG.castShadow = true;
         this.scene.add(this.meshG);
         // Both channels
 /*        this.mesh = new THREE.Mesh(this.geometry, this.material);       

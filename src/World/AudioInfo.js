@@ -39,8 +39,4 @@ export default class AudioInfo {
         this.mesh.name = "AudioInfo";
         this.scene.add(this.mesh);
     }
-
-    changeText(newText) {
-
-    }
 }

@@ -44,6 +44,7 @@ export default class PerlinSun {
         this.mesh.position.y += 5;
         this.mesh.position.x += 7;
         this.mesh.name = "PerlinSun";
+        this.mesh.castShadow = true;
         this.scene.add(this.mesh);
     }
 
