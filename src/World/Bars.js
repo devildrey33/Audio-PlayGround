@@ -2,6 +2,7 @@ import Experience from "../Experience";
 import * as THREE from 'three'
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import BarsVertexShader from "../Shaders/Bars/BarsVertexShader.glsl"
+import BarsDepthVertexShader from "../Shaders/Bars/BarsDepthVertexShader.glsl"
 import BarsFragmentShader from "../Shaders/Bars/BarsFragmentShader.glsl"
 
 /*
@@ -35,11 +36,7 @@ export default class Bars {
 
         let   size       = width * height;
 
-        this.cubeGeometries = [];
-/*        this.material = new THREE.MeshBasicMaterial({ 
-            color       : new THREE.Color("rgb(10,10,90)"),
-            transparent : true
-        });*/
+        let cubeGeometries = [];
 
         this.material = new THREE.ShaderMaterial({
             uniforms : {
@@ -64,13 +61,13 @@ export default class Bars {
 
                 geometry.translate(nx, 0, nz);
 
-                this.cubeGeometries.push(geometry);
+                cubeGeometries.push(geometry);
             }
         }
 
         const numPos = 24;
         this.idArray  = new Float32Array(size * numPos);        
-        this.geometry = BufferGeometryUtils.mergeGeometries(this.cubeGeometries);
+        this.geometry = BufferGeometryUtils.mergeGeometries(cubeGeometries);
         let count = 0;
         // fill each cube with his id
         for (let g = 0; g < size * numPos; g+= numPos) {
@@ -83,21 +80,26 @@ export default class Bars {
 
         // clear cube geometries used to create the merged geometry
         for (let i = 0; i < size; i++) {
-            this.cubeGeometries[i].dispose();
+            cubeGeometries[i].dispose();
         }
 
         this.mesh = new THREE.Mesh(this.geometry, this.material);
-        this.mesh.castShadow = true;
-//       this.bars.receiveShadow = true;
+        this.mesh.castShadow = this.experience.debugOptions.shadows;
 
         this.mesh.position.z += 4;
         this.mesh.name = "Bars";
-
+/*
+        // Custom depth material
         this.mesh.customDepthMaterial = new THREE.MeshDepthMaterial({ 
-            alphaTest: 0.5,
             depthPacking: THREE.RGBADepthPacking,
         });
-        this.mesh.customDepth = true;        
+
+        // Modify the default depth material
+        this.mesh.customDepthMaterial.onBeforeCompile = (shader) => {
+            shader.uniforms.uAudioTexture = { value : this.world.frequencyTexture.bufferCanvasLinear.texture };
+            shader.uniforms.uAudioTexture = { value : this.experience.debugOptions.barsAudioStrength };
+            shader.vertexShader = BarsDepthVertexShader;
+        }*/
 
         this.scene.add(this.mesh);
     }

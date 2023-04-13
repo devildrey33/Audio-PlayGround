@@ -9,7 +9,7 @@ uniform float uAudioStrength;
 //	Classic Perlin 3D Noise 
 //	by Stefan Gustavson
 //
-vec4 permute(vec4 x)       { return mod(((x*34.0)+1.0)*x, 289.0);            }
+/*vec4 permute(vec4 x)       { return mod(((x*34.0)+1.0)*x, 289.0);            }
 vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
 vec3 fade(vec3 t)          { return t*t*t*(t*(t*6.0-15.0)+10.0);             }
 
@@ -79,7 +79,7 @@ float cnoise(vec3 P) {
   vec2 n_yz = mix(n_z.xy, n_z.zw, fade_xyz.y);
   float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x); 
   return 2.2 * n_xyz;
-}
+}*/
 
 /* 
  * Three.js globals
@@ -105,16 +105,16 @@ varying vec3 vViewPosition;
  * Three.js main
  */
 void main() {
-	#include <uv_vertex>
-	#include <color_vertex>
-	#include <morphcolor_vertex>
-	#include <beginnormal_vertex>
-	#include <morphnormal_vertex>
-	#include <skinbase_vertex>
-	#include <skinnormal_vertex>
-	#include <defaultnormal_vertex>
-	#include <normal_vertex>
-	#include <begin_vertex>
+    #include <uv_vertex>
+    #include <color_vertex>
+    #include <morphcolor_vertex>
+    #include <beginnormal_vertex>
+    #include <morphnormal_vertex>
+    #include <skinbase_vertex>
+    #include <skinnormal_vertex>
+    #include <defaultnormal_vertex>
+    #include <normal_vertex>
+    #include <begin_vertex>
 
     /* 
      * Perlin noise audio floor main
@@ -124,29 +124,29 @@ void main() {
     transformed.z += textureColor.r * uAudioStrength;
 
     // Perlin noise displacement
-    vec2 displacement = uv + cnoise(vec3(uv * .3, uTime * 0.0001)) * 1.0;
+/*    vec2 displacement = uv + cnoise(vec3(uv * .3, uTime * 0.0001)) * 1.0;
     float strength = cnoise(vec3(displacement, uTime *0.0004));
     transformed.x += strength;
-    transformed.y += strength;
+    transformed.y += strength;*/
 
     /*
      * Three.js main end
      */
 
 
-	#include <morphtarget_vertex>
-	#include <skinning_vertex>
-	#include <displacementmap_vertex>
-	#include <project_vertex>
-	#include <logdepthbuf_vertex>
-	#include <clipping_planes_vertex>
-	vViewPosition = - mvPosition.xyz;
-	#include <worldpos_vertex>
-	#include <shadowmap_vertex>
-	#include <fog_vertex>
-#ifdef USE_TRANSMISSION
-	vWorldPosition = worldPosition.xyz;
-#endif
+    #include <morphtarget_vertex>
+    #include <skinning_vertex>
+    #include <displacementmap_vertex>
+    #include <project_vertex>
+    #include <logdepthbuf_vertex>
+    #include <clipping_planes_vertex>
+    vViewPosition = - mvPosition.xyz;
+    #include <worldpos_vertex>
+    #include <shadowmap_vertex>
+    #include <fog_vertex>
+  #ifdef USE_TRANSMISSION
+    vWorldPosition = worldPosition.xyz;
+  #endif
 }
 
 

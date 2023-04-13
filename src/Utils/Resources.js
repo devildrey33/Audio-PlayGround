@@ -59,7 +59,6 @@ export default class Resources extends EventEmitter {
             }
             else if (source.type === "jsonFont") { 
                 this.loaders.fontLoader.load(source.path, (font) => {
-                    console.log(font);
                     this.sourceLoaded(source, font);
                 })
             }

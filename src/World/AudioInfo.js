@@ -37,6 +37,7 @@ export default class AudioInfo {
         this.mesh.position.z = 7;
         this.mesh.position.y = -1;
         this.mesh.name = "AudioInfo";
+        this.mesh.castShadow = this.experience.debugOptions.shadows;
         this.scene.add(this.mesh);
     }
 }

@@ -48,7 +48,7 @@ export default class Floor {
             wireframe     : false,
             side          : THREE.DoubleSide,
             transparent   : true,
-            opacity       : .8 ,
+            opacity       : 1,
 /*            alphaTest     : 0.1,
             shadowSide    : THREE.FrontSide*/
 
@@ -81,7 +81,7 @@ export default class Floor {
         this.mesh.position.y = -8.00;
         this.mesh.position.z = -12.00;
         this.mesh.name = "Floor";
-        this.mesh.receiveShadow = true;
+        this.mesh.receiveShadow = this.experience.debugOptions.shadows;
         //this.mesh.castShadow    = true;
 /*
         this.meshWire = new THREE.Mesh(this.geometry, this.materialWire);

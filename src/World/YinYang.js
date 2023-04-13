@@ -41,7 +41,7 @@ export default class YinYang {
         this.mesh.rotation.z = -Math.PI;
         this.mesh.position.y += 3;
         this.mesh.position.x += 1;
-        this.mesh.castShadow = true;
+        this.mesh.castShadow =  this.experience.debugOptions.shadows;
         this.mesh.name = "YinYang";
         
         this.scene.add(this.mesh);

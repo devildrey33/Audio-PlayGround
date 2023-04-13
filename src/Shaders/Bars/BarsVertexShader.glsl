@@ -7,12 +7,13 @@ void main() {
     
     vec4 modelPosition      = modelMatrix       * vec4(position , 1.0);
     // If the point is from superior part
+    vec4 data = texture2D(uAudioTexture, vec2(aId, 0.0));
     if (uv.y > 0.1) {
         // Add the red channel intensity to the Y of the model
-        modelPosition.y +=  texture2D(uAudioTexture, vec2(aId, 0.0)).r * uAudioStrength;
+        modelPosition.y +=  data.r * uAudioStrength;
     }
     else {
-        modelPosition.y -=  texture2D(uAudioTexture, vec2(aId, 0.0)).r * uAudioStrength;
+        modelPosition.y -=  data.r * uAudioStrength;
     }
  
     vec4 viewPosition       = viewMatrix        * modelPosition;

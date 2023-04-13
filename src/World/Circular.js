@@ -63,7 +63,7 @@ export default class Circular {
         this.mesh.position.y += 3;
         this.mesh.position.x -= 3;
         this.mesh.name = "Circular";
-        this.mesh.castShadow = true;
+        this.mesh.castShadow = this.experience.debugOptions.shadows;
 
 
         this.scene.add(this.mesh);

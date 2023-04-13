@@ -83,6 +83,7 @@ export default class Experience {
     /* debug options for lil.gui */
     debugOptions = {
         songName                  : "",
+        shadows                   : false,
         osciloscopeLineSize       : 0.02,
         osciloscopeAlpha          : this.panelAlpha,
         osciloscopeAudioStrength  : 0.5,

@@ -39,7 +39,7 @@ export default class YinYangSin {
         this.mesh.position.y += 7;
         this.mesh.position.x += 1;
         this.mesh.name = "YinYangSin";
-        this.mesh.castShadow = true;
+        this.mesh.castShadow =  this.experience.debugOptions.shadows;
         this.scene.add(this.mesh);
 
     }
