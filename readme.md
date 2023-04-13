@@ -2,7 +2,7 @@
  
 First i want to see how hard i can push a mobile device, in my mobile works at 50fps +o-... but its 6 years old. My friends told me it runs at 60fps on their mobiles.
 
-Based on two textures : 32*32 for square operations and 1024*1 for lineal operations.
+Based on two textures : 32x32 for square operations and 1024x1 for lineal operations.
 Red channel has the Frequency, and green channel the TimeDomain of the song.
 
 - 32*32 plane to use Frequency array and move y-axis of the mesh in a shader (red channel)
