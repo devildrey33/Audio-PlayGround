@@ -1,6 +1,8 @@
 import Experience from "../Experience";
 import PerlinSunVertexShader from "../Shaders/PerlinSun/PerlinSunVertexShader.glsl"
 import PerlinSunFragmentShader from "../Shaders/PerlinSun/PerlinSunFragmentShader.glsl"
+import PerlinSunDepthFragmentShader from "../Shaders/PerlinSun/PerlinSunDepthFragmentShader.glsl"
+import DepthVertexShader from "../Shaders/DepthVertexShader.glsl"
 import * as THREE from "three"
 
 export default class PerlinSun {
@@ -20,13 +22,10 @@ export default class PerlinSun {
         this.material = new THREE.ShaderMaterial({
             uniforms : {
                 uAudioTexture   : { value : this.world.frequencyTexture.bufferCanvasLinear.texture },
-//                uHighFrequency  : { value : 0 },
-//                uLowFrequency   : { value : 0 },
                 uTime           : { value : 0 },
                 uAlpha          : { value : this.experience.debugOptions.perlinSunAlpha },
                 uRotate         : { value : 1.0 },
                 uHover          : { value : 0.0 },
-//                uColorStrength  : { value : 0   },
                 uColorFrequency : { value : this.experience.debugOptions.perlinSunColorFrequency },
                 uColorSin       : { value : this.experience.debugOptions.perlinSunColorSin }
             },
@@ -45,6 +44,27 @@ export default class PerlinSun {
         this.mesh.position.x += 7;
         this.mesh.name = "PerlinSun";
         this.mesh.castShadow =  this.experience.debugOptions.shadows;
+        
+        // Custom depth material
+        this.mesh.customDepthMaterial = new THREE.MeshDepthMaterial({ 
+            depthPacking: THREE.RGBADepthPacking
+        });
+
+        // Modify the default depth material
+        this.mesh.customDepthMaterial.onBeforeCompile = (shader) => {
+            shader.uniforms.uAudioTexture   = { value : this.world.frequencyTexture.bufferCanvasLinear.texture };
+            shader.uniforms.uTime           = { value : 0 };
+            shader.uniforms.uAlpha          = { value : this.experience.debugOptions.perlinSunAlpha };
+            shader.uniforms.uRotate         = { value : 1.0 };
+            shader.uniforms.uHover          = { value : 0.0 };
+            shader.uniforms.uColorFrequency = { value : this.experience.debugOptions.perlinSunColorFrequency };
+            shader.uniforms.uColorSin       = { value : this.experience.debugOptions.perlinSunColorSin };
+
+            shader.vertexShader            = DepthVertexShader;
+            shader.fragmentShader          = PerlinSunDepthFragmentShader;
+            this.mesh.customDepthMaterial.uniforms = shader.uniforms;
+        }
+        
         this.scene.add(this.mesh);
     }
 

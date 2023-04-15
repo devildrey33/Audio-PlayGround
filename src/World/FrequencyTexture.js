@@ -5,7 +5,8 @@ import FrequencyTextureVertexShader from "../Shaders/FrequencyTexture/FrequencyT
 //import FrequencyTextureFragmentShader from "../Shaders/FrequencyTexture/FrequencyTextureFragmentShader.glsl"
 import FrequencyTextureFragmentShaderR from "../Shaders/FrequencyTexture/FrequencyTextureFragmentShaderR.glsl"
 import FrequencyTextureFragmentShaderG from "../Shaders/FrequencyTexture/FrequencyTextureFragmentShaderG.glsl"
-
+import FrequencyTextureDepthFragmentShader from "../Shaders/FrequencyTexture/FrequencyTextureDepthFragmentShader.glsl"
+import DepthVertexShader from "../Shaders/DepthVertexShader.glsl"
 
 export default class FrequencyTexture {
     constructor() {
@@ -107,6 +108,21 @@ export default class FrequencyTexture {
         this.meshR.position.x -= 11;
         this.meshR.name = "FrequencyTexture";
         this.meshR.castShadow =  this.experience.debugOptions.shadows;
+
+
+        // Custom depth material
+        this.meshR.customDepthMaterial = new THREE.MeshDepthMaterial({ 
+            depthPacking: THREE.RGBADepthPacking
+        });
+
+        // Modify the default depth material
+        this.meshR.customDepthMaterial.onBeforeCompile = (shader) => {
+            shader.uniforms.uHover         = { value : 0.0 };
+            shader.vertexShader            = DepthVertexShader;
+            shader.fragmentShader          = FrequencyTextureDepthFragmentShader;
+            this.meshR.customDepthMaterial.uniforms = shader.uniforms;
+        }
+
         this.scene.add(this.meshR);
 
         // Green channel
@@ -116,6 +132,21 @@ export default class FrequencyTexture {
         this.meshG.position.x -= 11;
         this.meshG.name = "FrequencyTextureSin";
         this.meshG.castShadow = this.experience.debugOptions.shadows;
+
+
+        // Custom depth material
+        this.meshG.customDepthMaterial = new THREE.MeshDepthMaterial({ 
+            depthPacking: THREE.RGBADepthPacking
+        });
+
+        // Modify the default depth material
+        this.meshG.customDepthMaterial.onBeforeCompile = (shader) => {
+            shader.uniforms.uHover         = { value : 0.0 };
+            shader.vertexShader            = DepthVertexShader;
+            shader.fragmentShader          = FrequencyTextureDepthFragmentShader;
+            this.meshG.customDepthMaterial.uniforms = shader.uniforms;
+        }
+
         this.scene.add(this.meshG);
         // Both channels
 /*        this.mesh = new THREE.Mesh(this.geometry, this.material);       

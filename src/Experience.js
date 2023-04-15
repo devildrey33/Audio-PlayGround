@@ -83,7 +83,7 @@ export default class Experience {
     /* debug options for lil.gui */
     debugOptions = {
         songName                  : "",
-        shadows                   : false,
+        shadows                   : true,
         osciloscopeLineSize       : 0.02,
         osciloscopeAlpha          : this.panelAlpha,
         osciloscopeAudioStrength  : 0.5,
@@ -107,9 +107,9 @@ export default class Experience {
         perlinSunAlpha            : this.panelAlpha,
         perlinSunColorFrequency   : new THREE.Color("#972020"), //new THREE.Color("rgb(25, 0, 25)"),
         perlinSunColorSin         : new THREE.Color("#1e1f33"),  //new THREE.Color("rgb(50, 50, 250)"),
-        bloomThreshold            : -7.8,
-        bloomRadius               : -8.32,
-        bloomStrength             : 0.5,
+        bloomThreshold            : -0.8,
+        bloomRadius               : -1.32,
+        bloomStrength             : 0.55,
         bloomEnabled              : true,
         frequencyTextureVisible   : true
     };

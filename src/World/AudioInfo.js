@@ -7,7 +7,7 @@ export default class AudioInfo {
         this.experience = new Experience();
         this.scene      = this.experience.scene;
         this.world      = world;
-        this.font  = this.experience.resources.items.jsonFont;
+        this.font       = this.experience.resources.items.jsonFont;
 
         this.material = new THREE.MeshStandardMaterial({ color : "#070707" });
         this.setup();
@@ -35,7 +35,8 @@ export default class AudioInfo {
         this.mesh = new THREE.Mesh( this.geometry,  this.material);        
         this.mesh.position.x = centerOffset;
         this.mesh.position.z = 7;
-        this.mesh.position.y = -1;
+        this.mesh.position.y = -2;
+        this.mesh.rotation.x = Math.PI * -0.25;
         this.mesh.name = "AudioInfo";
         this.mesh.castShadow = this.experience.debugOptions.shadows;
         this.scene.add(this.mesh);

@@ -48,7 +48,7 @@ export default class Environment {
         this.sunLight.shadow.camera.top    =  16;
         this.sunLight.shadow.camera.left   = -16;
         this.sunLight.shadow.camera.right  =  16;
-        this.sunLight.position.set(-3, 12, 18);
+        this.sunLight.position.set(-5, 12, 18);
         this.scene.add(this.sunLight)
 
         //debug

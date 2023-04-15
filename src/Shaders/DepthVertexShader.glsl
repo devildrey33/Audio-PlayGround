@@ -1,7 +1,4 @@
-uniform sampler2D uAudioTexture;  // Linear texture (1024 * 1) to get audio values
-uniform float     uAudioStrength; // Strength multiplyer 
-attribute float   aId;            // Its an unique ID for each bar (1.0 / totalBars * actualBar)
-
+varying vec2 vUv;
 
 #include <common>
 #include <uv_pars_vertex>
@@ -21,17 +18,7 @@ void main() {
 	#endif
 	#include <begin_vertex>
 
-//vec4 audioValue = vec4(1.0);
-    vec4 audioValue = texture2D(uAudioTexture, vec2(aId, 0.0));
-
-    if (uv.y > 0.5) {
-        // Add the red channel intensity to the Y of the model
-        transformed.y +=  audioValue.r * uAudioStrength;
-    }
-    else {
-        transformed.y -=  audioValue.r * uAudioStrength;
-    }
-    
+    vUv = uv;
 
 	#include <morphtarget_vertex>
 	#include <skinning_vertex>

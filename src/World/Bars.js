@@ -54,7 +54,7 @@ export default class Bars {
 
         for (let z = 0; z < height; z++) {
             for (let x = 0; x < width; x++) {
-                const geometry = new THREE.BoxGeometry(0.07, 0.1, 0.07);
+                const geometry = new THREE.BoxGeometry(0.08, 0.1, 0.08);
 
                 const nx = (-(width * 0.5) + x) * 0.1;
                 const nz = (-(height * 0.5) + z) * 0.1;
@@ -86,20 +86,20 @@ export default class Bars {
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.mesh.castShadow = this.experience.debugOptions.shadows;
 
-        this.mesh.position.z += 4;
+        this.mesh.position.z += 4.5;
         this.mesh.name = "Bars";
-/*
+
         // Custom depth material
         this.mesh.customDepthMaterial = new THREE.MeshDepthMaterial({ 
-            depthPacking: THREE.RGBADepthPacking,
+            depthPacking: THREE.RGBADepthPacking
         });
 
         // Modify the default depth material
         this.mesh.customDepthMaterial.onBeforeCompile = (shader) => {
-            shader.uniforms.uAudioTexture = { value : this.world.frequencyTexture.bufferCanvasLinear.texture };
-            shader.uniforms.uAudioTexture = { value : this.experience.debugOptions.barsAudioStrength };
-            shader.vertexShader = BarsDepthVertexShader;
-        }*/
+            shader.uniforms.uAudioTexture  = { value : this.world.frequencyTexture.bufferCanvasLinear.texture };
+            shader.uniforms.uAudioStrength = { value : this.experience.debugOptions.barsAudioStrength };
+            shader.vertexShader            = BarsDepthVertexShader;
+        }
 
         this.scene.add(this.mesh);
     }

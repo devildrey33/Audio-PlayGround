@@ -1,6 +1,9 @@
 import Experience from "../Experience";
 import YinYangVertexShader from "../Shaders/YinYang/YinYangVertexShader.glsl"
 import YinYangFragmentShader from "../Shaders/YinYang/YinYangFragmentShader.glsl"
+import DepthVertexShader from "../Shaders/DepthVertexShader.glsl"
+import YinYangDepthFragmentShader from "../Shaders/YinYang/YinYangDepthFragmentShader.glsl"
+
 import * as THREE from "three"
 
 export default class YinYang {
@@ -44,6 +47,26 @@ export default class YinYang {
         this.mesh.castShadow =  this.experience.debugOptions.shadows;
         this.mesh.name = "YinYang";
         
+        // Custom depth material
+        this.mesh.customDepthMaterial = new THREE.MeshDepthMaterial({ 
+            depthPacking: THREE.RGBADepthPacking
+        });
+
+        // Modify the default depth material
+        this.mesh.customDepthMaterial.onBeforeCompile = (shader) => {
+            shader.uniforms.uAudioTexture  = { value : this.world.frequencyTexture.bufferCanvasLinear.texture };
+            shader.uniforms.uHighFrequency = { value : 0 };
+            shader.uniforms.uLowFrequency  = { value : 0 };
+            shader.uniforms.uTime          = { value : 0 };
+            shader.uniforms.uAlpha         = { value : this.experience.debugOptions.yinYangAlpha };
+            shader.uniforms.uRotate        = { value : 1.0 };
+            shader.uniforms.uHover         = { value : 0.0 };
+            shader.uniforms.uColorStrength = { value : 0   };
+            shader.vertexShader            = DepthVertexShader;
+            shader.fragmentShader          = YinYangDepthFragmentShader;
+            this.mesh.customDepthMaterial.uniforms = shader.uniforms;
+        }
+
         this.scene.add(this.mesh);
 
 

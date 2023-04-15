@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import Experience from "../Experience";
 //import FloorVertexShader from "../Shaders/Floor/FloorVertexShader.glsl"
 import FloorStandardVertexShader from "../Shaders/Floor/FloorStandardVertexShader.glsl"
+import FloorStandardFragmentShader from "../Shaders/Floor/FloorStandardFragmentShader.glsl"
 //import FloorFragmentShader from "../Shaders/Floor/FloorFragmentShader.glsl"
 
 export default class Floor {
@@ -40,8 +41,12 @@ export default class Floor {
                 shader.uniforms.uAudioTexture  = { value : this.world.frequencyTexture.bufferCanvasSquare.texture };
                 shader.uniforms.uAudioStrength = { value : this.experience.debugOptions.floorAudioStrength };
                 shader.uniforms.uTime          = { value : 0 }
+                
                 // New vertex shader
                 shader.vertexShader = FloorStandardVertexShader;                
+                // New fragment shader
+                shader.fragmentShader = FloorStandardFragmentShader;
+                // Make uniforms visible in the material
                 this.material.uniforms = shader.uniforms;
             },
             color         : new THREE.Color("#0505e0"),

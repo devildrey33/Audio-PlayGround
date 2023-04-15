@@ -2,6 +2,8 @@ import Experience from "../Experience";
 import * as THREE from 'three'
 import OsciloscopeVertexShader from "../Shaders/Osciloscope/OsciloscopeVertexShader.glsl"
 import OsciloscopeFragmentShader from "../Shaders/Osciloscope/OsciloscopeFragmentShader.glsl"
+import DepthVertexShader from "../Shaders/DepthVertexShader.glsl"
+import OsciloscopeDepthFragmentShader from "../Shaders/Osciloscope/OsciloscopeDepthFragmentShader.glsl"
 
 
 export default class Osciloscope {
@@ -45,6 +47,27 @@ export default class Osciloscope {
         this.mesh.position.x -= 7;
         this.mesh.name = "Osciloscope";
         this.mesh.castShadow =  this.experience.debugOptions.shadows;
+
+        // Custom depth material
+        this.mesh.customDepthMaterial = new THREE.MeshDepthMaterial({ 
+            depthPacking: THREE.RGBADepthPacking
+        });
+
+        // Modify the default depth material
+        this.mesh.customDepthMaterial.onBeforeCompile = (shader) => {
+            shader.uniforms.uAudioTexture  = { value : this.world.frequencyTexture.bufferCanvasLinear.texture };
+            shader.uniforms.uAudioStrength = { value : this.experience.debugOptions.osciloscopeAudioStrength };
+            shader.uniforms.uAudioZoom     = { value : this.experience.debugOptions.osciloscopeAudioZoom },
+            shader.uniforms.uAlpha         = { value : this.experience.debugOptions.osciloscopeAlpha };
+            shader.uniforms.uSize          = { value : this.experience.debugOptions.osciloscopeLineSize };
+            shader.uniforms.uTime          = { value : 0 };
+            shader.uniforms.uHover         = { value : 0.0 };
+            shader.vertexShader            = DepthVertexShader;
+            shader.fragmentShader          = OsciloscopeDepthFragmentShader;
+            this.mesh.customDepthMaterial.uniforms = shader.uniforms;
+        }
+
+
         this.scene.add(this.mesh);
 
     }

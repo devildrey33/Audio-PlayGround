@@ -1,5 +1,7 @@
 import CircularVertexShader from "../Shaders/Circular/CircularVertexShader.glsl"
 import CircularFragmentShader from "../Shaders/Circular/CircularFragmentShader.glsl"
+import DepthVertexShader from "../Shaders/DepthVertexShader.glsl"
+import CircularDepthFragmentShader from "../Shaders/Circular/CircularDepthFragmentShader.glsl"
 
 import Experience from "../Experience";
 import * as THREE from 'three'
@@ -51,11 +53,11 @@ export default class Circular {
             fragmentShader  : CircularFragmentShader,
             transparent     : true, 
             side            : THREE.DoubleSide,
-            depthWrite      : false,
+            depthWrite      : true,
 //            lights          : true
         });
 
-//        this.material.alphaTest = 0;
+//        this.material.alphaTest = 0.1;
 
         // Plane for the red channel circular shader
         this.mesh = new THREE.Mesh(this.geometry, this.material);
@@ -65,6 +67,24 @@ export default class Circular {
         this.mesh.name = "Circular";
         this.mesh.castShadow = this.experience.debugOptions.shadows;
 
+        // Custom depth material
+        this.mesh.customDepthMaterial = new THREE.MeshDepthMaterial({ 
+            depthPacking: THREE.RGBADepthPacking
+        });
+
+//        this.mesh.customDepthMaterial.uniforms = { uTime : { value : 0.0 }, uHover : { value : 0.0 }};
+        // Modify the default depth material
+        this.mesh.customDepthMaterial.onBeforeCompile = (shader) => {
+            shader.uniforms.uAudioTexture  = { value : this.world.frequencyTexture.bufferCanvasLinear.texture };
+            shader.uniforms.uAudioStrength = { value : this.experience.debugOptions.circularAudioStrength };
+            shader.uniforms.uAlpha         = { value : this.experience.debugOptions.circularAlpha };
+            shader.uniforms.uSize          = { value : this.experience.debugOptions.circularLineSize };
+            shader.uniforms.uTime          = { value : 0 };
+            shader.uniforms.uHover         = { value : 0.0 };
+            shader.vertexShader            = DepthVertexShader;
+            shader.fragmentShader          = CircularDepthFragmentShader;
+            this.mesh.customDepthMaterial.uniforms = shader.uniforms;
+        }        
 
         this.scene.add(this.mesh);
 
@@ -77,5 +97,7 @@ export default class Circular {
 
     update() {
         this.material.uniforms.uTime.value += this.time.delta / 1000;
+//        this.mesh.customDepthMaterial.uniforms.uTime.value += this.material.uniforms.uTime.value;
+//        this.mesh.customDepthMaterial.uniforms.uHover.value = this.material.uniforms.uHover.value;
     }
 }

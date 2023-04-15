@@ -1,7 +1,7 @@
 import CircularVertexShader from "../Shaders/Circular/CircularVertexShader.glsl"
-//import CircularFragmentShaderR from "../Shaders/Circular/CircularFragmentShaderR.glsl"
-import CircularSinFragmentShader from "../Shaders/Circular/CircularSinFragmentShader.glsl"
-//import CircularDistorsionFragmentShader from "../Shaders/Circular/CircularDistorsionFragmentShader.glsl"
+import DepthVertexShader from "../Shaders/DepthVertexShader.glsl"
+import CircularSinFragmentShader from "../Shaders/Circular/Sin/CircularSinFragmentShader.glsl"
+import CircularSinDepthFragmentShader from "../Shaders/Circular/Sin/CircularSinDepthFragmentShader.glsl"
 
 import Experience from "../Experience";
 import * as THREE from 'three'
@@ -35,7 +35,7 @@ export default class CircularSin {
             depthWrite      : false,
         });
 
-//        this.material.alphaTest = 0;
+
 
         // Plane for the red channel circular shader
         this.mesh = new THREE.Mesh(this.geometry, this.material);
@@ -44,6 +44,26 @@ export default class CircularSin {
         this.mesh.position.x -= 3;
         this.mesh.name = "CircularSin";
         this.mesh.castShadow = this.experience.debugOptions.shadows;
+
+
+        // Custom depth material
+        this.mesh.customDepthMaterial = new THREE.MeshDepthMaterial({ 
+            depthPacking: THREE.RGBADepthPacking
+        });
+
+        // Modify the default depth material
+        this.mesh.customDepthMaterial.onBeforeCompile = (shader) => {
+            shader.uniforms.uAudioTexture  = { value : this.world.frequencyTexture.bufferCanvasLinear.texture };
+            shader.uniforms.uAudioStrength = { value : this.experience.debugOptions.circularAudioStrength };
+            shader.uniforms.uAlpha         = { value : this.experience.debugOptions.circularAlpha };
+            shader.uniforms.uSize          = { value : this.experience.debugOptions.circularLineSize };
+            shader.uniforms.uTime          = { value : 0 };
+            shader.uniforms.uHover         = { value : 0.0 };
+            shader.vertexShader            = DepthVertexShader;
+            shader.fragmentShader          = CircularSinDepthFragmentShader;
+            this.mesh.customDepthMaterial.uniforms = shader.uniforms;
+        }
+
         this.scene.add(this.mesh);
 
     }
