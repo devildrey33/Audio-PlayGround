@@ -48,6 +48,9 @@ export default class YinYangSin {
             depthPacking: THREE.RGBADepthPacking
         });
 
+        // Need this structure formed on the first updates, when customDepthMaterial is compiled
+        // is filled with the real values
+        this.mesh.customDepthMaterial.uniforms = { uTime : { value : 0.0 }};
         // Modify the default depth material
         this.mesh.customDepthMaterial.onBeforeCompile = (shader) => {
             shader.uniforms.uAudioTexture  = { value : this.world.frequencyTexture.bufferCanvasLinear.texture };
@@ -73,5 +76,6 @@ export default class YinYangSin {
         this.material.uniforms.uLowFrequency.value  = this.audioAnalizer.averageFrequency[2] / 5024;
         this.material.uniforms.uColorStrength.value = 0.125 + this.audioAnalizer.averageFrequency[2] / 192;
         this.material.uniforms.uTime.value         += this.time.delta / 1000;
+        this.mesh.customDepthMaterial.uniforms.uTime.value = this.material.uniforms.uTime.value;
     }
 }

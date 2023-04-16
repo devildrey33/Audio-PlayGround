@@ -2,8 +2,8 @@ import Experience from "../Experience";
 import * as THREE from 'three'
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import BarsVertexShader from "../Shaders/Bars/BarsVertexShader.glsl"
-import BarsDepthVertexShader from "../Shaders/Bars/BarsDepthVertexShader.glsl"
 import BarsFragmentShader from "../Shaders/Bars/BarsFragmentShader.glsl"
+import BarsDepthVertexShader from "../Shaders/Bars/BarsDepthVertexShader.glsl"
 
 /*
  * Bars are merged and uses ShaderMaterial
@@ -54,7 +54,7 @@ export default class Bars {
 
         for (let z = 0; z < height; z++) {
             for (let x = 0; x < width; x++) {
-                const geometry = new THREE.BoxGeometry(0.08, 0.1, 0.08);
+                const geometry = new THREE.BoxGeometry(0.09, 0.1, 0.09);
 
                 const nx = (-(width * 0.5) + x) * 0.1;
                 const nz = (-(height * 0.5) + z) * 0.1;

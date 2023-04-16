@@ -16,6 +16,7 @@ export default class Debug {
         this.yinYang            = this.experience.world.yinYang;
         this.yinYangSin         = this.experience.world.yinYangSin;
         this.perlinSun          = this.experience.world.perlinSun;
+        this.ssPerlinSun        = this.experience.world.ssPerlinSun;
         this.bloomPass          = this.experience.renderer.bloomPass;
         this.options            = this.experience.debugOptions;
         this.songs              = this.experience.songs;
@@ -96,7 +97,7 @@ export default class Debug {
             /*
              * Osciloscope
              */
-            this.debugOsciloscope = this.ui.addFolder("Osciloscope").open(false);;
+            this.debugOsciloscope = this.ui.addFolder("Osciloscope").open(false);
             // Visible
 /*            this.debugOsciloscope.add(this.options, "osciloscopeVisible").name("Visible").onChange(() => {
                 this.osciloscope.visible(this.options.osciloscopeVisible);
@@ -116,6 +117,29 @@ export default class Debug {
             // Osciloscope line size
             this.debugOsciloscope.add(this.options, "osciloscopeLineSize").min(0.001).max(0.2).step(0.001).name("Line size").onChange(() => {
                 this.osciloscope.material.uniforms.uSize.value = this.options.osciloscopeLineSize;
+            });
+
+            /*
+             * Osciloscope Cylinder
+             */
+            this.debugOsciloscopeCylinder = this.ui.addFolder("Osciloscope Cylinder").open(false);
+            // Osciloscope audio strength
+            this.debugOsciloscopeCylinder.add(this.options, "osciloscopeCylinderAudioStrength").min(0).max(1).step(0.01).name("Audio strength").onChange(() => {
+                this.ssPerlinSun.osciloscopeCylinder1.material.uniforms.uAudioStrength.value = this.options.osciloscopeCylinderAudioStrength;
+                this.ssPerlinSun.osciloscopeCylinder2.material.uniforms.uAudioStrength.value = this.options.osciloscopeCylinderAudioStrength;
+                this.ssPerlinSun.osciloscopeCylinder3.material.uniforms.uAudioStrength.value = this.options.osciloscopeCylinderAudioStrength;
+            });            
+            // Osciloscope audio zoom
+            this.debugOsciloscopeCylinder.add(this.options, "osciloscopeCylinderAudioZoom").min(1).max(32).step(0.1).name("Audio zoom").onChange(() => {
+                this.ssPerlinSun.osciloscopeCylinder1.material.uniforms.uAudioZoom.value = this.options.osciloscopeCylinderAudioZoom;
+                this.ssPerlinSun.osciloscopeCylinder2.material.uniforms.uAudioZoom.value = this.options.osciloscopeCylinderAudioZoom;
+                this.ssPerlinSun.osciloscopeCylinder3.material.uniforms.uAudioZoom.value = this.options.osciloscopeCylinderAudioZoom;
+            });            
+            // Osciloscope line size
+            this.debugOsciloscopeCylinder.add(this.options, "osciloscopeCylinderLineSize").min(0.001).max(0.2).step(0.001).name("Line size").onChange(() => {
+                this.ssPerlinSun.osciloscopeCylinder1.material.uniforms.uSize.value = this.options.osciloscopeCylinderLineSize;
+                this.ssPerlinSun.osciloscopeCylinder2.material.uniforms.uSize.value = this.options.osciloscopeCylinderLineSize;
+                this.ssPerlinSun.osciloscopeCylinder3.material.uniforms.uSize.value = this.options.osciloscopeCylinderLineSize;
             });
 
          

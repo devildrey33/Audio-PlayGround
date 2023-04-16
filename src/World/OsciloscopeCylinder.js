@@ -1,46 +1,51 @@
 import Experience from "../Experience";
 import * as THREE from 'three'
-import OsciloscopeVertexShader from "../Shaders/Osciloscope/OsciloscopeVertexShader.glsl"
-import OsciloscopeFragmentShader from "../Shaders/Osciloscope/OsciloscopeFragmentShader.glsl"
+//import OsciloscopeVertexShader from "../Shaders/Osciloscope/OsciloscopeVertexShader.glsl"
+import OsciloscopeCylinderFragmentShader from "../Shaders/Osciloscope/Cylinder/OsciloscopeCylinderFragmentShader.glsl"
+import OsciloscopeCylinderVertexShader from "../Shaders/Osciloscope/Cylinder/OsciloscopeCylinderVertexShader.glsl"
 import DepthVertexShader from "../Shaders/DepthVertexShader.glsl"
 import OsciloscopeDepthFragmentShader from "../Shaders/Osciloscope/OsciloscopeDepthFragmentShader.glsl"
 
 
-export default class Osciloscope {
-    constructor(world) {
+
+
+export default class OsciloscopeCylinder {
+
+    constructor(world, group, rotation = new THREE.Vector3(0, 0, 0), color) {
         this.experience           = new Experience();
         this.scene                = this.experience.scene;
         this.sizes                = this.experience.sizes;
         this.world                = world;
+        this.time                 = this.experience.time;
         
-        this.setup();
+        this.setup(group, rotation, color);
     }
 
 
-    setup() {
-
-        this.geometry = new THREE.PlaneGeometry(3, 3);
+    setup(group, rotation, color) {
+        this.geometry = new THREE.CylinderGeometry(4, 4, 3, 32, 32, true);
 
         this.material = new THREE.ShaderMaterial({
             uniforms : {
                 uAudioTexture  : { value : this.world.frequencyTexture.bufferCanvasLinear.texture },
-                uAudioStrength : { value : this.experience.debugOptions.osciloscopeAudioStrength },
-                uAudioZoom     : { value : this.experience.debugOptions.osciloscopeAudioZoom },
-                uSize          : { value : this.experience.debugOptions.osciloscopeLineSize },
-                uAlpha         : { value : this.experience.debugOptions.osciloscopeAlpha },
+                uAudioStrength : { value : this.experience.debugOptions.osciloscopeCylinderAudioStrength },
+                uAudioZoom     : { value : this.experience.debugOptions.osciloscopeCylinderAudioZoom },
+                uSize          : { value : this.experience.debugOptions.osciloscopeCylinderLineSize },
+                uAlpha         : { value : this.experience.debugOptions.osciloscopeCylinderAlpha },
+                uColor         : { value : new THREE.Color(color) },
                 uHover         : { value : 0.0 },
-//                uTime         : { value : 0 }
+                uTime          : { value : 0.0 }
             },
-            vertexShader    : OsciloscopeVertexShader,
-            fragmentShader  : OsciloscopeFragmentShader,
+            vertexShader    : OsciloscopeCylinderVertexShader,
+            fragmentShader  : OsciloscopeCylinderFragmentShader,
             transparent     : true,
             side            : THREE.DoubleSide,
             depthWrite      : false
         });
         this.mesh = new THREE.Mesh(this.geometry, this.material);
-        this.mesh.position.y += 7;
-        this.mesh.position.x -= 7;
-        this.mesh.name = "Osciloscope";
+//        this.mesh.position.set(position.x, position.y, position.z);
+        this.mesh.rotation.set(rotation.x, rotation.y, rotation.z);
+        this.mesh.name = "OsciloscopeCilinder";
         this.mesh.castShadow =  this.experience.debugOptions.shadows;
 
         // Custom depth material
@@ -63,15 +68,16 @@ export default class Osciloscope {
         }
 
 
-        this.scene.add(this.mesh);
+        group.add(this.mesh);
 
     }
 
 /*    resize() {
     }*/
 
-/*    update() {
-    }*/
+    update() {
+        this.material.uniforms.uTime.value         += this.time.delta / 1000;
+    }
     
 
 }

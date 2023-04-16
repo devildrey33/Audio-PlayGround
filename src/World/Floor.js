@@ -3,7 +3,8 @@ import Experience from "../Experience";
 //import FloorVertexShader from "../Shaders/Floor/FloorVertexShader.glsl"
 import FloorStandardVertexShader from "../Shaders/Floor/FloorStandardVertexShader.glsl"
 import FloorStandardFragmentShader from "../Shaders/Floor/FloorStandardFragmentShader.glsl"
-//import FloorFragmentShader from "../Shaders/Floor/FloorFragmentShader.glsl"
+import FloorDepthVertexShader from "../Shaders/Floor/FloorDepthVertexShader.glsl"
+import DepthVertexShader from "../Shaders/DepthVertexShader.glsl"
 
 export default class Floor {
     constructor(world) {
@@ -13,11 +14,11 @@ export default class Floor {
         this.world        = world;
         this.setup();
     }
-
+/*
     visible(show) {
         if (show === true) this.scene.add(this.mesh);
         else               this.scene.remove(this.mesh);
-    }
+    }*/
 
     setup() {
         this.geometry = new THREE.PlaneGeometry(32, 32, 32, 32);
@@ -58,26 +59,6 @@ export default class Floor {
             shadowSide    : THREE.FrontSide*/
 
         });        
-/*
-        this.materialWire = new THREE.MeshStandardMaterial({
-            // Replace vertex shader and add more uniforms
-            onBeforeCompile : (shader) => {
-                // Add uniforms
-                shader.uniforms.uAudioTexture  = { value : this.world.frequencyTexture.bufferCanvasSquare.texture };
-                shader.uniforms.uAudioStrength = { value : this.experience.debugOptions.barsAudioStrength };
-                shader.uniforms.uTime          = { value : 0 }
-                // New vertex shader
-                shader.vertexShader = FloorStandardVertexShader;                
-                this.materialWire.uniforms = shader.uniforms;
-            },
-            color         : new THREE.Color("#990000"),
-            wireframe     : true,
-            side          : THREE.DoubleSide,
-        });        
-
-/*        this.materialWire = this.material.clone();
-        this.materialWire.wireframe = true;
-        this.materialWire.color = new THREE.Color("#990000");*/
 
         
         // Solid mesh
@@ -87,11 +68,24 @@ export default class Floor {
         this.mesh.position.z = -12.00;
         this.mesh.name = "Floor";
         this.mesh.receiveShadow = this.experience.debugOptions.shadows;
-        //this.mesh.castShadow    = true;
-/*
-        this.meshWire = new THREE.Mesh(this.geometry, this.materialWire);
-        this.meshWire.rotation.x = - Math.PI * 0.5
-        this.meshWire.position.y = -4.98;*/
+        this.mesh.castShadow    = this.experience.debugOptions.shadows;
+
+        // Custom depth material
+/*        this.mesh.customDepthMaterial = new THREE.MeshDepthMaterial({ 
+            depthPacking: THREE.RGBADepthPacking
+        });
+
+        // Modify the default depth material
+        this.mesh.customDepthMaterial.onBeforeCompile = (shader) => {
+            shader.uniforms.uAudioTexture  = { value : this.world.frequencyTexture.bufferCanvasLinear.texture };
+            shader.uniforms.uAudioStrength = { value : this.experience.debugOptions.osciloscopeAudioStrength };
+            shader.uniforms.uTime          = { value : 0 };
+            shader.vertexShader            = DepthVertexShader;
+            shader.fragmentShader          = FloorDepthVertexShader;
+            this.mesh.customDepthMaterial.uniforms = shader.uniforms;
+        }*/
+
+
 
         this.scene.add(this.mesh);
 
@@ -100,7 +94,6 @@ export default class Floor {
     update() {
         if (typeof this.material.uniforms !== "undefined") {
             this.material.uniforms.uTime.value     += this.time.delta / 1000;
-//            this.materialWire.uniforms.uTime.value += this.time.delta / 1000;
         }
 //        console.log(this.time.delta);
     }

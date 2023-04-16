@@ -10,31 +10,31 @@ export default class Environment {
 
 
         this.setSunLight();
-        //this.setSunLight2();
+//        this.setSunLight2();
 //        this.setEnvironmentMap();
 //        this.setSpotLight();
     }
 
     setSpotLight() {
-        this.spotLight = new THREE.SpotLight(0xffffff, 2, 100, Math.PI * 0.1, 0.25, 0.5);
-        this.spotLight.position.set(-6, 6,-7);
-        this.spotLight.target.position.set(-1, 0, 1)
-/*        this.spotLight.castShadow = true;
+        this.spotLight = new THREE.SpotLight(0xcccccc, 2, 100, Math.PI * 0.1, 0.25, 0.25);
+//        this.spotLight.position.set(1, 20, 27);
+        this.spotLight.position.set(-5, 18, 27);
+//        this.spotLight.target.position.set(-1, 0, 1)
+        this.spotLight.castShadow = true;
 
         //Set up shadow properties for the light
-        this.spotLight.shadow.mapSize.width = 512; // default
-        this.spotLight.shadow.mapSize.height = 512; // default
-        this.spotLight.shadow.camera.near = 0.5; // default
-        this.spotLight.shadow.camera.far = 20; // default
-        this.spotLight.shadow.focus = 1; // default*/
+        this.spotLight.shadow.mapSize.set(1024, 1024);
+        this.spotLight.shadow.camera.near = 0.1; // default
+        this.spotLight.shadow.camera.far = 1; // default
+        this.spotLight.shadow.focus = 1; // default
 
         this.scene.add(this.spotLight, this.spotLight.target);
 
-/*        if (this.debug.active) {
+        if (this.debug.active) {
             this.splhelper = new THREE.SpotLightHelper(this.spotLight);
             this.splhelper.visible = true; 
             this.scene.add(this.splhelper);  
-        }*/
+        }
 
     }
 
@@ -48,7 +48,7 @@ export default class Environment {
         this.sunLight.shadow.camera.top    =  16;
         this.sunLight.shadow.camera.left   = -16;
         this.sunLight.shadow.camera.right  =  16;
-        this.sunLight.position.set(-5, 12, 18);
+        this.sunLight.position.set(-5, 18, 27);
         this.scene.add(this.sunLight)
 
         //debug
@@ -59,15 +59,24 @@ export default class Environment {
     }
 
     setSunLight2() {
-        this.sunLight2 = new THREE.DirectionalLight('#ffffff', 0.6)
+        this.sunLight2 = new THREE.DirectionalLight('#ffffff', 2);
         this.sunLight2.castShadow = true
-        this.sunLight2.shadow.camera.far = 20
-        this.sunLight2.shadow.mapSize.set(256, 256)
-        this.sunLight2.shadow.normalBias = 0.05
-        this.sunLight2.position.set(6, 5, -7)
-        this.sunLight2.visible = false;
-        this.scene.add(this.sunLight2)
+        this.sunLight2.shadow.camera.far = 64;
+        this.sunLight2.shadow.mapSize.set(1024, 1024);
+        this.sunLight2.shadow.normalBias = 0.05;
+        this.sunLight2.shadow.camera.bottom = -16;
+        this.sunLight2.shadow.camera.top    =  16;
+        this.sunLight2.shadow.camera.left   = -16;
+        this.sunLight2.shadow.camera.right  =  16;
+        this.sunLight2.position.set(5, 12, 18);
+        this.scene.add(this.sunLight2);
 
+        //debug
+        if (this.debug.active) {
+            this.sunLightHelper2 = new THREE.DirectionalLightHelper(this.sunLight2, 1);
+            this.scene.add(this.sunLightHelper2);
+        }
+        
 /*        //debug
         if (this.debug.active) {
             this.debugFolder.add(this.sunLight2, 'intensity').min(0).max(10).step(0.001);

@@ -13,7 +13,9 @@ import * as THREE from 'three'
 import { gsap } from "gsap";
 import PerlinSun from './PerlinSun.js';
 import AudioInfo from './AudioInfo.js';
+import SSPerlinSun from './SSPerlinSun.js';
 //import OsciloscopeSoft from './OsciloscopeSoft.js';
+
 
 export default class World {
     constructor() {
@@ -36,17 +38,22 @@ export default class World {
 
     setup() {
         // Objects of the scene
-        this.frequencyTexture   = new FrequencyTexture();
-        this.floor              = new Floor(this);
-        this.bars               = new Bars(this);
-        this.osciloscope        = new Osciloscope(this);
-        this.circular           = new Circular(this);
-        this.circularSin        = new CircularSin(this);
-        this.circularDistorsion = new CircularDistorsion(this);
-        this.yinYang            = new YinYang(this);
-        this.yinYangSin         = new YinYangSin(this);
-        this.perlinSun          = new PerlinSun(this);
+        this.frequencyTexture    = new FrequencyTexture();
+        this.floor               = new Floor(this);
+        this.bars                = new Bars(this);
+        this.osciloscope         = new Osciloscope(this);
+        this.circular            = new Circular(this);
+        this.circularSin         = new CircularSin(this);
+        this.circularDistorsion  = new CircularDistorsion(this);
+        this.yinYang             = new YinYang(this);
+        this.yinYangSin          = new YinYangSin(this);
+        this.perlinSun           = new PerlinSun(this);
+        this.ssPerlinSun         = new SSPerlinSun(this);
+//        const start = Math.PI * 2.0 * 0.33 * 0.5;
 
+        this.experience.camera.controls.target.set(this.ssPerlinSun.group.position.x, this.ssPerlinSun.group.position.y, this.ssPerlinSun.group.position.z);
+        this.experience.camera.controls.update();
+        
         // Last camera position
         this.lastCameraPosition = this.camera.position.clone();
         // Camera focus, if not free is one of the panels
@@ -75,28 +82,23 @@ export default class World {
             this.environment      = new Environment();
             this.audioInfo        = new AudioInfo(this);
 
-            // Setup the objects
             this.objects = {
-    //            bars                : { name : "Bars"                , hover : false, material : this.bars.material }, },
-                circular            : { name : "Circular"            ,hover : false, material : this.circular.material          , object : this.circular          , mesh : this.circular.mesh },
-                circularSin         : { name : "CircularSin"         ,hover : false, material : this.circularSin.material       , object : this.circularSin       , mesh : this.circularSin.mesh },
-                circularDistorsion  : { name : "CircularDistorsion"  ,hover : false, material : this.circularDistorsion.material, object : this.circularDistorsion, mesh : this.circularDistorsion.mesh },
-    //            floor               : { name : "Floor"               , hover : false, material : this.floor.material }, },
-                frequencyTexture    : { name : "FrequencyTexture"    ,hover : false, material : this.frequencyTexture.materialR, object : this.frequencyTexture   , mesh : this.frequencyTexture.meshR },
-                frequencyTextureSin : { name : "FrequencyTextureSin" ,hover : false, material : this.frequencyTexture.materialG, object : this.frequencyTexture   , mesh : this.frequencyTexture.meshG },
-                osciloscope         : { name : "Osciloscope"         ,hover : false, material : this.osciloscope.material      , object : this.osciloscope        , mesh : this.osciloscope.mesh },
-                yinYang             : { name : "YinYang"             ,hover : false, material : this.yinYang.material          , object : this.yinYang            , mesh : this.yinYang.mesh },
-                yinYangSin          : { name : "YinYangSin"          ,hover : false, material : this.yinYangSin.material       , object : this.yinYangSin         , mesh : this.yinYangSin.mesh },
-                perlinSun           : { name : "PerlinSun"           ,hover : false, material : this.perlinSun.material        , object : this.perlinSun          , mesh : this.perlinSun.mesh },
-                audioInfo           : { name : "AudioInfo"           ,hover : false, material : this.audioInfo.material        , object : this.audioInfo          , mesh : this.audioInfo.mesh },
-    
+                circular            : { name : "Circular"            , hover : false, object : this.circular           },
+                circularSin         : { name : "CircularSin"         , hover : false, object : this.circularSin        },
+                circularDistorsion  : { name : "CircularDistorsion"  , hover : false, object : this.circularDistorsion },
+                osciloscope         : { name : "Osciloscope"         , hover : false, object : this.osciloscope        },
+                yinYang             : { name : "YinYang"             , hover : false, object : this.yinYang            },
+                yinYangSin          : { name : "YinYangSin"          , hover : false, object : this.yinYangSin         },
+                perlinSun           : { name : "PerlinSun"           , hover : false, object : this.perlinSun          },
+                audioInfo           : { name : "AudioInfo"           , hover : false, object : this.audioInfo          },            
             }
-
+            
             this.ready            = true;
             
         });
 
-        // hover animations with gsap
+        
+        //this.controls.update();
         
     }
 
@@ -132,8 +134,8 @@ export default class World {
             let geo;
             for (const object in this.objects) {
                 if (this.objects[object].name === this.hover) {
-                    position = this.objects[object].mesh.position;
-                    geo = this.objects[object].mesh.geometry;
+                    position = this.objects[object].object.mesh.position;
+                    geo = this.objects[object].object.mesh.geometry;
                 }
             }
 
@@ -149,7 +151,7 @@ export default class World {
             const width = geo.boundingBox.max.x - geo.boundingBox.min.x;
             let nz = (this.camera.position.z > position.z) ? 2.5 * width : -2.5 * width;
 
-//            console.log(nz);
+
             
             // Camera position and target animation
             gsap.to(this.camera.position, {
@@ -168,22 +170,10 @@ export default class World {
                 }
             });
         }
+        // Camera is focused
         else {
             let position;
             let geo;
-/*            let found = false;
-            for (const object in this.objects) {
-                if (this.objects[object].name === this.hover) {
-                    position = this.objects[object].mesh.position;
-                    geo      = this.objects[object].mesh.geometry;
-                    found    = true;
-                }
-            }
-
-            
-            if (found === true) {
-
-            }*/
 
             // Return to camera free animation
             gsap.to(this.camera.position, {
@@ -218,7 +208,6 @@ export default class World {
         this.hover = "";
 
         for (let i = 0; i < intersects.length; i++) {
-//        if (intersects.length > 0) {
             for (const object in this.objects) {
                 if (intersects[i].object.name === this.objects[object].name) {
                     this.hover = this.objects[object].name;
@@ -234,25 +223,33 @@ export default class World {
             const o = this.objects[object];
             if (o.hover === true && o.name !== "AudioInfo") {
                 // if the object is not hover, start the animation
-                if (o.material.uniforms.uHover.value < 0.01) {
-                    gsap.to(o.material.uniforms.uHover, {
+                if (o.object.material.uniforms.uHover.value < 0.01) {
+                    gsap.to(o.object.material.uniforms.uHover, {
                         duration : this.ani.duration, 
                         ease     : this.ani.ease,
                         value    : 1.0,
+/*                        onUpdate : () => {
+                            // Copy the hover value to the depthMaterial
+                            o.object.mesh.customDepthMaterial.uniforms.uHover = o.object.material.uniforms.uHover;
+                        }*/
                     });
                 }
             }
         }
 
-        // Update last hover object
+        // Update last hover to normal state
         if (this.lastHover !== this.hover) {
             for (const object in this.objects) {
                 const o = this.objects[object];
                 if (o.name === this.lastHover && o.name !== "AudioInfo" ) {
-                    gsap.to(o.material.uniforms.uHover, {
+                    gsap.to(o.object.material.uniforms.uHover, {
                         duration : this.ani.duration, 
                         ease     : this.ani.ease,
                         value    : 0.0,
+/*                        onUpdate : () => {
+                            // Copy the hover value to the depthMaterial
+                            o.object.mesh.customDepthMaterial.uniforms.uHover = o.object.material.uniforms.uHover;
+                        }*/
                     });
                     break;
                 }
@@ -282,6 +279,7 @@ export default class World {
             this.yinYang.update();
             this.yinYangSin.update();
             this.perlinSun.update();
+            this.ssPerlinSun.update();
 
 
 //            this.osciloscope.update();

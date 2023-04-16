@@ -30,54 +30,15 @@ export default class FrequencyTexture {
         this.bufferCanvasLinear.texture.minFilter = THREE.NearestFilter;
         this.bufferCanvasLinear.texture.magFilter = THREE.NearestFilter;
 
-        this.setup();
+//        this.setup();
     }
 
+    /* 
+     * Creates the audio texture pannels, one red with frequency data and one green with time domain data.
+     */
     setup() {
-        // Stuff to create a plus and equal simbols
-/*        this.simbolMaterial = new THREE.MeshBasicMaterial( { color : new THREE.Color("#ffff00") });
-        this.simbolGeometry = new THREE.BoxGeometry(0.125, 0.125, 0.1);
-
-        // Create two boxes to make a plus simbol
-        this.plus1 = new THREE.Mesh(this.simbolGeometry, this.simbolMaterial);
-        this.plus1.scale.x = 4.0;
-        this.plus2 = new THREE.Mesh(this.simbolGeometry, this.simbolMaterial);
-        this.plus2.scale.y = 4.0;
-        // Group for plus meshes
-        this.plus = new THREE.Group();
-        this.plus.add(this.plus1, this.plus2);
-        // Move plus to its position
-        this.plus.position.y += 5;
-        this.plus.position.x -= 11;
-        // Add plus group to the scene
-        this.scene.add(this.plus);
-
-        // Create two boxes to make an equal simbol
-        this.equal1 = new THREE.Mesh(this.simbolGeometry, this.simbolMaterial);
-        this.equal1.scale.x = 4.0;
-        this.equal1.position.y = 0.125;
-        this.equal2 = new THREE.Mesh(this.simbolGeometry, this.simbolMaterial);
-        this.equal2.scale.x = 4.0;
-        this.equal2.position.y = -0.125;
-        // Group for equal meshes
-        this.equal = new THREE.Group();
-        this.equal.add(this.equal1, this.equal2);
-        // Move equal to its position
-        this.equal.position.y += 3;
-        this.equal.position.x -= 9;
-        // Add equal group to the scene
-        this.scene.add(this.equal);*/
-
-
-
+        // Plane geometry of 3x3
         this.geometry = new THREE.PlaneGeometry(3, 3);
-/*        this.material = new THREE.ShaderMaterial({
-            uniforms : {
-                uAudioTexture : { value : this.bufferCanvasSquare.texture },
-            },
-            vertexShader    : FrequencyTextureVertexShader,
-            fragmentShader  : FrequencyTextureFragmentShader,
-        });*/
 
         this.materialR = new THREE.ShaderMaterial({
             uniforms : {
@@ -90,18 +51,7 @@ export default class FrequencyTexture {
             depthWrite      : false
         });
 
-        this.materialG = new THREE.ShaderMaterial({
-            uniforms : {
-                uAudioTexture : { value : this.bufferCanvasSquare.texture },
-                uHover        : { value : 0.0 },
-            },
-            vertexShader    : FrequencyTextureVertexShader,
-            fragmentShader  : FrequencyTextureFragmentShaderG,
-            transparent     : true,
-            depthWrite      : false
-        });
-
-        // Red channel
+        // Red channel pannel
         this.meshR = new THREE.Mesh(this.geometry, this.materialR);       
         this.meshR.material.side = THREE.DoubleSide;
         this.meshR.position.y += 3;
@@ -124,6 +74,19 @@ export default class FrequencyTexture {
         }
 
         this.scene.add(this.meshR);
+
+
+
+        this.materialG = new THREE.ShaderMaterial({
+            uniforms : {
+                uAudioTexture : { value : this.bufferCanvasSquare.texture },
+                uHover        : { value : 0.0 },
+            },
+            vertexShader    : FrequencyTextureVertexShader,
+            fragmentShader  : FrequencyTextureFragmentShaderG,
+            transparent     : true,
+            depthWrite      : false
+        });
 
         // Green channel
         this.meshG = new THREE.Mesh(this.geometry, this.materialG);       
@@ -148,31 +111,12 @@ export default class FrequencyTexture {
         }
 
         this.scene.add(this.meshG);
-        // Both channels
-/*        this.mesh = new THREE.Mesh(this.geometry, this.material);       
-        this.mesh.material.side = THREE.DoubleSide;
-        this.mesh.position.y += 3;
-        this.mesh.position.x -= 7;
-        this.scene.add(this.mesh);*/
     }
 
-    visible(show) {
-        if (show === true) {
-            this.scene.add(this.plus);
-            this.scene.add(this.equal);
-            this.scene.add(this.meshR);
-            this.scene.add(this.meshG);
-            this.scene.add(this.mesh);
-        }
-        else {
-            this.scene.remove(this.plus);
-            this.scene.remove(this.equal);
-            this.scene.remove(this.meshR);
-            this.scene.remove(this.meshG);
-            this.scene.remove(this.mesh);
-        }   
-    }
 
+    // Updates internal audio data textures
+    // For the floor whe need a 32x32 texture, and for the rest of the effects a 1024x1 texture
+    // Red channel is the Frequency data, and the Green channel is the time domain data
     update() {
         for (let y = 0; y < this.audioAnalizer.square; y++) {
             for (let x = 0; x < this.audioAnalizer.square * 2; x++) {

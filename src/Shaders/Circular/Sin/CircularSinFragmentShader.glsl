@@ -59,7 +59,7 @@ void main() {
     // Apply the round hover border
     color = borderRoundRect(color, vec2(1.0, 1.0), 0.125);
 
-    if (color.r == 0.0 && color.g == 0.0 && color.b == 0.0 && color.a == 0.0) discard;
+//    if (color.r == 0.0 && color.g == 0.0 && color.b == 0.0 && color.a == 0.0) discard;
 
     gl_FragColor = color;
 }
