@@ -40,7 +40,8 @@ export default class OsciloscopeCylinder {
             fragmentShader  : OsciloscopeCylinderFragmentShader,
             transparent     : true,
             side            : THREE.DoubleSide,
-            depthWrite      : false
+            depthWrite      : false,
+            renderOrder     : 1
         });
         this.mesh = new THREE.Mesh(this.geometry, this.material);
 //        this.mesh.position.set(position.x, position.y, position.z);
@@ -67,6 +68,7 @@ export default class OsciloscopeCylinder {
             this.mesh.customDepthMaterial.uniforms = shader.uniforms;
         }
 
+        this.mesh.scale.set(0.01, 0.01, 1.0);
 
         group.add(this.mesh);
 

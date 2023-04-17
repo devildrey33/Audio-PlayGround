@@ -92,7 +92,7 @@ export default class Experience {
         osciloscopeCylinderLineSize      : 0.005,
         osciloscopeCylinderAlpha         : this.panelAlpha,
         osciloscopeCylinderAudioStrength : 0.5,
-        osciloscopeCylinderAudioZoom     : 1,
+        osciloscopeCylinderAudioZoom     : 8,
         floorAudioStrength               : 5,
         floorVisible                     : true,
         floorColorBackground             : new THREE.Color("#000007"),

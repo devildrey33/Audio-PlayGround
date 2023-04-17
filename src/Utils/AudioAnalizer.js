@@ -15,7 +15,7 @@ export default class AudioAnalizer {
 //        start();
     }
 
-    start(fftSize, fnReady = () => {}, fnEnded = () => {}) {
+    start(fftSize/*, fnReady = () => {}, fnEnded = () => {}*/) {
         this.fftSize         = fftSize;
         this.square          = Math.sqrt(this.fftSize * 0.5);
         //this.bufferCanvas    = new BufferCanvas(this.square, this.square);
@@ -27,8 +27,8 @@ export default class AudioAnalizer {
         this.analizer                         = this.context.createAnalyser();
         this.analizer.fftSize                 = fftSize;
         this.analizer.smoothingTimeConstant   = 0.8; // 
-        this.fnEnded                          = fnEnded;
-        this.fnReady                          = fnReady;
+//        this.fnEnded                          = fnEnded;
+//        this.fnReady                          = fnReady;
 
         this.hEventDragEnter = this.eventDragEnter.bind(this);
         this.hEventDragOver  = this.eventDragOver.bind(this);
@@ -44,6 +44,7 @@ export default class AudioAnalizer {
             this.song.pause();
             this.songLoaded = false;
             this.experience.loading = true;
+            this.experience.htmlElements.elementAudioPlay.innerHTML = "Play";
         }
          
         this.song                = new Audio();
@@ -53,7 +54,7 @@ export default class AudioAnalizer {
         this.song.addEventListener('canplay', this.canPlay.bind(this));
         this.song.addEventListener('ended'  , () => { 
             this.experience.htmlElements.elementAudioPlay.innerHTML = "Play";
-            this.fnEnded.bind(this);
+//            this.fnEnded.bind(this);
         });                
         
     }
@@ -75,7 +76,7 @@ export default class AudioAnalizer {
         this.song.addEventListener('canplay', this.canPlayDrop.bind(this));
         this.song.addEventListener('ended'  , () => { 
             this.experience.htmlElements.elementAudioPlay.innerHTML = "Play";
-            this.fnEnded.bind(this);
+//            this.fnEnded.bind(this);
         });                
     }
 
@@ -83,8 +84,16 @@ export default class AudioAnalizer {
     playPause() {
         this.context.resume();
         // El autoplay en dispositivos moviles no funciona, por lo que hay que comprobar si está realmente en play o en pausa.
-        if (this.song.duration > 0 && !this.song.paused) { this.song.pause();  return false;  } 
-        else                                             { this.song.play();   return true;   }        
+        if (this.song.duration > 0 && !this.song.paused) { 
+            this.song.pause(); 
+            this.experience.htmlElements.elementAudioPlay.innerHTML = "Play";
+            return false;  
+        } 
+        else {
+            this.song.play();   
+            this.experience.htmlElements.elementAudioPlay.innerHTML = "Pause";
+            return true;   
+        }        
     };
 
     canPlay() {
@@ -95,8 +104,7 @@ export default class AudioAnalizer {
             this.audioSource.connect(this.analizer);
             this.analizer.connect(this.gainNode);
             this.gainNode.connect(this.context.destination);
-            this.fnReady();
-
+//            this.fnReady();            
             this.htmlElements.elementAudioTime.setAttribute("max", this.song.duration);
         }
     }

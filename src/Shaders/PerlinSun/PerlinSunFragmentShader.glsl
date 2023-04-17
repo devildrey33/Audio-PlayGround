@@ -1,3 +1,5 @@
+
+
 uniform float     uAlpha;
 uniform sampler2D uAudioTexture;
 uniform float     uTime;
@@ -121,7 +123,7 @@ vec4 circleFreq(vec4 currentColor, vec2 center, float radius, vec3 color) {
 
     float audioValue = (texture2D(uAudioTexture, vec2(normAngle, 0.0)).r - 0.5) * .25;
     // Perlin noise
-    float strength = cnoise(vec3(rad * 2.0, dist * 150.0,  uTime + color.b)) * radius * 0.1;
+    float strength = cnoise(vec3(rad * 2.0, dist * 15.0,  uTime + color.b)) * radius * 0.1;
 
     if (dist - audioValue + strength < radius) {
         color.r += audioValue * 0.5;
