@@ -1,6 +1,6 @@
 # Audio-PlayGround
  
-First i want to see how hard i can push a mobile device, in my mobile works at 50fps +o-... but its 6 years old. My friends told me it runs at 60fps on their mobiles.
+First i want to see how hard i can push a mobile device, in my mobile works at 25fps +o-... but its 6 years old. My friends told me it runs at 60fps on hig end mobiles. Need to implement a shadows removal if framerate drops on 3 first seconds or something like that
 
 Based on two textures : 32x32 for square operations and 1024x1 for lineal operations.
 Red channel has the Frequency, and green channel the TimeDomain of the song.
@@ -12,8 +12,8 @@ Red channel has the Frequency, and green channel the TimeDomain of the song.
 - Fragment shader Circular TimeDomain (green channel)
 - Fragment shader Circular Distortion (red channel)
 - Fragment shader Perlin sun (a mix of circular freuency + circular time domain + perlin noise)
-
-Im having a loot of problems with shadows, so at the moment this example runs without shadows...
+- Super Sayan Perlin sun (a combination of various effects)
+- Shadows added for all the effects
 
 You can drag & drop a song of your hard disk into the experience to play it.
 
@@ -21,7 +21,11 @@ live version : [Audio-PlayGround](https://devildrey33.es/Ejemplos/Three.js-Journ
 
 
 
-https://user-images.githubusercontent.com/15678544/231241903-63c07007-e20d-4e32-abef-6c86786b8484.mp4
+
+
+
+https://user-images.githubusercontent.com/15678544/232332632-74db47bc-60d3-4aae-baf4-2bbc2e0ce9e6.mp4
+
 
 
 
