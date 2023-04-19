@@ -13,9 +13,10 @@ export default class Bars {
     
     constructor(world) {
         this.experience      = new Experience();
-        this.fftSize         = this.experience.audioAnalizer.analizer.fftSize;
+        this.audioAnalizer   = this.experience.audioAnalizer;
+        this.fftSize         = this.audioAnalizer.analizer.fftSize;
+        this.data            = this.audioAnalizer.analizerData;
         this.scene           = this.experience.scene;
-        this.data            = this.experience.audioAnalizer.analizerData;
         this.world           = world;
         
         // Could be a square but makes no sense with the floor
@@ -40,7 +41,7 @@ export default class Bars {
 
         this.material = new THREE.ShaderMaterial({
             uniforms : {
-                uAudioTexture  : { value : this.world.frequencyTexture.bufferCanvasLinear.texture },
+                uAudioTexture  : { value : this.audioAnalizer.bufferCanvasLinear.texture },
                 uAudioStrength : { value : this.experience.debugOptions.barsAudioStrength },
 //                uTime         : { value : 0 }
             },
@@ -96,7 +97,7 @@ export default class Bars {
 
         // Modify the default depth material
         this.mesh.customDepthMaterial.onBeforeCompile = (shader) => {
-            shader.uniforms.uAudioTexture  = { value : this.world.frequencyTexture.bufferCanvasLinear.texture };
+            shader.uniforms.uAudioTexture  = { value : this.audioAnalizer.bufferCanvasLinear.texture };
             shader.uniforms.uAudioStrength = { value : this.experience.debugOptions.barsAudioStrength };
             shader.vertexShader            = BarsDepthVertexShader;
         }

@@ -21,7 +21,7 @@ export default class PerlinSun {
 //        console.log(this.experience.debugOptions.perlinSunColorFrequency);
         this.material = new THREE.ShaderMaterial({
             uniforms : {
-                uAudioTexture   : { value : this.world.frequencyTexture.bufferCanvasLinear.texture },
+                uAudioTexture   : { value : this.audioAnalizer.bufferCanvasLinear.texture },
                 uTime           : { value : 0 },
                 uAlpha          : { value : this.experience.debugOptions.perlinSunAlpha },
                 uRotate         : { value : 1.0 },
@@ -50,9 +50,12 @@ export default class PerlinSun {
             depthPacking: THREE.RGBADepthPacking
         });
 
+        // Create a pseudo uniforms before depth material is compiled, to not crash the update function
+        this.mesh.customDepthMaterial.uniforms = { uTime : { value : 0 } };
+
         // Modify the default depth material
         this.mesh.customDepthMaterial.onBeforeCompile = (shader) => {
-            shader.uniforms.uAudioTexture   = { value : this.world.frequencyTexture.bufferCanvasLinear.texture };
+            shader.uniforms.uAudioTexture   = { value : this.audioAnalizer.bufferCanvasLinear.texture };
             shader.uniforms.uTime           = { value : 0 };
             shader.uniforms.uAlpha          = { value : this.experience.debugOptions.perlinSunAlpha };
             shader.uniforms.uRotate         = { value : 1.0 };
@@ -73,5 +76,7 @@ export default class PerlinSun {
 //        this.material.uniforms.uHighFrequency.value = this.audioAnalizer.averageFrequency[0] / 255;
 //        this.material.uniforms.uLowFrequency.value  = this.audioAnalizer.averageFrequency[2] / 255;
 //        this.material.uniforms.uColorStrength.value = 0.125 + this.audioAnalizer.averageFrequency[2] / 192;
-        this.material.uniforms.uTime.value         += this.time.delta / 1000;    }
+        this.material.uniforms.uTime.value         += this.time.delta / 1000;    
+        this.mesh.customDepthMaterial.uniforms.uTime.value = this.material.uniforms.uTime.value;
+    }
 }

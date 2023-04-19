@@ -22,7 +22,7 @@ export default class YinYangSin {
 
         this.material = new THREE.ShaderMaterial({
             uniforms : {
-                uAudioTexture  : { value : this.world.frequencyTexture.bufferCanvasLinear.texture },
+                uAudioTexture  : { value : this.audioAnalizer.bufferCanvasLinear.texture },
                 uHighFrequency : { value : 0 },
                 uLowFrequency  : { value : 0 },
                 uTime          : { value : 0 },
@@ -53,7 +53,7 @@ export default class YinYangSin {
         this.mesh.customDepthMaterial.uniforms = { uTime : { value : 0.0 }};
         // Modify the default depth material
         this.mesh.customDepthMaterial.onBeforeCompile = (shader) => {
-            shader.uniforms.uAudioTexture  = { value : this.world.frequencyTexture.bufferCanvasLinear.texture };
+            shader.uniforms.uAudioTexture  = { value : this.audioAnalizer.bufferCanvasLinear.texture };
             shader.uniforms.uHighFrequency = { value : 0 };
             shader.uniforms.uLowFrequency  = { value : 0 };
             shader.uniforms.uTime          = { value : 0 };

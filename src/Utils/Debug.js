@@ -25,7 +25,7 @@ export default class Debug {
         this.active = window.location.hash === '#debug';
 
         if (this.active) {
-            this.ui = new dat.GUI()
+            this.ui = new dat.GUI();
 
             /* 
              * Audio
@@ -53,20 +53,12 @@ export default class Debug {
                 this.experience.audioAnalizer.loadSong(this.experience.song.path);
                 this.experience.audioAnalizer.playPause();
             });
-            // Audio textures visible
-/*            this.debugAudio.add(this.options, "frequencyTextureVisible").name("Audio textures visible").onChange(() => {
-                this.frequencyTexture.visible(this.options.frequencyTextureVisible);
-            });*/
 
 
             /*
              * Bars
              */
             this.debugBars = this.ui.addFolder("Bars").open(false);;
-            // Visible
-/*            this.debugBars.add(this.options, "barsVisible").name("Visible").onChange(() => {
-                this.bars.visible(this.options.barsVisible);
-            });*/
             // Count
             this.debugBars.add(this.options, "barsCount").min(32).max(512).step(1).name("Count").onChange(() => {
                 this.experience.world.bars.createBars(this.options.barsCount, 1);                
@@ -136,11 +128,11 @@ export default class Debug {
                 this.ssPerlinSun.osciloscopeCylinder3.material.uniforms.uAudioZoom.value = this.options.osciloscopeCylinderAudioZoom;
             });            
             // Osciloscope line size
-            this.debugOsciloscopeCylinder.add(this.options, "osciloscopeCylinderLineSize").min(0.001).max(0.2).step(0.001).name("Line size").onChange(() => {
+/*            this.debugOsciloscopeCylinder.add(this.options, "osciloscopeCylinderLineSize").min(0.001).max(0.2).step(0.001).name("Line size").onChange(() => {
                 this.ssPerlinSun.osciloscopeCylinder1.material.uniforms.uSize.value = this.options.osciloscopeCylinderLineSize;
                 this.ssPerlinSun.osciloscopeCylinder2.material.uniforms.uSize.value = this.options.osciloscopeCylinderLineSize;
                 this.ssPerlinSun.osciloscopeCylinder3.material.uniforms.uSize.value = this.options.osciloscopeCylinderLineSize;
-            });
+            });*/
 
          
             

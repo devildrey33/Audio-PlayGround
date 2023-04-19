@@ -15,6 +15,7 @@ export default class OsciloscopeCylinder {
         this.experience           = new Experience();
         this.scene                = this.experience.scene;
         this.sizes                = this.experience.sizes;
+        this.audioAnalizer        = this.experience.audioAnalizer;
         this.world                = world;
         this.time                 = this.experience.time;
         
@@ -27,7 +28,7 @@ export default class OsciloscopeCylinder {
 
         this.material = new THREE.ShaderMaterial({
             uniforms : {
-                uAudioTexture  : { value : this.world.frequencyTexture.bufferCanvasLinear.texture },
+                uAudioTexture  : { value : this.audioAnalizer.bufferCanvasLinear.texture },
                 uAudioStrength : { value : this.experience.debugOptions.osciloscopeCylinderAudioStrength },
                 uAudioZoom     : { value : this.experience.debugOptions.osciloscopeCylinderAudioZoom },
                 uSize          : { value : this.experience.debugOptions.osciloscopeCylinderLineSize },
@@ -56,7 +57,7 @@ export default class OsciloscopeCylinder {
 
         // Modify the default depth material
         this.mesh.customDepthMaterial.onBeforeCompile = (shader) => {
-            shader.uniforms.uAudioTexture  = { value : this.world.frequencyTexture.bufferCanvasLinear.texture };
+            shader.uniforms.uAudioTexture  = { value : this.audioAnalizer.bufferCanvasLinear.texture };
             shader.uniforms.uAudioStrength = { value : this.experience.debugOptions.osciloscopeAudioStrength };
             shader.uniforms.uAudioZoom     = { value : this.experience.debugOptions.osciloscopeAudioZoom },
             shader.uniforms.uAlpha         = { value : this.experience.debugOptions.osciloscopeAlpha };

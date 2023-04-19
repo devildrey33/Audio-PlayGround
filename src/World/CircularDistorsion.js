@@ -8,10 +8,11 @@ import * as THREE from 'three'
 
 export default class CircularDistorsion {
     constructor(world) {
-        this.experience = new Experience();
-        this.scene      = this.experience.scene;
-        this.world      = world;
-        this.time       = this.experience.time;
+        this.experience     = new Experience();
+        this.scene          = this.experience.scene;
+        this.world          = world;
+        this.time           = this.experience.time;
+        this.audioAnalizer  = this.experience.audioAnalizer;
 
         this.setup();
     }
@@ -21,7 +22,7 @@ export default class CircularDistorsion {
 
         this.material = new THREE.ShaderMaterial({
             uniforms : {
-                uAudioTexture  : { value : this.world.frequencyTexture.bufferCanvasLinear.texture },
+                uAudioTexture  : { value : this.audioAnalizer.bufferCanvasLinear.texture },
                 uAudioStrength : { value : this.experience.debugOptions.circularAudioStrength * 0.6 },
                 uAlpha         : { value : this.experience.debugOptions.circularAlpha },
                 uSize          : { value : this.experience.debugOptions.circularLineSize },
@@ -53,7 +54,7 @@ export default class CircularDistorsion {
 
         // Modify the default depth material
         this.mesh.customDepthMaterial.onBeforeCompile = (shader) => {
-            shader.uniforms.uAudioTexture  = { value : this.world.frequencyTexture.bufferCanvasLinear.texture };
+            shader.uniforms.uAudioTexture  = { value : this.audioAnalizer.bufferCanvasLinear.texture };
             shader.uniforms.uAudioStrength = { value : this.experience.debugOptions.circularAudioStrength * 0.75  };
             shader.uniforms.uAlpha         = { value : this.experience.debugOptions.circularAlpha };
             shader.uniforms.uSize          = { value : this.experience.debugOptions.circularLineSize };

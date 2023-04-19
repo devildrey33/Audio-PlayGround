@@ -38,7 +38,7 @@ export default class World {
 
     setup() {
         // Objects of the scene
-        this.frequencyTexture    = new FrequencyTexture();
+//        this.frequencyTexture    = new FrequencyTexture();
         this.floor               = new Floor(this);
         this.bars                = new Bars(this);
         this.osciloscope         = new Osciloscope(this);
@@ -269,7 +269,7 @@ export default class World {
 //            gsap.updateTweens();
 
 
-            this.frequencyTexture.update();
+//            this.frequencyTexture.update();
             // Floor need to be updated / painted first
             this.floor.update();
 //            this.bars.update();

@@ -30,7 +30,7 @@ export default class SSPerlinSun {
 //        console.log(this.experience.debugOptions.perlinSunColorFrequency);
         this.material = new THREE.ShaderMaterial({
             uniforms : {
-                uAudioTexture   : { value : this.world.frequencyTexture.bufferCanvasLinear.texture },
+                uAudioTexture   : { value : this.audioAnalizer.bufferCanvasLinear.texture },
                 uTime           : { value : 0 },
                 uAlpha          : { value : this.experience.debugOptions.perlinSunAlpha },
                 uRotate         : { value : 1.0 },
@@ -63,9 +63,12 @@ export default class SSPerlinSun {
             depthPacking: THREE.RGBADepthPacking
         });
 
+        // Create a pseudo uniforms before depth material is compiled, to not crash the update function
+        this.mesh.customDepthMaterial.uniforms = { uTime : { value : 0 } };
+
         // Modify the default depth material
         this.mesh.customDepthMaterial.onBeforeCompile = (shader) => {
-            shader.uniforms.uAudioTexture   = { value : this.world.frequencyTexture.bufferCanvasLinear.texture };
+            shader.uniforms.uAudioTexture   = { value : this.audioAnalizer.bufferCanvasLinear.texture };
             shader.uniforms.uTime           = { value : 0 };
             shader.uniforms.uAlpha          = { value : this.experience.debugOptions.perlinSunAlpha };
             shader.uniforms.uRotate         = { value : 1.0 };
@@ -104,21 +107,22 @@ export default class SSPerlinSun {
     }
 
 
-    update() {
-        // Divided by 1024 to get values from 0.0 to 0.25
-//        this.material.uniforms.uHighFrequency.value = this.audioAnalizer.averageFrequency[0] / 255;
-//        this.material.uniforms.uLowFrequency.value  = this.audioAnalizer.averageFrequency[2] / 255;
-//        this.material.uniforms.uColorStrength.value = 0.125 + this.audioAnalizer.averageFrequency[2] / 192;
+    update() {        
         const advance = this.time.delta / 1000;
+        // update time on perlin sun
         this.material.uniforms.uTime.value         += advance;   
+        // update time on perlin sun shadow
+        this.mesh.customDepthMaterial.uniforms.uTime.value = this.material.uniforms.uTime.value;
         
+        // make the perlin sun look at the camera
         this.groupLookAt.lookAt(this.experience.camera.instance.position);
-        //this.mesh.rotation.z = -Math.PI * 0.5;
         
         const high    = this.audioAnalizer.averageFrequency[0] / 255;
         const medium  = this.audioAnalizer.averageFrequency[1] / 255;
         const low     = this.audioAnalizer.averageFrequency[2] / 255;
         const average = this.audioAnalizer.averageFrequency[3] / 255;
+
+        //set the osciloscopecylinders scale
         this.osciloscopeCylinder1.mesh.scale.set(0.01 + high,
                                                  0.01 + high,
                                                  0.01 + high);
@@ -129,17 +133,18 @@ export default class SSPerlinSun {
                                                  0.2 + low,
                                                  0.2 + low);
 
-
+        // set the osciloscopecylinders line size
         const t = Math.abs(Math.sin(this.material.uniforms.uTime.value) * 0.05);
         this.osciloscopeCylinder1.material.uniforms.uSize.value = t * 0.75;
         this.osciloscopeCylinder2.material.uniforms.uSize.value = t * 0.66;
         this.osciloscopeCylinder3.material.uniforms.uSize.value = t * 0.52;
 
-
+        // Rotate the osciloscopecylinder lightnings
         this.osciloscopeCylinder1.mesh.rotation.set(-this.osciloscopeCylinder1.mesh.rotation.x - (advance * 0.33), 0, -this.osciloscopeCylinder2.mesh.rotation.z - (advance * 0.66));
         this.osciloscopeCylinder2.mesh.rotation.set(this.osciloscopeCylinder2.mesh.rotation.x + (advance * 0.66), 0, this.osciloscopeCylinder2.mesh.rotation.z + (advance * 0.66));
         this.osciloscopeCylinder3.mesh.rotation.set(this.osciloscopeCylinder3.mesh.rotation.x + advance, 0, -this.osciloscopeCylinder3.mesh.rotation.z - advance);
 
+        // Rotate the bars cylinder aura
         this.barsCylinder.mesh.rotation.set(0, this.barsCylinder.mesh.rotation.y + advance * 1.15 * (1.0 - average), 0);
 
         this.osciloscopeCylinder1.update();

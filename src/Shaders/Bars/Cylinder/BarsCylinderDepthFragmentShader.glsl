@@ -1,5 +1,5 @@
 uniform sampler2D uAudioTexture;
-//uniform float     uAudioStrength;
+uniform float     uAudioStrength;
 varying vec2      vUv;
 
 
@@ -27,10 +27,10 @@ void main() {
     float normPos = 0.0;
     if (vUv.x > 0.5) normPos = 1.0 - vUv.x;
     else             normPos = vUv.x;
-    float audioValue = 0.01 + texture2D(uAudioTexture, vec2(normPos, 0.0)).r;
+    float audioValue = 0.01 + texture2D(uAudioTexture, vec2(normPos, 0.0)).r * uAudioStrength;
 
 
-    vec4 color = vec4(1.0, 1.0, 1.0, 1.0);
+    vec4 color = vec4(0.5);
     if ((vUv.y - audioValue) < 0.0) {
 //        gl_FragColor = vec4(color, 0.6);
     }

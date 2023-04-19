@@ -8,10 +8,12 @@ import DepthVertexShader from "../Shaders/DepthVertexShader.glsl"
 
 export default class Floor {
     constructor(world) {
-        this.experience   = new Experience();
-        this.scene        = this.experience.scene;
-        this.time         = this.experience.time;
-        this.world        = world;
+        this.experience    = new Experience();
+        this.scene         = this.experience.scene;
+        this.time          = this.experience.time;
+        this.audioAnalizer = this.experience.audioAnalizer;
+
+        this.world         = world;
         this.setup();
     }
 /*
@@ -39,7 +41,7 @@ export default class Floor {
             // Replace vertex shader and add more uniforms
             onBeforeCompile : (shader) => {
                 // Add uniforms
-                shader.uniforms.uAudioTexture  = { value : this.world.frequencyTexture.bufferCanvasSquare.texture };
+                shader.uniforms.uAudioTexture  = { value : this.audioAnalizer.bufferCanvasSquare.texture };
                 shader.uniforms.uAudioStrength = { value : this.experience.debugOptions.floorAudioStrength };
                 shader.uniforms.uTime          = { value : 0 }
                 

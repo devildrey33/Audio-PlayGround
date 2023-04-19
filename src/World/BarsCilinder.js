@@ -7,10 +7,10 @@ import * as THREE from 'three'
 
 export default class BarsCilinder {
     constructor(world, group, color, color2) {
-        this.experience = new Experience();
-        this.time       = this.experience.time;
-        this.world      = world;
-
+        this.experience     = new Experience();
+        this.time           = this.experience.time;
+        this.world          = world;
+        this.audioAnalizer  = this.experience.audioAnalizer;
         this.setup(group, color, color2);
     }
 
@@ -18,13 +18,13 @@ export default class BarsCilinder {
         this.geometry = new THREE.CylinderGeometry(4, 2, 4, 32, 32, true);
         this.material = new THREE.ShaderMaterial({
             uniforms : {
-                uAudioTexture  : { value : this.world.frequencyTexture.bufferCanvasLinear.texture },
+                uAudioTexture  : { value : this.audioAnalizer.bufferCanvasLinear.texture },
                 uAudioStrength : { value : this.experience.debugOptions.osciloscopeCylinderAudioStrength },
                 uSize          : { value : this.experience.debugOptions.osciloscopeCylinderLineSize },
                 uColor         : { value : new THREE.Color(color) },
                 uColor2        : { value : new THREE.Color(color2) },
                 uHover         : { value : 0.0 },
-                uTime          : { value : 0.0 }
+//                uTime          : { value : 0.0 }
             },
             vertexShader    : BarsCylinderVertexShader,
             fragmentShader  : BarsCylinderFragmentShader,
@@ -47,7 +47,7 @@ export default class BarsCilinder {
 //        this.mesh.customDepthMaterial.uniforms = { uTime : { value : 0.0 }, uHover : { value : 0.0 }};
         // Modify the default depth material
         this.mesh.customDepthMaterial.onBeforeCompile = (shader) => {
-            shader.uniforms.uAudioTexture  = { value : this.world.frequencyTexture.bufferCanvasLinear.texture };
+            shader.uniforms.uAudioTexture  = { value : this.audioAnalizer.bufferCanvasLinear.texture };
             shader.uniforms.uAudioStrength = { value : this.experience.debugOptions.circularAudioStrength };
             shader.vertexShader            = DepthVertexShader;
             shader.fragmentShader          = BarsCylinderDepthFragmentShader;
@@ -60,6 +60,6 @@ export default class BarsCilinder {
 
     
     update() {
-        this.material.uniforms.uTime.value         += this.time.delta / 1000;
+//        this.material.uniforms.uTime.value         += this.time.delta / 1000;
     }
 }

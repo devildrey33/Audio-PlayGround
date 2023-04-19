@@ -96,30 +96,32 @@ void main () {
     if (vUv.x > 0.5) normPos = 1.0 - vUv.x ;
     else             normPos = vUv.x;
     
-    float audioValue = 0.01 + texture2D(uAudioTexture, vec2(normPos, 0.0)).r;
+    float audioValue = 0.01 + texture2D(uAudioTexture, vec2(normPos, 0.0)).r * uAudioStrength;
 
 
     // its inside the bars area
     if ((vUv.y - audioValue) < 0.0) {
 
         // Displace uV (first perlin noise)
-        vec2 displacedUv = vec2(normPos, vUv.y) + cnoise(vec3(normPos * PS1, vUv.y * PS1, uTime * PT1));
+//        vec2 displacedUv = vec2(normPos, vUv.y) + cnoise(vec3(normPos * PS1, vUv.y * PS1, uTime * PT1));
 
         // Make second perlin noise for the strength
-        float strength = cnoise(vec3(displacedUv * PS2, uTime * PT2));
+//        float strength = cnoise(vec3(displacedUv + normPos  * PS2, uTime * PT2));
 
         // Apply cool step
-        strength = strength + step(-0.1, strength) * 0.8; 
+//        strength = strength + step(-0.1, strength) * 0.8; 
 
         // Final color
-        vec3 color = mix (uColor, uColor2, strength * 0.75);
+//        vec3 color = mix (vec3(0.0), uColor, strength * 0.75);
+        vec3 color = mix (vec3(0.8), uColor2, 1.0 - audioValue);
 
-        gl_FragColor = vec4(color, 0.6);
+//        if (color.r == color.g && color.r == color.b) discard;
+        gl_FragColor = vec4(color, .75);
 
-//        gl_FragColor = vec4(mix(uColor, uColor2, vUv.y), 1.0);
+ //       gl_FragColor = vec4(mix(vec3(0.0, 0.0, 0.0), uColor, vUv.y), 1.0);
 
     }
-    else if ((vUv.y - audioValue) <= 0.025) {
+    else if ((vUv.y - audioValue) <= 0.015) {
         gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
     }
     else {
