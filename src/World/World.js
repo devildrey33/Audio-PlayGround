@@ -25,15 +25,18 @@ export default class World {
         this.resources  = this.experience.resources;
         this.camera     = this.experience.camera.instance;
         this.sizes      = this.experience.sizes;
+        this.time       = this.experience.time;
         // World ready
         this.ready      = false;
-        // animation time
+        // Camera animation time & ease
         this.ani = {
             duration : 0.5,
             ease     : "slowmo"
         }   
         // setup
         this.setup();                
+        // Markup to check the fps one time, and disable shadows if fps are below 55
+        this.checkSpeed = false;
     }
 
     setup() {
@@ -48,7 +51,7 @@ export default class World {
         this.yinYang             = new YinYang(this);
         this.yinYangSin          = new YinYangSin(this);
         this.perlinSun           = new PerlinSun(this);
-        this.ssPerlinSun         = new SSPerlinSun(this);
+        this.ssPerlinSun         = new SSPerlinSun(this);        
 //        const start = Math.PI * 2.0 * 0.33 * 0.5;
 
         this.experience.camera.controls.target.set(this.ssPerlinSun.group.position.x, this.ssPerlinSun.group.position.y, this.ssPerlinSun.group.position.z);
@@ -287,6 +290,12 @@ export default class World {
     update() {
         if (this.ready === true) {
 
+            if (this.time.elapsed > 3000 && this.checkSpeed === false) {
+                this.checkSpeed = true;
+                if (this.time.fps < 55) {
+                    this.shadows(false);
+                }
+            }
             this.updateRaycaster();
 
 //            this.frequencyTexture.update();

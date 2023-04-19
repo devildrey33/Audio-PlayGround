@@ -15,6 +15,8 @@ export default class Time extends EventEmitter {
         this.actualFrame    = this.start + 1000;
         // Number of frames during this second
         this.frameCounter   = 0;
+        // actual framerate
+        this.fps            = 0;
 
         window.requestAnimationFrame(() => {
             this.tick();
@@ -37,6 +39,7 @@ export default class Time extends EventEmitter {
                 // Put the color of the FPS text (Green 60fps, Red 0fps)        
                 this.elements.elementFPS.style.color = "rgb(" + Math.round(255 - (this.frameCounter * Part)) + "," + Math.round(this.frameCounter * Part) + ", 0)";
             }
+            this.fps = this.frameCounter;
             // Restart the counter of frames
             this.frameCounter = 0;
         }

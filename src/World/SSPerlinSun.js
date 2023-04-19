@@ -143,9 +143,9 @@ export default class SSPerlinSun {
         this.osciloscopeCylinder3.material.uniforms.uSize.value = t * 0.52;
 
         // Rotate the osciloscopecylinder lightnings
-        this.osciloscopeCylinder1.mesh.rotation.set(-this.osciloscopeCylinder1.mesh.rotation.x - (advance * 0.33), 0, -this.osciloscopeCylinder2.mesh.rotation.z - (advance * 0.66));
-        this.osciloscopeCylinder2.mesh.rotation.set(this.osciloscopeCylinder2.mesh.rotation.x + (advance * 0.66), 0, this.osciloscopeCylinder2.mesh.rotation.z + (advance * 0.66));
-        this.osciloscopeCylinder3.mesh.rotation.set(this.osciloscopeCylinder3.mesh.rotation.x + advance, 0, -this.osciloscopeCylinder3.mesh.rotation.z - advance);
+        this.osciloscopeCylinder1.mesh.rotation.set(-this.osciloscopeCylinder1.mesh.rotation.x - (advance * high), 0, -this.osciloscopeCylinder2.mesh.rotation.z - (advance * 0.66));
+        this.osciloscopeCylinder2.mesh.rotation.set(this.osciloscopeCylinder2.mesh.rotation.x + (advance * medium), 0, this.osciloscopeCylinder2.mesh.rotation.z + (advance * 0.66));
+        this.osciloscopeCylinder3.mesh.rotation.set(this.osciloscopeCylinder3.mesh.rotation.x + (advance * low), 0, -this.osciloscopeCylinder3.mesh.rotation.z - advance);
 
         
         
