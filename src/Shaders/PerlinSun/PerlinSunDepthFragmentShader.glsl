@@ -4,8 +4,8 @@ uniform float     uTime;
 uniform float     uHover;
 //uniform float     uHighFrequency;
 //uniform float     uLowFrequency;
-uniform vec3      uColorFrequency;
-uniform vec3      uColorSin;
+//uniform vec3      uColorFrequency;
+//uniform vec3      uColorSin;
 
 varying vec2      vUv; // Coordenadas UV del fragmento
 
@@ -188,8 +188,8 @@ void main() {
 //    color = circleNoise(color, center, 0.25, vec3(0.0, 0.0, 1.0));
 //    color = circleNoise(color, center, 0.125, vec3(0.5, 0.5, 0.25));
 
-    color = circleFreq(color, center, 0.4, uColorFrequency);
-    color = circleSin(color, center, 0.25, uColorSin);
+    color = circleFreq(color, center, 0.4, vec3(1.0));
+    color = circleSin(color, center, 0.25, vec3(1.0));
 
     // Apply the round hover border
 //    color = borderRoundRect(color, vec2(1.0, 1.0), 0.125);

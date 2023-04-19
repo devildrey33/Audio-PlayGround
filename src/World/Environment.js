@@ -12,35 +12,37 @@ export default class Environment {
         this.setSunLight();
 //        this.setSunLight2();
 //        this.setEnvironmentMap();
-//        this.setSpotLight();
+        this.setSpotLight();
     }
 
     setSpotLight() {
-        this.spotLight = new THREE.SpotLight(0xcccccc, 2, 100, Math.PI * 0.1, 0.25, 0.25);
+        this.spotLight = new THREE.SpotLight(0xcccccc, this.experience.options.spotLightIntensity, 100, Math.PI * 0.1, 0.25, 0.25);
 //        this.spotLight.position.set(1, 20, 27);
         this.spotLight.position.set(-5, 18, 27);
 //        this.spotLight.target.position.set(-1, 0, 1)
-        this.spotLight.castShadow = true;
+        this.spotLight.castShadow = this.experience.debugOptions.shadows;
 
         //Set up shadow properties for the light
         this.spotLight.shadow.mapSize.set(1024, 1024);
         this.spotLight.shadow.camera.near = 0.1; // default
         this.spotLight.shadow.camera.far = 1; // default
         this.spotLight.shadow.focus = 1; // default
+        
+        this.spotLight.visible = this.experience.debugOptions.spotLightVisible;
 
         this.scene.add(this.spotLight, this.spotLight.target);
 
         if (this.debug.active) {
             this.splhelper = new THREE.SpotLightHelper(this.spotLight);
-            this.splhelper.visible = true; 
+            this.splhelper.visible = this.experience.debugOptions.spotLightVisible; 
             this.scene.add(this.splhelper);  
         }
 
     }
 
     setSunLight() {
-        this.sunLight = new THREE.DirectionalLight('#ffffff', 2)
-        this.sunLight.castShadow = this.experience.debugOptions.shadows;;
+        this.sunLight = new THREE.DirectionalLight('#ffffff', this.experience.debugOptions.sunLightIntensity)
+        this.sunLight.castShadow = this.experience.debugOptions.shadows;
         this.sunLight.shadow.camera.far = 64;
         this.sunLight.shadow.mapSize.set(1024, 1024);
         this.sunLight.shadow.normalBias = 0.05;
@@ -49,11 +51,15 @@ export default class Environment {
         this.sunLight.shadow.camera.left   = -16;
         this.sunLight.shadow.camera.right  =  16;
         this.sunLight.position.set(-5, 18, 27);
+
+        this.sunLight.visible = this.experience.debugOptions.sunLightVisible;
+
         this.scene.add(this.sunLight)
 
         //debug
         if (this.debug.active) {
             this.sunLightHelper = new THREE.DirectionalLightHelper(this.sunLight, 1);
+            this.sunLightHelper.visible = this.experience.debugOptions.sunLightVisible;
             this.scene.add(this.sunLightHelper);
         }
     }

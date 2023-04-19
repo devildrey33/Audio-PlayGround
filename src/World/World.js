@@ -5,7 +5,7 @@ import CircularDistorsion from './CircularDistorsion.js';
 import CircularSin from './CircularSin.js';
 import Environment from './Environment.js'
 import Floor from './Floor.js';
-import FrequencyTexture from './FrequencyTexture.js';
+//import FrequencyTexture from './FrequencyTexture.js';
 import Osciloscope from './Osciloscope.js';
 import YinYang from './YinYang.js';
 import YinYangSin from './YinYangSin.js';
@@ -96,10 +96,32 @@ export default class World {
             this.ready            = true;
             
         });
+        
+    }
 
-        
-        //this.controls.update();
-        
+
+    shadows(enable) {
+
+        if (typeof this.environment.sunLight !== "undefined")  this.environment.sunLight.castShadow = enable;
+        if (typeof this.environment.spotLight !== "undefined") this.environment.spotLight.castShadow = enable;
+
+        this.audioInfo.mesh.castShadow                        = enable;
+
+        this.floor.mesh.receiveShadow                         = enable;
+        this.floor.mesh.castShadow                            = enable;
+
+        this.bars.mesh.castShadow                             = enable;
+        this.circular.mesh.castShadow                         = enable;
+        this.circularDistorsion.mesh.castShadow               = enable;
+        this.circularSin.mesh.castShadow                      = enable;
+        this.osciloscope.mesh.castShadow                      = enable;
+        this.perlinSun.mesh.castShadow                        = enable;
+        this.ssPerlinSun.mesh.castShadow                      = enable;
+        this.ssPerlinSun.barsCylinder.mesh.castShadow         = enable;
+        this.ssPerlinSun.osciloscopeCylinder1.mesh.castShadow = enable;
+        this.ssPerlinSun.osciloscopeCylinder2.mesh.castShadow = enable;
+        this.ssPerlinSun.osciloscopeCylinder3.mesh.castShadow = enable;
+
     }
 
     // Mouse move event
@@ -266,8 +288,6 @@ export default class World {
         if (this.ready === true) {
 
             this.updateRaycaster();
-//            gsap.updateTweens();
-
 
 //            this.frequencyTexture.update();
             // Floor need to be updated / painted first

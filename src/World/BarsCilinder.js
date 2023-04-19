@@ -6,23 +6,23 @@ import Experience from "../Experience";
 import * as THREE from 'three'
 
 export default class BarsCilinder {
-    constructor(world, group, color, color2) {
+    constructor(world, group) {
         this.experience     = new Experience();
         this.time           = this.experience.time;
         this.world          = world;
         this.audioAnalizer  = this.experience.audioAnalizer;
-        this.setup(group, color, color2);
+        this.setup(group);
     }
 
-    setup(group, color, color2) {
+    setup(group) {
         this.geometry = new THREE.CylinderGeometry(4, 2, 4, 32, 32, true);
         this.material = new THREE.ShaderMaterial({
             uniforms : {
                 uAudioTexture  : { value : this.audioAnalizer.bufferCanvasLinear.texture },
                 uAudioStrength : { value : this.experience.debugOptions.osciloscopeCylinderAudioStrength },
                 uSize          : { value : this.experience.debugOptions.osciloscopeCylinderLineSize },
-                uColor         : { value : new THREE.Color(color) },
-                uColor2        : { value : new THREE.Color(color2) },
+                uColor         : { value : new THREE.Color(this.experience.debugOptions.barsCylinderColor1) },
+                uColor2        : { value : new THREE.Color(this.experience.debugOptions.barsCylinderColor2) },
                 uHover         : { value : 0.0 },
 //                uTime          : { value : 0.0 }
             },

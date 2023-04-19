@@ -5,7 +5,9 @@ import * as THREE from 'three'
 export default class Debug {
     constructor() {
         this.experience         = new Experience();
-        this.environment        = this.experience.world.environment;
+        this.resources          = this.experience.resources;
+        this.world              = this.experience.world;
+//        this.environment        = this.experience.world.environment;
         this.osciloscope        = this.experience.world.osciloscope;
         this.floor              = this.experience.world.floor;
         this.frequencyTexture   = this.experience.world.frequencyTexture;
@@ -27,10 +29,74 @@ export default class Debug {
         if (this.active) {
             this.ui = new dat.GUI();
 
+            /*
+             * Lights
+             */
+            this.debugLights = this.ui.addFolder("Lights").open(false);
+
+            this.debugDirectional = this.debugLights.addFolder("Directional").open(false);            
+            // Visible
+            this.debugDirectional.add(this.options, "sunLightVisible").name("Visible").onChange(() => {
+                this.world.environment.sunLight.visible = this.options.sunLightVisible;
+                this.world.environment.sunLightHelper.visible = this.options.sunLightVisible;
+            });
+            // Color
+            this.debugDirectional.addColor(this.options, "sunLightColor").name("Color").onChange(() => {
+                this.world.environment.sunLight.color = this.options.sunLightColor;
+            });        
+            // Intensity
+            this.debugDirectional.add(this.options, "sunLightIntensity").min(0.1).max(10).step(0.1).name("Intensity").onChange(() => {
+                this.world.environment.sunLight.intensity = this.options.sunLightIntensity;
+            });        
+            // Position X
+            this.debugDirectional.add(this.options, "sunLightPosX").min(-100).max(100).step(0.1).name("Position X").onChange(() => {
+                this.world.environment.sunLight.position.set(this.options.sunLightPosX, this.options.sunLightPosY, this.options.sunLightPosZ);
+            });        
+            // Position Y
+            this.debugDirectional.add(this.options, "sunLightPosY").min(-100).max(100).step(0.1).name("Position Y").onChange(() => {
+                this.world.environment.sunLight.position.set(this.options.sunLightPosX, this.options.sunLightPosY, this.options.sunLightPosZ);
+            });        
+            // Position Z
+            this.debugDirectional.add(this.options, "sunLightPosZ").min(-100).max(100).step(0.1).name("Position Z").onChange(() => {
+                this.world.environment.sunLight.position.set(this.options.sunLightPosX, this.options.sunLightPosY, this.options.sunLightPosZ);
+            });        
+
+            this.debugSpot = this.debugLights.addFolder("Spot").open(false);
+            // Visible
+            this.debugSpot.add(this.options, "spotLightVisible").name("Visible").onChange(() => {
+                this.world.environment.spotLight.visible = this.options.spotLightVisible;
+                this.world.environment.splhelper.visible = this.options.spotLightVisible;
+            });
+            // Color
+            this.debugSpot.addColor(this.options, "spotLightColor").name("Color").onChange(() => {
+                this.world.environment.spotLight.color = this.options.spotLightColor;
+            });        
+            // Intensity
+            this.debugSpot.add(this.options, "spotLightIntensity").min(0.1).max(10).step(0.1).name("Intensity").onChange(() => {
+                this.world.environment.spotLight.intensity = this.options.spotLightIntensity;
+            });        
+            // Position X
+            this.debugSpot.add(this.options, "spotLightPosX").min(-100).max(100).step(0.1).name("Position X").onChange(() => {
+                this.world.environment.spotLight.position.set(this.options.spotLightPosX, this.options.spotLightPosY, this.options.spotLightPosZ);
+            });        
+            // Position Y
+            this.debugSpot.add(this.options, "spotLightPosY").min(-100).max(100).step(0.1).name("Position Y").onChange(() => {
+                this.world.environment.spotLight.position.set(this.options.spotLightPosX, this.options.spotLightPosY, this.options.spotLightPosZ);
+            });        
+            // Position Z
+            this.debugSpot.add(this.options, "spotLightPosZ").min(-100).max(100).step(0.1).name("Position Z").onChange(() => {
+                this.world.environment.spotLight.position.set(this.options.spotLightPosX, this.options.spotLightPosY, this.options.spotLightPosZ);
+            });        
+
+            // Shadows
+            this.debugLights.add(this.options, "shadows").name("Shadows").onChange(() => {
+                this.experience.world.shadows(this.options.shadows);
+            });
+
             /* 
              * Audio
              */
-            this.debugAudio = this.ui.addFolder("Audio");
+            this.debugAudio = this.ui.addFolder("Audio").open(false);
             this.playPauseButton = { playPause : () => { 
                 this.experience.audioAnalizer.playPause();
             }}                    
@@ -111,49 +177,12 @@ export default class Debug {
                 this.osciloscope.material.uniforms.uSize.value = this.options.osciloscopeLineSize;
             });
 
-            /*
-             * Osciloscope Cylinder
-             */
-            this.debugOsciloscopeCylinder = this.ui.addFolder("Osciloscope Cylinder").open(false);
-            // Osciloscope audio strength
-            this.debugOsciloscopeCylinder.add(this.options, "osciloscopeCylinderAudioStrength").min(0).max(1).step(0.01).name("Audio strength").onChange(() => {
-                this.ssPerlinSun.osciloscopeCylinder1.material.uniforms.uAudioStrength.value = this.options.osciloscopeCylinderAudioStrength;
-                this.ssPerlinSun.osciloscopeCylinder2.material.uniforms.uAudioStrength.value = this.options.osciloscopeCylinderAudioStrength;
-                this.ssPerlinSun.osciloscopeCylinder3.material.uniforms.uAudioStrength.value = this.options.osciloscopeCylinderAudioStrength;
-            });            
-            // Osciloscope audio zoom
-            this.debugOsciloscopeCylinder.add(this.options, "osciloscopeCylinderAudioZoom").min(1).max(32).step(0.1).name("Audio zoom").onChange(() => {
-                this.ssPerlinSun.osciloscopeCylinder1.material.uniforms.uAudioZoom.value = this.options.osciloscopeCylinderAudioZoom;
-                this.ssPerlinSun.osciloscopeCylinder2.material.uniforms.uAudioZoom.value = this.options.osciloscopeCylinderAudioZoom;
-                this.ssPerlinSun.osciloscopeCylinder3.material.uniforms.uAudioZoom.value = this.options.osciloscopeCylinderAudioZoom;
-            });            
-            // Osciloscope line size
-/*            this.debugOsciloscopeCylinder.add(this.options, "osciloscopeCylinderLineSize").min(0.001).max(0.2).step(0.001).name("Line size").onChange(() => {
-                this.ssPerlinSun.osciloscopeCylinder1.material.uniforms.uSize.value = this.options.osciloscopeCylinderLineSize;
-                this.ssPerlinSun.osciloscopeCylinder2.material.uniforms.uSize.value = this.options.osciloscopeCylinderLineSize;
-                this.ssPerlinSun.osciloscopeCylinder3.material.uniforms.uSize.value = this.options.osciloscopeCylinderLineSize;
-            });*/
-
          
             
             /*
              * Circular
              */
-            this.debugCircular = this.ui.addFolder("Circular").open(false);;
-
-            // Circle Bars Visible
-/*            this.debugCircular.add(this.options, "circularRVisible").name("Circle bars visible").onChange(() => {
-                this.circular.visibleR(this.options.circularRVisible);
-            });
-            // Circle Osci Visible
-            this.debugCircular.add(this.options, "circularGVisible").name("Circle osciloscope visible").onChange(() => {
-                this.circular.visibleG(this.options.circularGVisible);
-            });
-            // Circle deformed Visible
-            this.debugCircular.add(this.options, "circularDistorsionVisible").name("Circle distorsion visible").onChange(() => {
-                this.circular.visibleD(this.options.circularDistorsionVisible);
-            });*/
-            
+            this.debugCircular = this.ui.addFolder("Circular").open(false);          
 
             this.debugCircular.add(this.options, "circularAudioStrength").min(0.1).max(0.5).step(0.01).name("Audio strength").onChange(() => {
                 this.circular.material.uniforms.uAudioStrength.value = this.options.circularAudioStrength;
@@ -199,13 +228,71 @@ export default class Debug {
                 this.perlinSun.material.uniforms.uAlpha.value = this.options.perlinSunAlpha;
             });            
             this.debugPerlinSun.addColor(this.options, "perlinSunColorFrequency").name("Color freq.").onChange(() => {
-                this.perlinSun.material.uniforms.perlinSunColorFrequency = new THREE.Color(this.options.perlinSunColorFrequency);
+                this.perlinSun.material.uniforms.perlinSunColorFrequency.value = new THREE.Color(this.options.perlinSunColorFrequency);
             });
 
             this.debugPerlinSun.addColor(this.options, "perlinSunColorSin").name("Color sin").onChange(() => {
-                this.perlinSun.material.uniforms.perlinSunColorFrequency = new THREE.Color(this.options.perlinSunColorSin);
+                this.perlinSun.material.uniforms.perlinSunColorSin.value = new THREE.Color(this.options.perlinSunColorSin);
             });
 
+
+            /*
+             * SSPerlin sun
+             */
+            this.debugSSPerlinSun           = this.ui.addFolder("SSPerlin sun").open(false);
+            this.debugOsciloscopeCylinder   = this.debugSSPerlinSun.addFolder("Osciloscope Cylinder").open(false);
+            this.debugBarsCylinder          = this.debugSSPerlinSun.addFolder("Bars Cylinder").open(false);
+            // Color Frequency
+            this.debugSSPerlinSun.addColor(this.options, "ssPerlinSunColorFrequency").name("Color freq.").onChange(() => {
+                this.ssPerlinSun.material.uniforms.perlinSunColorFrequency.value = new THREE.Color(this.options.ssPerlinSunColorFrequency);
+            });
+            // Color Sin
+            this.debugSSPerlinSun.addColor(this.options, "ssPerlinSunColorSin").name("Color sin").onChange(() => {
+                this.ssPerlinSun.material.uniforms.perlinSunColorSin.value = new THREE.Color(this.options.ssPerlinSunColorSin);
+            });
+            // Perlin noise strength
+            this.debugSSPerlinSun.add(this.options, "ssPerlinSunNoiseStrength").min(.1).max(50).step(0.01).name("Noise strength").onChange(() => {
+                this.ssPerlinSun.material.uniforms.uNoiseStrength.value = this.options.ssPerlinSunNoiseStrength;
+                this.ssPerlinSun.mesh.customDepthMaterial.uniforms.uNoiseStrength.value = this.options.ssPerlinSunNoiseStrength;
+            });
+            // Perlin noise speed
+            this.debugSSPerlinSun.add(this.options, "ssPerlinSunNoiseSpeed").min(.1).max(50).step(0.01).name("Noise speed").onChange(() => {
+                this.ssPerlinSun.material.uniforms.uNoiseSpeed.value = this.options.ssPerlinSunNoiseSpeed;
+                this.ssPerlinSun.mesh.customDepthMaterial.uniforms.uNoiseSpeed.value = this.options.ssPerlinSunNoiseSpeed;
+            });
+            /*
+             * Osciloscope Cylinder
+             */
+            // Osciloscope audio strength
+            this.debugOsciloscopeCylinder.add(this.options, "osciloscopeCylinderAudioStrength").min(0).max(1).step(0.01).name("Audio strength").onChange(() => {
+                this.ssPerlinSun.osciloscopeCylinder1.material.uniforms.uAudioStrength.value = this.options.osciloscopeCylinderAudioStrength;
+                this.ssPerlinSun.osciloscopeCylinder2.material.uniforms.uAudioStrength.value = this.options.osciloscopeCylinderAudioStrength;
+                this.ssPerlinSun.osciloscopeCylinder3.material.uniforms.uAudioStrength.value = this.options.osciloscopeCylinderAudioStrength;
+            });            
+            // Osciloscope audio zoom
+            this.debugOsciloscopeCylinder.add(this.options, "osciloscopeCylinderAudioZoom").min(1).max(32).step(0.1).name("Audio zoom").onChange(() => {
+                this.ssPerlinSun.osciloscopeCylinder1.material.uniforms.uAudioZoom.value = this.options.osciloscopeCylinderAudioZoom;
+                this.ssPerlinSun.osciloscopeCylinder2.material.uniforms.uAudioZoom.value = this.options.osciloscopeCylinderAudioZoom;
+                this.ssPerlinSun.osciloscopeCylinder3.material.uniforms.uAudioZoom.value = this.options.osciloscopeCylinderAudioZoom;
+            });            
+            
+            /*
+             * Bars Cylinder
+             */
+            // Color 1
+            this.debugBarsCylinder.addColor(this.options, "barsCylinderColor1").name("Color one").onChange(() => {
+                this.ssPerlinSun.barsCylinder.material.uniforms.uColor.value = new THREE.Color(this.options.barsCylinderColor1);
+            });
+            // Color 2
+            this.debugBarsCylinder.addColor(this.options, "barsCylinderColor2").name("Color two").onChange(() => {
+                this.ssPerlinSun.barsCylinder.material.uniforms.uColor2.value = new THREE.Color(this.options.barsCylinderColor2);
+            });
+            // Audio strength            
+            this.debugBarsCylinder.add(this.options, "barsCylinderAudioStrength").min(0.1).max(2).step(0.1).name("Audio strength").onChange(() => {
+                this.ssPerlinSun.barsCylinder.material.uniforms.uAudioStrength.value = this.options.barsCylinderAudioStrength;
+            });            
+            // Rotation strength            
+            this.debugBarsCylinder.add(this.options, "barsCylinderRotation").min(0).max(32).step(0.1).name("Rotation strength");
 
             /*
             * Bloom

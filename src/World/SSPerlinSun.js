@@ -3,7 +3,7 @@ import SSPerlinSunVertexShader from "../Shaders/PerlinSun/SS/SSPerlinSunVertexSh
 import PerlinSunVertexShader from "../Shaders/PerlinSun/PerlinSunVertexShader.glsl"
 import PerlinSunFragmentShader from "../Shaders/PerlinSun/PerlinSunFragmentShader.glsl"
 import SSPerlinSunFragmentShader from "../Shaders/PerlinSun/SS/SSPerlinSunFragmentShader.glsl"
-import PerlinSunDepthFragmentShader from "../Shaders/PerlinSun/PerlinSunDepthFragmentShader.glsl"
+import SSPerlinSunDepthFragmentShader from "../Shaders/PerlinSun/SS/SSPerlinSunDepthFragmentShader.glsl"
 import DepthVertexShader from "../Shaders/DepthVertexShader.glsl"
 import * as THREE from "three"
 import OsciloscopeCylinder from "./OsciloscopeCylinder.js"
@@ -34,9 +34,11 @@ export default class SSPerlinSun {
                 uTime           : { value : 0 },
                 uAlpha          : { value : this.experience.debugOptions.perlinSunAlpha },
                 uRotate         : { value : 1.0 },
-                uHover          : { value : 0.0 },
-                uColorFrequency : { value : this.experience.debugOptions.perlinSunColorFrequency },
-                uColorSin       : { value : this.experience.debugOptions.perlinSunColorSin }
+                //uHover          : { value : 0.0 },
+                uColorFrequency : { value : this.experience.debugOptions.ssPerlinSunColorFrequency },
+                uColorSin       : { value : this.experience.debugOptions.ssPerlinSunColorSin },
+                uNoiseStrength  : { value : this.experience.debugOptions.ssPerlinSunNoiseStrength },
+                uNoiseSpeed     : { value : this.experience.debugOptions.ssPerlinSunNoiseSpeed }
             },
             vertexShader    : PerlinSunVertexShader,
             fragmentShader  : SSPerlinSunFragmentShader,
@@ -44,7 +46,6 @@ export default class SSPerlinSun {
             side            : THREE.DoubleSide,
             depthFunc       : THREE.AlwaysDepth,
             depthWrite      : false,
-            renderOrder     : 1,
 //            blending        : THREE.AdditiveBlending
 
         });
@@ -72,12 +73,13 @@ export default class SSPerlinSun {
             shader.uniforms.uTime           = { value : 0 };
             shader.uniforms.uAlpha          = { value : this.experience.debugOptions.perlinSunAlpha };
             shader.uniforms.uRotate         = { value : 1.0 };
-            shader.uniforms.uHover          = { value : 0.0 };
-            shader.uniforms.uColorFrequency = { value : this.experience.debugOptions.perlinSunColorFrequency };
-            shader.uniforms.uColorSin       = { value : this.experience.debugOptions.perlinSunColorSin };
+            shader.uniforms.uNoiseStrength  = { value : this.experience.debugOptions.ssPerlinSunNoiseStrength }
+            shader.uniforms.uNoiseSpeed     = { value : this.experience.debugOptions.ssPerlinSunNoiseSpeed }
+//            shader.uniforms.uColorFrequency = { value : this.experience.debugOptions.ssPerlinSunColorFrequency };
+//            shader.uniforms.uColorSin       = { value : this.experience.debugOptions.ssPerlinSunColorSin };
 
             shader.vertexShader            = DepthVertexShader;
-            shader.fragmentShader          = PerlinSunDepthFragmentShader;
+            shader.fragmentShader          = SSPerlinSunDepthFragmentShader;
             this.mesh.customDepthMaterial.uniforms = shader.uniforms;
         }
         
@@ -103,11 +105,12 @@ export default class SSPerlinSun {
     }
 
     setupBarsCylinder() {
-        this.barsCylinder = new BarsCilinder(this.world, this.group, "#0000ff", "#ff0000");
+        this.barsCylinder = new BarsCilinder(this.world, this.group);
     }
 
 
-    update() {        
+    update() {
+        //
         const advance = this.time.delta / 1000;
         // update time on perlin sun
         this.material.uniforms.uTime.value         += advance;   
@@ -144,8 +147,10 @@ export default class SSPerlinSun {
         this.osciloscopeCylinder2.mesh.rotation.set(this.osciloscopeCylinder2.mesh.rotation.x + (advance * 0.66), 0, this.osciloscopeCylinder2.mesh.rotation.z + (advance * 0.66));
         this.osciloscopeCylinder3.mesh.rotation.set(this.osciloscopeCylinder3.mesh.rotation.x + advance, 0, -this.osciloscopeCylinder3.mesh.rotation.z - advance);
 
+        
+        
         // Rotate the bars cylinder aura
-        this.barsCylinder.mesh.rotation.set(0, this.barsCylinder.mesh.rotation.y + advance * 1.15 * (1.0 - average), 0);
+        this.barsCylinder.mesh.rotation.set(0, this.barsCylinder.mesh.rotation.y + advance * this.experience.debugOptions.barsCylinderRotation * (1.0 - average), 0);
 
         this.osciloscopeCylinder1.update();
         this.osciloscopeCylinder2.update();

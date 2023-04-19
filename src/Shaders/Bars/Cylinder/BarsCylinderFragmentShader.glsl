@@ -113,7 +113,7 @@ void main () {
 
         // Final color
 //        vec3 color = mix (vec3(0.0), uColor, strength * 0.75);
-        vec3 color = mix (vec3(0.8), uColor2, 1.0 - audioValue);
+        vec3 color = mix (uColor, uColor2, 1.0 - audioValue);
 
 //        if (color.r == color.g && color.r == color.b) discard;
         gl_FragColor = vec4(color, .75);
