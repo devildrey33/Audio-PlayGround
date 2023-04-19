@@ -1,6 +1,5 @@
 uniform sampler2D uAudioTexture;
 uniform float     uAudioStrength;
-uniform float     uTime;
 
 
 #include <common>
@@ -22,7 +21,7 @@ void main() {
 	#include <begin_vertex>
 
 //vec4 audioValue = vec4(1.0);
-    vec4 audioValue = texture2D(uAudioTexture, vec2(aId, 0.0));
+    vec4 audioValue = texture2D(uAudioTexture, uv);
 
     if (uv.y > 0.5) {
         // Add the red channel intensity to the Y of the model

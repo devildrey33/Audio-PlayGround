@@ -73,19 +73,19 @@ export default class Floor {
         this.mesh.castShadow    = this.experience.debugOptions.shadows;
 
         // Custom depth material
-/*        this.mesh.customDepthMaterial = new THREE.MeshDepthMaterial({ 
+        this.mesh.customDepthMaterial = new THREE.MeshDepthMaterial({ 
             depthPacking: THREE.RGBADepthPacking
         });
 
         // Modify the default depth material
         this.mesh.customDepthMaterial.onBeforeCompile = (shader) => {
-            shader.uniforms.uAudioTexture  = { value : this.world.frequencyTexture.bufferCanvasLinear.texture };
+            shader.uniforms.uAudioTexture  = { value : this.audioAnalizer.bufferCanvasLinear.texture };
             shader.uniforms.uAudioStrength = { value : this.experience.debugOptions.osciloscopeAudioStrength };
-            shader.uniforms.uTime          = { value : 0 };
-            shader.vertexShader            = DepthVertexShader;
-            shader.fragmentShader          = FloorDepthVertexShader;
+//            shader.uniforms.uTime          = { value : 0 };
+            shader.vertexShader            = FloorDepthVertexShader;
+//            shader.fragmentShader          = FloorDepthVertexShader;
             this.mesh.customDepthMaterial.uniforms = shader.uniforms;
-        }*/
+        }
 
 
 
