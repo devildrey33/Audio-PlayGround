@@ -150,7 +150,8 @@ export default class SSPerlinSun {
         
         
         // Rotate the bars cylinder aura
-        this.barsCylinder.mesh.rotation.set(0, this.barsCylinder.mesh.rotation.y + advance * this.experience.debugOptions.barsCylinderRotation * (1.0 - average), 0);
+        this.barsCylinder.mesh.rotation.set(0, this.barsCylinder.mesh.rotation.y + advance * (this.experience.debugOptions.barsCylinderRotation * (high + medium + low * 0.3)) * (1.0 - average), 0);
+
 
         this.osciloscopeCylinder1.update();
         this.osciloscopeCylinder2.update();

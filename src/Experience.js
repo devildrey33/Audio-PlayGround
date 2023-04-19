@@ -115,7 +115,7 @@ export default class Experience {
         barsCylinderColor1               : new THREE.Color("#6b6b9e"),
         barsCylinderColor2               : new THREE.Color("#ff0000"),
         barsCylinderAudioStrength        : 1,
-        barsCylinderRotation             : 15.0,
+        barsCylinderRotation             : 10,
         circularAudioStrength            : 0.4,
         circularLineSize                 : 0.07,
         circularAlpha                    : this.panelAlpha,
