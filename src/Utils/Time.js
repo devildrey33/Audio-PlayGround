@@ -24,7 +24,7 @@ export default class Time extends EventEmitter {
     }
 
     // Function to measure Frames Per Second
-    getFPS() {
+    calculateFPS() {
         // If the current time is superior from actualFrame
         if (this.current > this.actualFrame) {
             // Setup the next frame is current time + 1000
@@ -58,7 +58,7 @@ export default class Time extends EventEmitter {
         this.current = currentTime;
         this.elapsed = this.current - this.start;
         // Recalculate Frames Per Second
-        this.getFPS();
+        this.calculateFPS();
         // Send tick event 
         this.trigger('tick');
         // Call requestAnimationFrame for the next frame

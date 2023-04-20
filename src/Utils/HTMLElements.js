@@ -106,20 +106,36 @@ export default class HTMLElements {
             strHTML += '<div class="Experience_Controls">';
             // Show FPS
             if (this.options.showFPS === true) {
-                strHTML +=  "<div class='Experience_Panel Experience_Control' title='Frames Per Second'>" +
+                strHTML +=  "<div class='Experience_Panel Experience_Static' title='Frames Per Second'>" +
                                 "<div class='Experience_FPS'>60</div>" +
                                 "<div class='Experience_TxtFPS'>fps</div>" +
                             "</div>";
             }
             // Show full screen button
             if (this.options.buttonFullScreen === true) {
-                strHTML +=  "<div class='Experience_Panel Experience_Control' title='Togle Full Screen'>" +
-                            "</div>";
+                strHTML +=  "<div id='fullScreen' class='Experience_Panel Experience_Control' title='Full screen mode'>" +
+                                "<img src='icos.svg#svg-pantalla-completa' />" +
+                            "</div>" +
+                            "<div id='restoreScreen' class='Experience_Panel Experience_Control' title='Restore screen'>" +
+                                "<img src='icos.svg#svg-restaurar-pantalla' />" +
+                            "</div>";                
+            }
+
+            // Show full screen button
+            if (this.options.buttonGitHub === true) {
+                strHTML +=  "<a href='" + this.options.urlGitHub + "' target='_blank' class='Experience_Panel Experience_Control' title='GitHub project'>" +
+                                "<img src='icos.svg#svg-github' />" +            
+                            "</a>";
             }
             // Show devildrey33 logo button
             if (this.options.buttonLogo === true) {
-                strHTML +=  "<div class='Experience_Panel Experience_Control' title='devildrey33 home page'>" +
-                            "</div>";
+                strHTML +=  "<a href='https://devildrey33.es' target='_blank' id='Logo' class='Experience_Panel Experience_Control'>" +
+                                "<img src='icos.svg#svg-logo' />" +
+                                "<div id='LogoText'>" +
+                                    "<span>D</span>" + "<span>E</span>" + "<span>V</span>" + "<span>I</span>" + "<span>L</span>" + "<span>D</span>" + "<span>R</span>" + "<span>E</span>" + "<span>Y</span>" + "<span>&nbsp;</span>" + "<span>3</span>" + "<span>3</span>" +
+                                "</div>" +
+
+                            "</a>";
             }
             // Cierro el div .Experience_Controls
             strHTML += '</div>';
@@ -148,6 +164,24 @@ export default class HTMLElements {
             this.elementExperience.innerHTML = strHTML;
 
 
+            if (this.options.buttonFullScreen === true) {
+                this.elementFullScreen    = document.getElementById("fullScreen");
+                this.elementRestoreScreen = document.getElementById("restoreScreen");
+                this.elementFullScreen.addEventListener("click", (e) => {
+                    this.elementExperience.requestFullscreen();
+                    this.elementFullScreen.style.display    = "none";
+                    this.elementRestoreScreen.style.display = "block";
+                });
+                this.elementRestoreScreen.addEventListener("click", (e) => {
+                    document.exitFullscreen();
+                    this.elementFullScreen.style.display    = "block";
+                    this.elementRestoreScreen.style.display = "none";        
+                });
+
+            }
+
+
+
             // Audio controls element
             this.elementAudioControls = document.querySelector("#" + this.elementExperience.id + " > .Experience_AudioControls");
             // Audio songs select option element
@@ -173,7 +207,7 @@ export default class HTMLElements {
             // if FPS are show
             if (this.options.showFPS === true) {
                 // Get FPS html element from the doom
-                this.elementFPS = document.querySelector("#" + this.elementExperience.id + " > .Experience_Controls > .Experience_Control > .Experience_FPS")
+                this.elementFPS = document.querySelector("#" + this.elementExperience.id + " > .Experience_Controls > .Experience_Static > .Experience_FPS")
             }
         }
 

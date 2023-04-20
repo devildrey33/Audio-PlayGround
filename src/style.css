@@ -14,6 +14,10 @@ html, body {
 
 
 
+
+
+
+
 .Experience {
     position:relative;
     width:100vw;
@@ -63,9 +67,13 @@ html, body {
     position:fixed;
     bottom :0;
     right:0;
+    z-index:10000;
 }
 
-.Experience_Control {
+.Experience_Static {
+     user-select: none;
+}
+.Experience_Static, .Experience_Control {
     position:relative;
     width:max(3.2vw, 3.2vh);
     height:max(3.2vw, 3.2vh);
@@ -73,6 +81,9 @@ html, body {
     margin-right:max(0.5vw, 0.5vh);
     padding:max(0.4vw, 0.4vh);
     text-align: center;
+    border:2px solid transparent;
+    display: block;
+    margin-left: auto;
 }
 
 .Experience_FPS {
@@ -83,6 +94,91 @@ html, body {
     font-size:max(1.1vw, 1.1vh);
 }
 
+
+.Experience_Control:hover {
+    border:2px solid rgb(234, 80, 78);
+    cursor:pointer;
+}
+
+.Experience_Control > img {
+    transition:0.4s;
+    width:48px;
+    height:48px;
+    position:absolute;
+    top:5px;
+    right:5px;
+}
+
+.Experience_Control:hover > img {
+    transform: scale(1.5, 1.5);
+}
+
+#restoreScreen {
+    display:none;
+}
+
+#Logo {
+    display: block;
+    transition: width 0.33s ease-in;
+}
+
+#Logo > * {
+    pointer-events: none;
+}
+
+#Logo:hover {
+    width:280px;
+}
+
+#Logo > #LogoText {
+    position:absolute;
+    bottom:14px;
+    margin-top:3px;
+    transition:0.4s;
+    width:230px; /* 12 caracters * 400px */                 
+    font-size:24px;
+}
+
+#Logo > #LogoText > span {
+    transition:0.33s cubic-bezier(.17,-0.42,0,1.15);
+    opacity:0;
+    position: relative;
+    display: inline-block;
+    color:#FFF;
+}            
+
+#Logo:hover > #LogoText > span {                
+    position:relative;
+    opacity:1;
+    left:230px;
+    animation: LogoAnimation 0.33s 0.33s cubic-bezier(.17,-0.42,0,1.15);
+    animation-fill-mode:forwards;
+}
+
+
+/* Color rojo del 33 */
+#Logo > #LogoText > span:nth-child(11), #Logo > #LogoText > span:nth-child(12) {
+    color: rgb(234, 80, 78);
+}            
+
+
+#Logo:hover > #LogoText > span:nth-child(1)  {    animation-delay: 0.55s;     }
+#Logo:hover > #LogoText > span:nth-child(2)  {    animation-delay: 0.50s;     }
+#Logo:hover > #LogoText > span:nth-child(3)  {    animation-delay: 0.45s;     }
+#Logo:hover > #LogoText > span:nth-child(4)  {    animation-delay: 0.40s;     }
+#Logo:hover > #LogoText > span:nth-child(5)  {    animation-delay: 0.35s;     }
+#Logo:hover > #LogoText > span:nth-child(6)  {    animation-delay: 0.30s;     }
+#Logo:hover > #LogoText > span:nth-child(7)  {    animation-delay: 0.25s;     }
+#Logo:hover > #LogoText > span:nth-child(8)  {    animation-delay: 0.20s;     }
+#Logo:hover > #LogoText > span:nth-child(9)  {    animation-delay: 0.15s;     }
+#Logo:hover > #LogoText > span:nth-child(10) {    animation-delay: 0.10s;     }
+#Logo:hover > #LogoText > span:nth-child(11) {    animation-delay: 0.05s;     }
+#Logo:hover > #LogoText > span:nth-child(12) {    animation-delay: 0.0s;      }
+
+@keyframes LogoAnimation {
+    0%   { left:230px;  }
+    100% { left:0px;  }
+}  
 
 /* 
  * Audio controls
@@ -173,7 +269,7 @@ flex-basis:32px;
     pointer-events:all;
 }
 
-td {
+.Experience td {
     color:#ffffff;
     text-shadow: 1px 1px #000000;
 }

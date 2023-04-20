@@ -126,6 +126,7 @@ export default class AudioAnalizer {
         }
     }
 
+    // Function called when is posible to play a drag & drop song
     canPlayDrop() {
         this.canPlay();
         this.song.play();
@@ -212,7 +213,6 @@ export default class AudioAnalizer {
                 this.imageDataLinear.data[pos + 1] = gValue;
                 this.imageDataLinear.data[pos + 2] = 0;
                 this.imageDataLinear.data[pos + 3] = 255;
-//                console.log(Math.clamp(this.analizerDataSin[x + y * this.square] + 128, 0, 255))
             }
         }
         this.bufferCanvasSquare.context.putImageData(this.imageDataSquare, 0, 0, 0, 0, 32, 32);

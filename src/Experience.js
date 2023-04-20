@@ -68,9 +68,13 @@ export default class Experience {
         // Show framerate inside the butons frame
         showFPS                 : true,            
         // Show full screen buton in the buttons frame
-        buttonFullScreen        : false,            
+        buttonFullScreen        : true,            
         // Show my logo buton in the buttons frame (that redirects to devildrey33.es)
         buttonLogo              : false,            
+        // Show a github icon to go to the example repository
+        buttonGitHub            : true,
+        // GitHub url for this project (only used if buttonGitHub is true)
+        urlGitHub               : "https://github.com/devildrey33/Audio-PlayGround",
         // Element where canvas is inserted (by default is document.body)
         // For example you can use document.getElementById() to retrieve tag inside you want to create the canvas
         rootElement             : document.body,
