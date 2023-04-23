@@ -7,7 +7,7 @@ export default class AudioAnalizer {
     constructor() {
         this.experience     = new Experience();
 
-        this.audioSourceDD  = { context : { currentTime : 0 } };
+//        this.audioSourceDD  = { context : { currentTime : 0 } };
         this.context        = new AudioContext();
         this.songLoaded     = false;
         this.htmlElements   = this.experience.htmlElements;
@@ -16,7 +16,7 @@ export default class AudioAnalizer {
 //        start();
     }
 
-    start(fftSize/*, fnReady = () => {}, fnEnded = () => {}*/) {
+    start(fftSize = 2048/*, fnReady = () => {}, fnEnded = () => {}*/) {
         this.fftSize         = fftSize;
         this.square          = Math.sqrt(this.fftSize * 0.5);
         //this.bufferCanvas    = new BufferCanvas(this.square, this.square);
