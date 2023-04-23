@@ -36,7 +36,9 @@ And then you can use <code>npm run dev</code> to start the local test server.
 
 
 
-Im creating a separate projects for each fragment shader effect, this is the first one the osciloscope :
+Im creating a separate project for each fragment shader effect.
+You can find them in : [Codepen AudioShaders](https://github.com/devildrey33/Audio-PlayGround/tree/main/Codepen)
+This is the first one, the osciloscope :
 
 
 https://user-images.githubusercontent.com/15678544/233856539-5433525a-dfa8-40b9-9434-1201412165c0.mp4
