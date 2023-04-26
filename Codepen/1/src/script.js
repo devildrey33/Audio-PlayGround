@@ -95,7 +95,6 @@ class Osciloscope extends CodepenThreeAudio {
             this.material.uniforms.uSize.value = this.osciloscopeOptions.lineSize;
             this.mesh.customDepthMaterial.uniforms.uSize.value = this.osciloscopeOptions.lineSize;
         });
-        this.ui.open(false);
     }
 
 

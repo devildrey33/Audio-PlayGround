@@ -12,7 +12,7 @@
  *        URL         : https://www.jamendo.com/track/1594018/after-us
  * 
  *  Created on        : 20/04/2023
- *  Last modification : 23/04/2023
+ *  Last modification : 26/04/2023
  */
 
 
@@ -245,7 +245,7 @@ export default class CodepenThreeAudio {
             this.elementRestoreScreen = document.getElementById("restoreScreen");
             // Listen full screen click
             this.elementFullScreen.addEventListener("click", (e) => {
-                this.elementExperience.requestFullscreen();
+                document.body.requestFullscreen();
                 this.elementFullScreen.style.display    = "none";
                 this.elementRestoreScreen.style.display = "block";
             });
@@ -311,7 +311,7 @@ export default class CodepenThreeAudio {
         this.scene = new THREE.Scene();
         // Create the camera
         this.camera = new THREE.PerspectiveCamera(35, this.width / this.height, 0.1, 1000);
-        this.camera.position.set(-0.5, 0, 10);
+        this.camera.position.set(-2, 0, this.width > this.height ? 15 : 30);
         this.scene.add(this.camera);       
         
         if (this.options.orbitControls === true) {
