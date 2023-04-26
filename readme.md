@@ -33,3 +33,16 @@ https://user-images.githubusercontent.com/15678544/232332632-74db47bc-60d3-4aae-
 You need run <code>npm install</code> once to get all dependencies.
 
 And then you can use <code>npm run dev</code> to start the local test server.
+
+
+
+Im creating a separate project for each fragment shader effect.
+You can find them in : [Codepen AudioShaders](https://github.com/devildrey33/Audio-PlayGround/tree/main/Codepen)
+This is the first one, the osciloscope :
+
+
+https://user-images.githubusercontent.com/15678544/233856539-5433525a-dfa8-40b9-9434-1201412165c0.mp4
+
+
+Live version : [Audio-Shader #1](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/1/)
+
