@@ -44,5 +44,7 @@ This is the first one, the osciloscope :
 https://user-images.githubusercontent.com/15678544/233856539-5433525a-dfa8-40b9-9434-1201412165c0.mp4
 
 
-Live version : [Audio-Shader #1](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/1/)
+Live versions : 
+[Audio-Shader #1](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/1/)
+[Audio-Shader #2](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/2/)
 
