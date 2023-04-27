@@ -38,15 +38,28 @@ And then you can use <code>npm run dev</code> to start the local test server.
 
 Im creating a separate project for each fragment shader effect.
 You can find them in : [Codepen AudioShaders](https://github.com/devildrey33/Audio-PlayGround/tree/main/Codepen)
-This is the first one, the osciloscope :
 
 
-https://user-images.githubusercontent.com/15678544/233856539-5433525a-dfa8-40b9-9434-1201412165c0.mp4
 
 
 Audio-Shaders live versions : 
 
+https://user-images.githubusercontent.com/15678544/233856539-5433525a-dfa8-40b9-9434-1201412165c0.mp4
+
 [Audio-Shader #1](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/1/)
 
+
+
+https://user-images.githubusercontent.com/15678544/234913322-4a4b95bb-9ec4-4a3d-ad07-228a605267f8.mp4
+
+
+
 [Audio-Shader #2](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/2/)
+
+
+https://user-images.githubusercontent.com/15678544/234913365-def0e49b-ea9a-47f9-833d-519d8d48f549.mp4
+
+
+
+[Audio-Shader #3](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/3/)
 
