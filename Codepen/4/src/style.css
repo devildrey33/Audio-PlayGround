@@ -1,0 +1,328 @@
+@import url('https://fonts.googleapis.com/css?family=Architects+Daughter|Orbitron');
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    overflow: hidden;
+    font-family:'Orbitron',sans-serif;
+    font-size:14px; 
+}
+
+/* dat.gui align to left */
+.lil-gui.autoPlace{ 
+    right:auto !important;
+    left:15px !important;
+ }
+
+
+
+.Experience {
+    position:relative;
+    width:100vw;
+    height:100vh;
+}
+
+.Experience > .Experience_Canvas {
+    top:0;
+    left:0;
+    position:absolute;
+    outline: none;
+    filter:grayscale(0%);
+    transition:filter 1s;
+}
+
+.Experience[loading = "true"] > .Experience_Canvas {
+    filter:grayscale(90%);
+}
+
+
+.Experience_Panel {
+    position:relative;
+    border:1px solid #000022;
+    background-color: rgba(30, 30, 90, 0.75);
+    color:#FFFFFF;
+    border-radius: 6px;
+    box-shadow:  5px  5px 5px rgba(0,0,0, 0.5);
+}
+
+.Experience > .Experience_Loading {
+    padding:0.6em;
+/*    width:4em;*/
+    margin:auto;
+    top: calc(50vh - 10px);
+    height: 18px;
+    display:none;
+    font-family:'Orbitron',sans-serif;
+    font-size:max(1.5vw, 1.5vh); 
+}
+
+.Experience[loading = "true"] > .Experience_Loading {
+    display:table;
+}
+
+/* Group of controls (fps, button logo, button full screen) */
+.Experience_Controls {
+    position:fixed;
+    bottom :0;
+    right:0;
+    z-index:10000;
+}
+
+.Experience_Static {
+     user-select: none;
+}
+.Experience_Static, .Experience_Control {
+    position:relative;
+    width:48px; /*max(3.2vw, 3.2vh);*/
+    height:48px; /*max(3.2vw, 3.2vh);*/
+    margin-bottom:max(0.5vw, 0.5vh);
+    margin-right:max(0.5vw, 0.5vh);
+    padding:6px;
+/*    padding:max(0.4vw, 0.4vh);*/
+    text-align: center;
+    border:2px solid transparent;
+    display: block;
+    margin-left: auto;
+    transition:border 0.4s;
+}
+
+.Experience_FPS {
+    font-size:24px;
+}
+
+.Experience_TxtFPS {
+    font-size:14px;
+}
+
+
+.Experience_Control:hover {
+    border:2px solid rgb(234, 80, 78);
+    cursor:pointer;
+}
+
+.Experience_Control > img {
+    transition:transform 0.4s;
+    width:48px;
+    height:48px;
+    position:relative;    
+}
+
+.Experience_Control:hover > img {
+    transform: scale(1.5, 1.5);
+}
+
+#restoreScreen {
+    display:none;
+}
+
+#Logo {
+    display: block;
+    transition: width 0.33s ease-in;
+}
+
+/* Logo svg need to be fixed on the right, because of the letter logo animation */
+#Logo img {
+    position:absolute;
+    right: 6px;
+}
+
+#Logo > * {
+    pointer-events: none;
+}
+
+#Logo:hover {
+    width:280px;
+}
+
+#Logo > #LogoText {
+    position:absolute;
+    bottom:14px;
+    margin-top:3px;
+    transition:0.4s;
+    width:230px; /* 12 caracters * 400px */                 
+    font-size:24px;
+}
+
+#Logo > #LogoText > span {
+    transition:0.33s cubic-bezier(.17,-0.42,0,1.15);
+    opacity:0;
+    position: relative;
+    display: inline-block;
+    color:#FFF;
+}            
+
+#Logo:hover > #LogoText > span {                
+    position:relative;
+    opacity:1;
+    left:230px;
+    animation: LogoAnimation 0.33s 0.33s cubic-bezier(.17,-0.42,0,1.15);
+    animation-fill-mode:forwards;
+}
+
+
+/* Color rojo del 33 */
+#Logo > #LogoText > span:nth-child(11), #Logo > #LogoText > span:nth-child(12) {
+    color: rgb(234, 80, 78);
+}            
+
+
+#Logo:hover > #LogoText > span:nth-child(1)  {    animation-delay: 0.55s;     }
+#Logo:hover > #LogoText > span:nth-child(2)  {    animation-delay: 0.50s;     }
+#Logo:hover > #LogoText > span:nth-child(3)  {    animation-delay: 0.45s;     }
+#Logo:hover > #LogoText > span:nth-child(4)  {    animation-delay: 0.40s;     }
+#Logo:hover > #LogoText > span:nth-child(5)  {    animation-delay: 0.35s;     }
+#Logo:hover > #LogoText > span:nth-child(6)  {    animation-delay: 0.30s;     }
+#Logo:hover > #LogoText > span:nth-child(7)  {    animation-delay: 0.25s;     }
+#Logo:hover > #LogoText > span:nth-child(8)  {    animation-delay: 0.20s;     }
+#Logo:hover > #LogoText > span:nth-child(9)  {    animation-delay: 0.15s;     }
+#Logo:hover > #LogoText > span:nth-child(10) {    animation-delay: 0.10s;     }
+#Logo:hover > #LogoText > span:nth-child(11) {    animation-delay: 0.05s;     }
+#Logo:hover > #LogoText > span:nth-child(12) {    animation-delay: 0.0s;      }
+
+@keyframes LogoAnimation {
+    0%   { left:230px;  }
+    100% { left:0px;  }
+}  
+
+/* 
+ * Audio controls
+ */
+.Experience_AudioControls {
+    user-select: none;
+    position:fixed;
+    display:flex;
+    flex-flow: row;
+    flex-direction:column;
+/*    flex-wrap: wrap;*/
+    bottom:1vh;
+/*    height:80px;*/
+    width:75vw;
+    left:12.5vw;
+/*    padding:0 0 min(1vw, 1vh) 0 0;*/
+    pointer-events: none;
+}
+
+.Experience_AudioControls label, .Experience_AudioControls button {
+    font-size:14px !important;
+    font-family:'Orbitron',sans-serif;
+}
+
+.Experience_AC_Play {
+/*    margin:max(0.5vw, 0.5vh);*/
+    flex-basis:32px;
+}
+
+    
+
+.Experience_AC_Play > button {
+    width:62px;
+    height:62px;
+    border-radius: 100px;
+    background-color: rgba(30, 30, 150, 1.0);
+    cursor:pointer;
+    color:#fff;
+    transition:background-color 0.5s;
+    pointer-events:all;
+}
+
+.Experience_AC_Play > button:hover {
+    background-color: rgb(49, 49, 255);
+}
+
+.Experience_AC_Songs {
+    flex: 3 0 10%; 
+/*    margin:max(0.5vw, 0.5vh);*/
+    position:relative;
+/*    top:6px;*/
+    
+/*    flex-basis:176px;*/
+flex-basis:32px;
+}
+
+.Experience_AC_Songs > select {
+    position:relative;
+    left:5px;
+    height: 22px;
+    pointer-events:all;
+}
+
+.Experience_AC_Volume {
+    flex-basis:32px;
+/*    margin:max(0.5vw, 0.5vh);*/
+    
+/*    flex-basis:150px;*/
+}
+
+.Experience_AC_Volume > input {
+    position:relative;
+    left:5px;
+    top:5px;
+    pointer-events:all;
+}
+
+.Experience_AC_Time {
+    flex-basis:32px;
+/*    margin:max(0.5vw, 0.5vh);*/
+}
+
+.Experience_AC_Time > input {
+    position:relative;
+    left:5px;
+    top:5px;
+    width: calc(100% - 10px);
+    pointer-events:all;
+}
+
+.Experience td {
+    color:#ffffff;
+    text-shadow: 1px 1px #000000;
+}
+
+
+
+
+/* Pay & Pause buttons */
+.Experience_Play, .Experience_Pause {
+    position: fixed;
+    margin-bottom: max(0.5vw, 0.5vh);
+    margin-left: max(0.5vw, 0.5vh);
+    bottom:0;
+}
+
+/* when play is true, play button is enabled, and pause button is disabled, when is false is the oposite */
+.Experience_Play[play="false"], .Experience_Pause[play="true"] {
+    display:none;
+}
+ 
+.Experience_SongInfo {
+    position:fixed;
+    margin-bottom: max(0.5vw, 0.5vh);
+    margin-left: max(0.5vw, 0.5vh);    
+    bottom:70px;
+    padding:12px;
+    left:-500px;
+    transition:left 0.4s cubic-bezier(.17,-0.42,0,1.15);
+}
+
+.Experience_SongInfo[visible="false"] {
+    left:0px;
+    animation: SongInfoAnimation 0.4s 5s cubic-bezier(.17,-0.42,0,1.15);
+    animation-fill-mode:forwards;
+}
+
+.Experience_SongInfo td {
+    padding: 4px;
+    color:#CCCCCC;
+}
+
+.Experience_SongInfo a, .Experience_SongInfo a:visited {
+    color:#FFFFFF;
+}
+
+@keyframes SongInfoAnimation {
+    0%   { opacity:1; left:0px;     }
+    100% { opacity:0; left:-300px;  }
+}  

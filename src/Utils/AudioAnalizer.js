@@ -94,7 +94,7 @@ export default class AudioAnalizer {
         this.song.crossOrigin    = "anonymous";
         this.song.src            = URL.createObjectURL(files[0]); 
 
-        this.song.addEventListener('canplay', this.canPlayDrop.bind(this));
+        this.song.addEventListener('canplay', () => { this.canPlayDrop(); });
         this.song.addEventListener('ended'  , () => { 
 //            this.fnEnded.bind(this);
         });                
@@ -122,7 +122,7 @@ export default class AudioAnalizer {
             this.audioSource.connect(this.analizer);
             this.analizer.connect(this.gainNode);
             this.gainNode.connect(this.context.destination);
-//            this.fnReady();            
+            // Update max time on the time slider
             this.htmlElements.elementAudioTime.setAttribute("max", this.song.duration);
         }
     }
@@ -200,8 +200,8 @@ export default class AudioAnalizer {
                 // position for a 1024 array
                 let pos = (x + y * this.square);
                 // set red channel with the frequency, and the green channel with time domain
-                let rValue = Math.clamp(this.analizerData[pos], 0, 255);       // R
-                let gValue = Math.clamp(this.analizerDataSin[pos], 0, 255);
+                let rValue = this.analizerData[pos];
+                let gValue = this.analizerDataSin[pos];
                 // position for a 4098 array
                 pos = pos * 4;
                 // fill the 32*32 image
