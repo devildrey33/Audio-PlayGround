@@ -21,6 +21,8 @@ export default class HTMLElements {
     setupAudioControlEvents() {
         // Time bar its changing by the user
         this.dragTime = false;
+        // Not a drag & drop song
+        this.defaultSong = true;
 
         // Audio songs select option element
         this.elementAudioSongs.addEventListener('change', (e) => {
@@ -35,7 +37,7 @@ export default class HTMLElements {
             this.experience.audioAnalizer.playPause();
             this.experience.world.audioInfo.setup();
         });
-        // Audio play / pause button element
+/*        // Audio play / pause button element
         this.elementAudioPlay.addEventListener('click', (e) => { 
             if (this.experience.audioAnalizer.playPause() == false) {
                 this.elementAudioPlay.innerHTML = "Play";
@@ -43,7 +45,7 @@ export default class HTMLElements {
             else {
                 this.elementAudioPlay.innerHTML = "Pause";
             }
-        });
+        });*/
         // Audio volume slider element
         this.elementAudioVolume.addEventListener('input', (e) => { 
             this.experience.audioAnalizer.gainNode.gain.value = e.currentTarget.value;
@@ -72,15 +74,29 @@ export default class HTMLElements {
 
     }
 
+    audioUI(play) {
+        this.elementPlay.setAttribute("play", play);
+        this.elementPause.setAttribute("play", play);
+
+        this.elementSongInfoName.innerHTML = "<a href='" + this.experience.song.url + "' target='_blank'>" + this.experience.song.name + "</a>";
+        this.elementSongInfoArtist.innerHTML = "<a href='" + this.experience.song.url + "' target='_blank'>" + this.experience.song.group + "</a>";
+
+        if (this.defaultSong === true && (play === "true" || play === true)) 
+            this.elementSongInfo.setAttribute("visible", play);
+        else
+            this.elementSongInfo.setAttribute("visible", false);
+    }
+
+/*
     createAudioControls() {
         let audioControls = "<div class='Experience_AudioControls Experience_Panel'>";
         audioControls +=    "</div>";
         document.body.innerHTML = document.body.innerHTML + audioControls;
 
-        // Obtengo la etiqueta del marco para los controles
+        // Get the AudioControls element
         this.elementAudioControls = document.querySelector("#" + this.elementExperience.id + " > .Experience_AudioControls");
 
-    }
+    }*/
 
     create() {
         // Si no hay una ID asignada es que no se ha creado la etiqueta OCanvas para este objeto
@@ -140,13 +156,37 @@ export default class HTMLElements {
             // Cierro el div .Experience_Controls
             strHTML += '</div>';
 
+            // Play button
+            strHTML += '<div class="Experience_Play Experience_Panel Experience_Control" play="true">' +
+                            "<img src='https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/icos.svg#svg-play' />" +
+                    '</div>';
+            // Pause button
+            strHTML += '<div class="Experience_Pause Experience_Panel Experience_Control" play="true">' +
+                            "<img src='https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/icos.svg#svg-pause' />" +
+                    '</div>';
+
+            // Song info
+            strHTML += `<div class="Experience_Panel Experience_SongInfo">
+                            <table>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>:</td>
+                                    <td id='AudioInfo_Name'><a href="https://www.jamendo.com/track/1884527/the-deep" target="_blank">The Deep</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Artist</td>
+                                    <td>:</td>
+                                    <td id='AudioInfo_Artist'><a href="https://www.jamendo.com/artist/359034/anitek" target="_blank">Anitek</a></td>
+                                </tr>
+                            </table>
+                        </div>`;
+
+
             /* 
              * AudioControls
              */
             strHTML += "<div class='Experience_AudioControls'>";
-            strHTML += "<table style='width:300px'><tr><td style='width:70px'>";
-            strHTML +=      "<div class='Experience_AC_Play'><button>Play</button></div>";
-            strHTML += "</td><td style='width:200px'><table><tr><td><span>song</span></td><td>";
+            strHTML += "<table style='width:200px'><tr><td><span>song</span></td><td>";
             strHTML +=      "<div class='Experience_AC_Songs'><select name='songs'>";
             for (let i = 0; i < this.songs.length; i++) {
                 strHTML += (this.songs[i].name === this.song.name) ? "<option selected>" : "<option>";
@@ -154,9 +194,9 @@ export default class HTMLElements {
             }
             strHTML +=      "</select></div></td></tr><tr><td>volume</td><td>";
             strHTML +=      "<div class='Experience_AC_Volume'><input type='range' name='volume' min='0' max='2' value='1' step='0.01' ></input></div>" ;
-            strHTML +=      "</td></tr></table></td>";
+            strHTML +=      "</td></tr></table>";
 //            strHTML +=      "<td><div class='Experience_AC_Info'>txt</div></td>";
-            strHTML +=      "</tr></table>";
+//            strHTML +=      "</tr></table>";
             strHTML +=      "<div class='Experience_AC_Time'><input type='range'></input></div>" ;
             strHTML += "</div>";
 
@@ -186,8 +226,10 @@ export default class HTMLElements {
             this.elementAudioControls = document.querySelector("#" + this.elementExperience.id + " > .Experience_AudioControls");
             // Audio songs select option element
             this.elementAudioSongs = document.querySelector("#" + this.elementExperience.id + " > .Experience_AudioControls  .Experience_AC_Songs select");
-            // Audio play button element
-            this.elementAudioPlay = document.querySelector("#" + this.elementExperience.id + " > .Experience_AudioControls  .Experience_AC_Play button");
+            // Get the song information panel
+            this.elementSongInfo = document.querySelector("#" + this.elementExperience.id + " > .Experience_SongInfo");
+            this.elementSongInfoName   = document.getElementById("AudioInfo_Name");
+            this.elementSongInfoArtist = document.getElementById("AudioInfo_Artist");
             // Audio volume slider element
             this.elementAudioVolume = document.querySelector("#" + this.elementExperience.id + " > .Experience_AudioControls  .Experience_AC_Volume input");
             // Audio time slider element
@@ -195,6 +237,12 @@ export default class HTMLElements {
             // Audio time slider element
             this.elementAudioInfo = document.querySelector("#" + this.elementExperience.id + " > .Experience_AudioControls  .Experience_AC_Info");
 
+            // Get the play and pause button elements
+            this.elementPlay  = document.querySelector("#" + this.elementExperience.id + " > .Experience_Play");
+            this.elementPause = document.querySelector("#" + this.elementExperience.id + " > .Experience_Pause");            
+            // Play pause button listen click
+            this.elementPlay.addEventListener( "click", (e) => {  this.audioUI(!this.experience.audioAnalizer.playPause());  });
+            this.elementPause.addEventListener("click", (e) => {  this.audioUI(!this.experience.audioAnalizer.playPause());  });
 
 
         

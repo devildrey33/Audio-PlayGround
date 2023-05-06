@@ -61,7 +61,8 @@ export default class AudioAnalizer {
             this.song.pause();
             this.songLoaded = false;
             this.experience.loading = true;
-            this.experience.htmlElements.elementAudioPlay.innerHTML = "Play";
+            // Put the pause button visible, and play button invisible
+            this.experience.htmlElements.audioUI(false);
         }
          
         this.song                = new Audio();
@@ -70,11 +71,14 @@ export default class AudioAnalizer {
         this.song.src            = path;          // "/Canciones/cancion.mp3"
         this.song.addEventListener('canplay', this.canPlay.bind(this));
         this.song.addEventListener('ended'  , () => { 
-            this.experience.htmlElements.elementAudioPlay.innerHTML = "Play";
-//            this.fnEnded.bind(this);
+            this.experience.htmlElements.elementPlay.setAttribute("play", "true");
+            this.experience.htmlElements.elementPause.setAttribute("play", "true");
+    //            this.fnEnded.bind(this);
         });                
         
     }
+
+
 
     loadSongDrop(files) {
 //        if (this.songLoaded === false) { return; }
@@ -92,7 +96,6 @@ export default class AudioAnalizer {
 
         this.song.addEventListener('canplay', this.canPlayDrop.bind(this));
         this.song.addEventListener('ended'  , () => { 
-            this.experience.htmlElements.elementAudioPlay.innerHTML = "Play";
 //            this.fnEnded.bind(this);
         });                
     }
@@ -103,12 +106,10 @@ export default class AudioAnalizer {
         // El autoplay en dispositivos moviles no funciona, por lo que hay que comprobar si está realmente en play o en pausa.
         if (this.song.duration > 0 && !this.song.paused) { 
             this.song.pause(); 
-            this.experience.htmlElements.elementAudioPlay.innerHTML = "Play";
             return false;  
         } 
         else {
             this.song.play();   
-            this.experience.htmlElements.elementAudioPlay.innerHTML = "Pause";
             return true;   
         }        
     };

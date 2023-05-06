@@ -75,23 +75,25 @@ html, body {
 }
 .Experience_Static, .Experience_Control {
     position:relative;
-    width:max(3.2vw, 3.2vh);
-    height:max(3.2vw, 3.2vh);
+    width:48px; /*max(3.2vw, 3.2vh);*/
+    height:48px; /*max(3.2vw, 3.2vh);*/
     margin-bottom:max(0.5vw, 0.5vh);
     margin-right:max(0.5vw, 0.5vh);
-    padding:max(0.4vw, 0.4vh);
+    padding:6px;
+/*    padding:max(0.4vw, 0.4vh);*/
     text-align: center;
     border:2px solid transparent;
     display: block;
     margin-left: auto;
+    transition:border 0.4s;
 }
 
 .Experience_FPS {
-    font-size:max(1.7vw, 1.7vh);
+    font-size:24px;
 }
 
 .Experience_TxtFPS {
-    font-size:max(1.1vw, 1.1vh);
+    font-size:14px;
 }
 
 
@@ -190,12 +192,18 @@ html, body {
     flex-flow: row;
     flex-direction:column;
 /*    flex-wrap: wrap;*/
-    bottom:1vh;
+    bottom:0px;
 /*    height:80px;*/
-    width:75vw;
-    left:12.5vw;
+    width:calc(100% - 160px);
+    left:70px;
 /*    padding:0 0 min(1vw, 1vh) 0 0;*/
     pointer-events: none;
+    padding:0 10px;
+}
+
+
+.Experience_AudioControls td {
+    padding-left:7px;
 }
 
 .Experience_AudioControls label, .Experience_AudioControls button {
@@ -273,3 +281,50 @@ flex-basis:32px;
     color:#ffffff;
     text-shadow: 1px 1px #000000;
 }
+
+
+
+
+/* Pay & Pause buttons */
+.Experience_Play, .Experience_Pause {
+    position: fixed;
+    margin-bottom: max(0.5vw, 0.5vh);
+    margin-left: max(0.5vw, 0.5vh);
+    bottom:0;
+}
+
+/* when play is true, play button is enabled, and pause button is disabled, when is false is the oposite */
+.Experience_Play[play="false"], .Experience_Pause[play="true"] {
+    display:none;
+}
+ 
+.Experience_SongInfo {
+    position:fixed;
+    margin-bottom: max(0.5vw, 0.5vh);
+    margin-left: max(0.5vw, 0.5vh);    
+    bottom:70px;
+    padding:12px;
+    left:-500px;
+    transition:left 0.4s cubic-bezier(.17,-0.42,0,1.15);
+    z-index:100;
+}
+
+.Experience_SongInfo[visible="false"] {
+    left:0px;
+    animation: SongInfoAnimation 0.4s 5s cubic-bezier(.17,-0.42,0,1.15);
+    animation-fill-mode:forwards;
+}
+
+.Experience_SongInfo td {
+    padding: 4px;
+    color:#CCCCCC;
+}
+
+.Experience_SongInfo a, .Experience_SongInfo a:visited {
+    color:#FFFFFF;
+}
+
+@keyframes SongInfoAnimation {
+    0%   { opacity:1; left:0px;     }
+    100% { opacity:0; left:-300px;  }
+}  

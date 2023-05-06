@@ -53,6 +53,11 @@ export default class Experience {
             group : "Convergence", 
             path  : "./songs/Convergence_-_Six_feet_under.mp3", 
             url   : "https://www.jamendo.com/track/80122/six-feet-under" 
+        }, {
+            name  : "The Deep",
+            group : "Anitek", 
+            path  : "./songs/The_Deep_-_Anitek.mp3", 
+            url   : "https://www.jamendo.com/track/1884527/the-deep" 
         }
     ]
 
@@ -70,7 +75,7 @@ export default class Experience {
         // Show full screen buton in the buttons frame
         buttonFullScreen        : true,            
         // Show my logo buton in the buttons frame (that redirects to devildrey33.es)
-        buttonLogo              : false,            
+        buttonLogo              : true,            
         // Show a github icon to go to the example repository
         buttonGitHub            : true,
         // GitHub url for this project (only used if buttonGitHub is true)

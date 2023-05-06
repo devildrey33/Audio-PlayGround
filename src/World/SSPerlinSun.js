@@ -86,7 +86,7 @@ export default class SSPerlinSun {
         
         this.groupLookAt.add(this.mesh);
         this.group.add(this.groupLookAt);
-        this.group.position.set(-12, 4, -5);
+        this.group.position.set(6, 7, 0);
 
         this.scene.add(this.group);
 

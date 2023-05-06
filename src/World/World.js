@@ -50,12 +50,12 @@ export default class World {
         this.circularDistorsion  = new CircularDistorsion(this);
         this.yinYang             = new YinYang(this);
         this.yinYangSin          = new YinYangSin(this);
-        this.perlinSun           = new PerlinSun(this);
+//        this.perlinSun           = new PerlinSun(this);
         this.ssPerlinSun         = new SSPerlinSun(this);        
 //        const start = Math.PI * 2.0 * 0.33 * 0.5;
 
-        this.experience.camera.controls.target.set(this.ssPerlinSun.group.position.x, this.ssPerlinSun.group.position.y, this.ssPerlinSun.group.position.z);
-        this.experience.camera.controls.update();
+//        this.experience.camera.controls.target.set(this.ssPerlinSun.group.position.x, this.ssPerlinSun.group.position.y, this.ssPerlinSun.group.position.z);
+//        this.experience.camera.controls.update();
         
         // Last camera position
         this.lastCameraPosition = this.camera.position.clone();
@@ -307,7 +307,7 @@ export default class World {
             this.circularDistorsion.update();
             this.yinYang.update();
             this.yinYangSin.update();
-            this.perlinSun.update();
+//            this.perlinSun.update();
             this.ssPerlinSun.update();
 
 
