@@ -75,6 +75,9 @@ export default class HTMLElements {
     }
 
     audioUI(play) {
+
+//        let play = !this.song.paused;
+
         this.elementPlay.setAttribute("play", play);
         this.elementPause.setAttribute("play", play);
 

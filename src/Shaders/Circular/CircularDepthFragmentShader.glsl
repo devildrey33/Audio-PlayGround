@@ -49,7 +49,7 @@ void main() {
 
 
 
-    vec2  center       = vec2(0.75, 0.5); // projected center of the circle a bit down of the uv center
+    vec2  center       = vec2(0.65, 0.5); // projected center of the circle a bit down of the uv center
     float radius       = 0.2;
     float thickness    = uSize;
     //  float centerRadius = 0.2;

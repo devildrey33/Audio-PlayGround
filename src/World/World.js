@@ -118,7 +118,7 @@ export default class World {
         this.circularDistorsion.mesh.castShadow               = enable;
         this.circularSin.mesh.castShadow                      = enable;
         this.osciloscope.mesh.castShadow                      = enable;
-        this.perlinSun.mesh.castShadow                        = enable;
+//        this.perlinSun.mesh.castShadow                        = enable;
         this.ssPerlinSun.mesh.castShadow                      = enable;
         this.ssPerlinSun.barsCylinder.mesh.castShadow         = enable;
         this.ssPerlinSun.osciloscopeCylinder1.mesh.castShadow = enable;

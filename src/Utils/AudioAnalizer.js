@@ -75,6 +75,11 @@ export default class AudioAnalizer {
             this.experience.htmlElements.elementPause.setAttribute("play", "true");
     //            this.fnEnded.bind(this);
         });                
+        // Update max time
+        this.song.addEventListener('durationchange'  , () => { 
+            // Update max time on the time slider
+            this.htmlElements.elementAudioTime.setAttribute("max", this.song.duration);
+        });                
         
     }
 
@@ -96,14 +101,23 @@ export default class AudioAnalizer {
 
         this.song.addEventListener('canplay', () => { this.canPlayDrop(); });
         this.song.addEventListener('ended'  , () => { 
-//            this.fnEnded.bind(this);
+            this.experience.htmlElements.elementPlay.setAttribute("play", "true");
+            this.experience.htmlElements.elementPause.setAttribute("play", "true");
+        });                
+        
+        // Update max time
+        this.song.addEventListener('durationchange'  , () => { 
+            // Update max time on the time slider
+            this.htmlElements.elementAudioTime.setAttribute("max", this.song.duration);
         });                
     }
 
     // Función que detecta si está en play o en pausa, y asigna el estado contrario
     playPause() {
         this.context.resume();
-        // El autoplay en dispositivos moviles no funciona, por lo que hay que comprobar si está realmente en play o en pausa.
+        
+        
+        // If song is playing
         if (this.song.duration > 0 && !this.song.paused) { 
             this.song.pause(); 
             return false;  
