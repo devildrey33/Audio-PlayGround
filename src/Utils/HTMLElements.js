@@ -133,23 +133,23 @@ export default class HTMLElements {
             // Show full screen button
             if (this.options.buttonFullScreen === true) {
                 strHTML +=  "<div id='fullScreen' class='Experience_Panel Experience_Control' title='Full screen mode'>" +
-                                "<img src='icos.svg#svg-pantalla-completa' />" +
+                                "<img draggable='false' src='icos.svg#svg-pantalla-completa' />" +
                             "</div>" +
                             "<div id='restoreScreen' class='Experience_Panel Experience_Control' title='Restore screen'>" +
-                                "<img src='icos.svg#svg-restaurar-pantalla' />" +
+                                "<img draggable='false' src='icos.svg#svg-restaurar-pantalla' />" +
                             "</div>";                
             }
 
             // Show full screen button
             if (this.options.buttonGitHub === true) {
                 strHTML +=  "<a href='" + this.options.urlGitHub + "' target='_blank' class='Experience_Panel Experience_Control' title='GitHub project'>" +
-                                "<img src='icos.svg#svg-github' />" +            
+                                "<img draggable='false' src='icos.svg#svg-github' />" +            
                             "</a>";
             }
             // Show devildrey33 logo button
             if (this.options.buttonLogo === true) {
                 strHTML +=  "<a href='https://devildrey33.es' target='_blank' id='Logo' class='Experience_Panel Experience_Control'>" +
-                                "<img src='icos.svg#svg-logo' />" +
+                                "<img draggable='false' src='icos.svg#svg-logo' />" +
                                 "<div id='LogoText'>" +
                                     "<span>D</span>" + "<span>E</span>" + "<span>V</span>" + "<span>I</span>" + "<span>L</span>" + "<span>D</span>" + "<span>R</span>" + "<span>E</span>" + "<span>Y</span>" + "<span>&nbsp;</span>" + "<span>3</span>" + "<span>3</span>" +
                                 "</div>" +
@@ -161,11 +161,11 @@ export default class HTMLElements {
 
             // Play button
             strHTML += '<div class="Experience_Play Experience_Panel Experience_Control" play="true">' +
-                            "<img src='https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/icos.svg#svg-play' />" +
+                            "<img draggable='false' src='https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/icos.svg#svg-play' />" +
                     '</div>';
             // Pause button
             strHTML += '<div class="Experience_Pause Experience_Panel Experience_Control" play="true">' +
-                            "<img src='https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/icos.svg#svg-pause' />" +
+                            "<img draggable='false' src='https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/icos.svg#svg-pause' />" +
                     '</div>';
 
             // Song info

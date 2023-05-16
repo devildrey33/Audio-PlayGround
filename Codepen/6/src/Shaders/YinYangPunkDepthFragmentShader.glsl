@@ -1,10 +1,3 @@
-/*uniform float     uSize;
-uniform sampler2D uAudioTexture;
-uniform float     uAudioStrength;
-uniform float     uAudioZoom;
-uniform float     uRadius;
-varying vec2      vUv; // Coordenadas UV del fragmento*/
-
 uniform sampler2D uAudioTexture;
 uniform float     uAudioStrength;
 uniform float     uAudioZoom;

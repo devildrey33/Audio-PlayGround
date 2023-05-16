@@ -58,6 +58,11 @@ export default class Experience {
             group : "Anitek", 
             path  : "./songs/The_Deep_-_Anitek.mp3", 
             url   : "https://www.jamendo.com/track/1884527/the-deep" 
+        }, {
+            name  : "Alone",
+            group : "Color out", 
+            path  : "./songs/Alone_-_Color_Out.mp3", 
+            url   : "https://www.jamendo.com/track/1886257/alone" 
         }
     ]
 
