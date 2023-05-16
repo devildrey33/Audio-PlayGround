@@ -46,7 +46,7 @@ Audio-Shaders live versions :
 
 https://user-images.githubusercontent.com/15678544/233856539-5433525a-dfa8-40b9-9434-1201412165c0.mp4
 
-[Audio-Shader #1 Osciloscope](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/1/)
+Live version : [Audio-Shader #1 Osciloscope](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/1/)
 
 
 
@@ -54,14 +54,14 @@ https://user-images.githubusercontent.com/15678544/234913322-4a4b95bb-9ec4-4a3d-
 
 
 
-[Audio-Shader #2 Circular osciloscope](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/2/)
+Live version : [Audio-Shader #2 Circular osciloscope](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/2/)
 
 
 https://user-images.githubusercontent.com/15678544/234913365-def0e49b-ea9a-47f9-833d-519d8d48f549.mp4
 
 
 
-[Audio-Shader #3 Sunset](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/3/)
+Live version : [Audio-Shader #3 Sunset](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/3/)
 
 
 
@@ -69,7 +69,7 @@ https://user-images.githubusercontent.com/15678544/236633400-1310db30-0002-4c68-
 
 
 
-[Audio-Shader #4 Onion](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/4/)
+Live version : [Audio-Shader #4 Onion](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/4/)
 
 
 
@@ -77,5 +77,5 @@ https://github.com/devildrey33/Audio-PlayGround/assets/15678544/ba610cb6-e8eb-41
 
 
 
-[Audio-Shader #5 YinYang](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/5/)
+Live version : [Audio-Shader #5 YinYang](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/5/)
 
