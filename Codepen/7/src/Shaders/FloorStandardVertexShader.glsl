@@ -1,6 +1,3 @@
-/* 
- * Perlin noise audio floor globals
- */
 uniform sampler2D uAudioTexture;
 //uniform float uTime;
 uniform float uAudioStrength;

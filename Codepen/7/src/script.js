@@ -11,7 +11,7 @@ import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUti
 
 
 
-class YinYangPunk extends CodepenThreeAudio {
+class FloorAndBars extends CodepenThreeAudio {
     // lil.gui data
     floorBarsOptions = {
         audioStrengthFloor  : 6,
@@ -87,9 +87,9 @@ class YinYangPunk extends CodepenThreeAudio {
         /* 
          * Bars
          */
-        let width = 256;
+        let width  = 256;
         let height = 1;
-        let   size       = width * height;
+        let size   = width * height;
 
         let cubeGeometries = [];
 
@@ -160,4 +160,4 @@ class YinYangPunk extends CodepenThreeAudio {
     }
 }
 
-const newExample = new YinYangPunk();
+const newExample = new FloorAndBars();

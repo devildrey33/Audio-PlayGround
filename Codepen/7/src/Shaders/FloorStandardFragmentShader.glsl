@@ -82,8 +82,8 @@ void main() {
 	#include <map_fragment>
 	#include <color_fragment>
 
-    #define GRID_SIZE 16.0
-    #define BORDER_SIZE 0.1
+    #define GRID_SIZE 32.0
+    #define BORDER_SIZE 0.5
 
     // Calculate the position of the grid
     vec2 position = mod((vUv * GRID_SIZE * GRID_SIZE), vec2(GRID_SIZE)) / GRID_SIZE;
