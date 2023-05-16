@@ -79,3 +79,11 @@ https://github.com/devildrey33/Audio-PlayGround/assets/15678544/ba610cb6-e8eb-41
 
 Live version : [Audio-Shader #5 YinYang](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/5/)
 
+
+
+https://github.com/devildrey33/Audio-PlayGround/assets/15678544/6610bf9e-5926-4a24-ab2a-ebb4a7a0a7dd
+
+
+
+Live version : [Audio-Shader #6 YinYang Punk](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/6/)
+
