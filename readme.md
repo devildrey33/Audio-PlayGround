@@ -87,3 +87,12 @@ https://github.com/devildrey33/Audio-PlayGround/assets/15678544/6610bf9e-5926-4a
 
 Live version : [Audio-Shader #6 YinYang Punk](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/6/)
 
+
+
+
+https://github.com/devildrey33/Audio-PlayGround/assets/15678544/999a848e-0e91-46a1-a9b7-1a3c66c803f4
+
+
+
+Live version : [Audio-Shader #7 Floor and Bars](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/7/)
+
