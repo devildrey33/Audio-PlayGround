@@ -4,7 +4,7 @@
  * 
  *  #4 onion effect.
  *      - Play with Audio Strength, Line size, and radius to achieve different effects
- *      - This script creates an audio data texture with the getByteTimeDomainData values 
+ *      - This script creates an audio data texture with the getByteFrequencyData values 
  *        on the red channel. (Its more easy than creating extra attributes, and looks better)
  *      - Then this texture is sent to the sunset shader and the sunset depth shader.
  *      - You can drag & drop any song of your computer to play it.

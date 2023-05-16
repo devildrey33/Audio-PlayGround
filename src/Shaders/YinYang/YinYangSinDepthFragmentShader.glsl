@@ -91,7 +91,7 @@ void main() {
     if (rad < 0.0) {
         normAngle = ((rad + PI) / PI);
     } else {
-        normAngle = (1.0 + ((rad - PI) / PI));
+        normAngle = (((rad - PI) / PI));
     }
 
     normAngle = mod(normAngle + uTime * 0.25, 1.0);
