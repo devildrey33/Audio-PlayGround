@@ -36,7 +36,7 @@ And then you can use <code>npm run dev</code> to start the local test server.
 
 
 
-Im creating a separate project for each fragment shader effect.
+Im creating a separate project for each shader effect.
 You can find them in : [Codepen AudioShaders](https://github.com/devildrey33/Audio-PlayGround/tree/main/Codepen)
 
 
