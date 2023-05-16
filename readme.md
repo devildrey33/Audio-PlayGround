@@ -71,3 +71,11 @@ https://user-images.githubusercontent.com/15678544/236633400-1310db30-0002-4c68-
 
 [Audio-Shader #4 Onion](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/4/)
 
+
+
+https://github.com/devildrey33/Audio-PlayGround/assets/15678544/ba610cb6-e8eb-414e-8b6e-bfdc82254517
+
+
+
+[Audio-Shader #5 YinYang](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/5/)
+
