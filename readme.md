@@ -96,3 +96,11 @@ https://github.com/devildrey33/Audio-PlayGround/assets/15678544/999a848e-0e91-46
 
 Live version : [Audio-Shader #7 Floor and Bars](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/7/)
 
+
+
+https://github.com/devildrey33/Audio-PlayGround/assets/15678544/1af81003-cc71-4113-8cdf-5c93951750f4
+
+
+
+Live version : [Audio-Shader #8 Perlin SUn](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/8/)
+
