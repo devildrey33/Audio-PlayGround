@@ -1,3 +1,4 @@
+import * as THREE from "three"
 import Experience from "../Experience";
 import SSPerlinSunVertexShader from "../Shaders/PerlinSun/SS/SSPerlinSunVertexShader.glsl"
 import PerlinSunVertexShader from "../Shaders/PerlinSun/PerlinSunVertexShader.glsl"
@@ -5,9 +6,6 @@ import PerlinSunFragmentShader from "../Shaders/PerlinSun/PerlinSunFragmentShade
 import SSPerlinSunFragmentShader from "../Shaders/PerlinSun/SS/SSPerlinSunFragmentShader.glsl"
 import SSPerlinSunDepthFragmentShader from "../Shaders/PerlinSun/SS/SSPerlinSunDepthFragmentShader.glsl"
 import DepthVertexShader from "../Shaders/DepthVertexShader.glsl"
-import * as THREE from "three"
-import OsciloscopeCylinder from "./OsciloscopeCylinder.js"
-import BarsCilinder from "./BarsCilinder";
 
 export default class SSPerlinSun {
     constructor(world) {
@@ -17,8 +15,6 @@ export default class SSPerlinSun {
         this.audioAnalizer = this.experience.audioAnalizer;
         this.world         = world;
         this.setup();
-        this.setupOsciloscopeCylinder();
-        this.setupBarsCylinder();
     }
 
     setup() {        
@@ -34,7 +30,7 @@ export default class SSPerlinSun {
                 uTime           : { value : 0 },
                 uAlpha          : { value : this.experience.debugOptions.perlinSunAlpha },
                 uRotate         : { value : 1.0 },
-                //uHover          : { value : 0.0 },
+                uHover          : { value : 0.0 },
                 uColorFrequency : { value : this.experience.debugOptions.ssPerlinSunColorFrequency },
                 uColorSin       : { value : this.experience.debugOptions.ssPerlinSunColorSin },
                 uNoiseStrength  : { value : this.experience.debugOptions.ssPerlinSunNoiseStrength },
@@ -84,28 +80,11 @@ export default class SSPerlinSun {
         }
         
         
-        this.groupLookAt.add(this.mesh);
-        this.group.add(this.groupLookAt);
-        this.group.position.set(6, 7, 0);
-
-        this.scene.add(this.group);
-
-    }
+      
+        this.mesh.position.set(7, 5, 0);
+        this.scene.add(this.mesh);
 
 
-    setupOsciloscopeCylinder() {
-        const rnd1 = Math.PI * 2.0 * Math.random() * 0.66;
-        const rnd2 = Math.PI * 2.0 * Math.random() * 0.66;
-        const rnd3 = Math.PI * 2.0 * Math.random() * 0.66;
-
-        this.osciloscopeCylinder1 = new OsciloscopeCylinder(this.world, this.group, new THREE.Vector3(rnd1, 0, 0), "#ff6666");
-        this.osciloscopeCylinder2 = new OsciloscopeCylinder(this.world, this.group, new THREE.Vector3(0, rnd2, 0), "#66ff66");
-        this.osciloscopeCylinder3 = new OsciloscopeCylinder(this.world, this.group, new THREE.Vector3(0, 0, rnd3), "#6666ff");
-        
-    }
-
-    setupBarsCylinder() {
-        this.barsCylinder = new BarsCilinder(this.world, this.group);
     }
 
 
@@ -116,47 +95,6 @@ export default class SSPerlinSun {
         this.material.uniforms.uTime.value         += advance;   
         // update time on perlin sun shadow
         this.mesh.customDepthMaterial.uniforms.uTime.value = this.material.uniforms.uTime.value;
-        
-        // make the perlin sun look at the camera
-        this.groupLookAt.lookAt(this.experience.camera.instance.position);
-        
-        const high    = this.audioAnalizer.averageFrequency[0] / 255;
-        const medium  = this.audioAnalizer.averageFrequency[1] / 255;
-        const low     = this.audioAnalizer.averageFrequency[2] / 255;
-        const average = this.audioAnalizer.averageFrequency[3] / 255;
-
-        //set the osciloscopecylinders scale
-        this.osciloscopeCylinder1.mesh.scale.set(0.01 + high,
-                                                 0.01 + high,
-                                                 0.01 + high);
-        this.osciloscopeCylinder2.mesh.scale.set(0.1 + medium,
-                                                 0.1 + medium,
-                                                 0.1 + medium);
-        this.osciloscopeCylinder3.mesh.scale.set(0.2 + low,
-                                                 0.2 + low,
-                                                 0.2 + low);
-
-        // set the osciloscopecylinders line size
-        const t = Math.abs(Math.sin(this.material.uniforms.uTime.value) * 0.05);
-        this.osciloscopeCylinder1.material.uniforms.uSize.value = t * 0.75;
-        this.osciloscopeCylinder2.material.uniforms.uSize.value = t * 0.66;
-        this.osciloscopeCylinder3.material.uniforms.uSize.value = t * 0.52;
-
-        // Rotate the osciloscopecylinder lightnings
-        this.osciloscopeCylinder1.mesh.rotation.set(-this.osciloscopeCylinder1.mesh.rotation.x - (advance * high), 0, -this.osciloscopeCylinder2.mesh.rotation.z - (advance * 0.66));
-        this.osciloscopeCylinder2.mesh.rotation.set(this.osciloscopeCylinder2.mesh.rotation.x + (advance * medium), 0, this.osciloscopeCylinder2.mesh.rotation.z + (advance * 0.66));
-        this.osciloscopeCylinder3.mesh.rotation.set(this.osciloscopeCylinder3.mesh.rotation.x + (advance * low), 0, -this.osciloscopeCylinder3.mesh.rotation.z - advance);
-
-        
-        
-        // Rotate the bars cylinder aura
-        this.barsCylinder.mesh.rotation.set(0, this.barsCylinder.mesh.rotation.y + advance * (this.experience.debugOptions.barsCylinderRotation * (high + medium + low * 0.3)) * (1.0 - average), 0);
-
-
-        this.osciloscopeCylinder1.update();
-        this.osciloscopeCylinder2.update();
-        this.osciloscopeCylinder3.update();
-
-        this.barsCylinder.update();
+     
     }
 }

@@ -9,7 +9,7 @@ uniform float     uHover;
 uniform float     uTime;
 uniform vec3      uColor;
 varying vec2      vUv; // Coordenadas UV del fragmento
-
+/*
 
 vec4 posColor(float alpha, float x) {
     // Cambia el valor de 'interval' para controlar la velocidad de cambio de colores
@@ -31,10 +31,13 @@ vec4 posColor(float alpha, float x) {
     return vec4(color * smoothstepX, alpha * smoothstep(alphaGradient, 1.0 - alphaGradient, smoothstepX));
 }
 
-
+*/
 void main() {
+    float pos = (vUv.x < 0.5) ? vUv.x * 2.0 : 1.0 - vUv.x;
+
     // Get the audio value from texture green channel
-    float audioValue = ((texture2D(uAudioTexture, vec2(vUv.x / uAudioZoom, 0.0)).g - .5) * uAudioStrength) + .5;
+    float audioValue = ((texture2D(uAudioTexture, vec2(pos / uAudioZoom, 0.0)).g - .5) * uAudioStrength) + .5;
+//    float audioValue = ((texture2D(uAudioTexture, vec2(vUv.x / uAudioZoom, 0.0)).g - .5) * uAudioStrength) + .5;
 
     
 

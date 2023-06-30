@@ -67,7 +67,7 @@ html, body {
     position:fixed;
     bottom :0;
     right:0;
-    z-index:10000;
+    z-index:1000;
 }
 
 .Experience_Static {

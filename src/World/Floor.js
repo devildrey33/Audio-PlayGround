@@ -41,9 +41,10 @@ export default class Floor {
             // Replace vertex shader and add more uniforms
             onBeforeCompile : (shader) => {
                 // Add uniforms
-                shader.uniforms.uAudioTexture  = { value : this.audioAnalizer.bufferCanvasSquare.texture };
-                shader.uniforms.uAudioStrength = { value : this.experience.debugOptions.floorAudioStrength };
-                shader.uniforms.uTime          = { value : 0 }
+                shader.uniforms.uAudioTexture    = { value : this.audioAnalizer.bufferCanvasSquare.texture };
+                shader.uniforms.uAudioStrength   = { value : this.experience.debugOptions.floorAudioStrength };
+                shader.uniforms.uColorGrid       = { value : this.experience.debugOptions.floorColorGrid },
+                shader.uniforms.uTime            = { value : 0 }
                 
                 // New vertex shader
                 shader.vertexShader = FloorStandardVertexShader;                
@@ -52,7 +53,7 @@ export default class Floor {
                 // Make uniforms visible in the material
                 this.material.uniforms = shader.uniforms;
             },
-            color         : new THREE.Color("#0505e0"),
+            color         : new THREE.Color(this.experience.debugOptions.floorColorBackground),
             wireframe     : false,
             side          : THREE.DoubleSide,
             transparent   : true,
@@ -71,6 +72,7 @@ export default class Floor {
         this.mesh.name = "Floor";
         this.mesh.receiveShadow = this.experience.debugOptions.shadows;
         this.mesh.castShadow    = this.experience.debugOptions.shadows;
+//        this.mesh.material.color = new THREE.Color("#4747e1");
 
         // Custom depth material
         this.mesh.customDepthMaterial = new THREE.MeshDepthMaterial({ 

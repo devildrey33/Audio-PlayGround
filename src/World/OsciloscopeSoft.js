@@ -2,6 +2,7 @@ import Experience from "../Experience";
 import * as THREE from 'three'
 import BufferCanvas from "../Utils/BufferCanvas";
 
+/* NOT USED, this class paints a linear osciloscpe using CPU */
 
 export default class OsciloscopeSoft {
     constructor(world) {

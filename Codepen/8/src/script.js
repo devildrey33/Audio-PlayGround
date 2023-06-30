@@ -96,7 +96,7 @@ class PerlinSun extends CodepenThreeAudio {
         this.group = new THREE.Group();
         this.groupLookAt = new THREE.Group();
 
-        this.geometry = new THREE.PlaneGeometry(7, 7);
+        this.geometry = new THREE.PlaneGeometry(16, 16);
 
 //        console.log(this.experience.debugOptions.perlinSunColorFrequency);
         this.material = new THREE.ShaderMaterial({
@@ -151,7 +151,6 @@ class PerlinSun extends CodepenThreeAudio {
         
         this.groupLookAt.add(this.mesh);
         this.group.add(this.groupLookAt);
-        this.group.position.set(0, 3, 0);
 
         this.scene.add(this.group);
         
@@ -205,15 +204,7 @@ class PerlinSun extends CodepenThreeAudio {
         this.ui.add(this.perlinSunOptions, "audioStrengthFloor").min(0.1).max(10).step(0.01).name("Floor audio strength").onChange(() => {
             this.materialFloor.uniforms.uAudioStrength.value = this.perlinSunOptions.audioStrengthFloor;
             this.floor.customDepthMaterial.uniforms.uAudioStrength.value = this.perlinSunOptions.audioStrengthFloor;
-        });            
-        
-        
-                
-        // Osciloscope audio zoom
-/*        this.ui.add(this.perlinSunOptions, "audioZoom").min(1).max(16).step(0.1).name("Audio zoom").onChange(() => {
-            this.material.uniforms.uAudioZoom.value = this.perlinSunOptions.audioZoom;
-            this.mesh.customDepthMaterial.uniforms.uAudioZoom.value = this.perlinSunOptions.audioZoom;
-        });            */
+        });                
     }
 
 

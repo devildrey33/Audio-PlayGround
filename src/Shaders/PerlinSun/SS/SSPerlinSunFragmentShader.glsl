@@ -3,7 +3,7 @@
 uniform float     uAlpha;
 uniform sampler2D uAudioTexture;
 uniform float     uTime;
-//uniform float     uHover;
+uniform float     uHover;
 uniform float     uNoiseStrength;
 uniform float     uNoiseSpeed;
 //uniform float     uLowFrequency;
@@ -89,7 +89,7 @@ float cnoise(vec3 P){
     float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x); 
     return 2.2 * n_xyz;
 }
-/*
+
 // Function to make a round rectangle when the 2d plane is hover
 vec4 borderRoundRect(vec4 currentColor, vec2 size, float radius) {
     vec2  position   = vUv * size;
@@ -97,7 +97,7 @@ vec4 borderRoundRect(vec4 currentColor, vec2 size, float radius) {
     vec2  difference = position - rounded;
     float dist       = length(difference);
     vec4  color      = vec4(1.0, 1.0, 1.0, uHover); // Border color
-    float borderSize = 0.015;                       // Border size
+    float borderSize = 0.015 * 0.5;                       // Border size
     float alpha      = step(0.2, smoothstep(radius - borderSize, radius- borderSize, dist) - smoothstep(radius, radius + borderSize, dist));
     color.a = alpha * uHover;
     // Its inside
@@ -107,7 +107,7 @@ vec4 borderRoundRect(vec4 currentColor, vec2 size, float radius) {
     // Its outside
     return currentColor;
 }
-*/
+
 
 // Make a circle with the frequency data
 vec4 circleFreq(vec4 currentColor, vec2 center, float radius, vec3 color) {
@@ -127,8 +127,8 @@ vec4 circleFreq(vec4 currentColor, vec2 center, float radius, vec3 color) {
     float strength = cnoise(vec3(rad * 2.0, dist * uNoiseStrength,  uTime + color.b * uNoiseSpeed)) * radius * 0.1;
 
     if (dist - audioValue + strength < radius) {
-        color.r += audioValue * 0.5;
-        color.b += audioValue * 0.5;
+//        color.rgb += audioValue * 0.5;
+        color.rgb = color.rgb + audioValue * 0.5;
         return vec4(color, 1.0);
     } 
     return currentColor;
@@ -153,18 +153,20 @@ vec4 circleSin(vec4 currentColor, vec2 center, float radius, vec3 color) {
     float strength = 0.0; //cnoise(vec3(rad * TAU * 5.0, dist * 100.0,  uTime + color.b)) * radius * 0.1;
 
     if (dist - audioValue + strength < radius) {
-        color.g += 1.0 - audioValue;
-        return vec4(color, 1.0);
+        color.rgb += audioValue * 0.25;
+        return vec4(color, 0.5 + audioValue);
     } 
     return currentColor;
 }
+
+
 
 void main() {
 
     // Center of the plane
     vec2 center = vec2(0.5, 0.5);
     // Base color
-    vec4 color = vec4(0.0, 0.0, 0.0, uAlpha * 0.80);
+    vec4 color = vec4(0.0, 0.0, 0.0, (uAlpha + uHover) * 0.80);
 
 //    color = circleNoise(color, center, 0.25, vec3(0.0, 0.0, 1.0));
 //    color = circleNoise(color, center, 0.125, vec3(0.5, 0.5, 0.25));
@@ -173,7 +175,7 @@ void main() {
     color = circleSin(color, center, 0.25, uColorSin);
 
     // Apply the round hover border
-//    color = borderRoundRect(color, vec2(1.0, 1.0), 0.125);
+    color = borderRoundRect(color, vec2(1.0, 1.0), 0.125);
 
 
     gl_FragColor = color;

@@ -9,7 +9,7 @@ export default class AudioInfo {
         this.world      = world;
         this.font       = this.experience.resources.items.jsonFont;
 
-        this.material = new THREE.MeshStandardMaterial({ color : "#070707" });
+        this.material = new THREE.MeshStandardMaterial({ color : "#888888" });
         this.setup();
     }
 

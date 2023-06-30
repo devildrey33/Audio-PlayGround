@@ -24,7 +24,7 @@ export default class OsciloscopeCylinder {
 
 
     setup(group, rotation, color) {
-        this.geometry = new THREE.CylinderGeometry(4, 4, 3, 32, 32, true);
+        this.geometry = new THREE.CylinderGeometry(4, 4, 6, 32, 32, true);
 
         this.material = new THREE.ShaderMaterial({
             uniforms : {

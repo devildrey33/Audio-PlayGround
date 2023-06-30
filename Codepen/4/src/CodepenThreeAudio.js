@@ -290,7 +290,8 @@ export default class CodepenThreeAudio {
             antialias   : this.options.antialias
         })
         this.renderer.useLegacyLights     = true;
-        this.renderer.outputEncoding      = THREE.sRGBEncoding;
+        this.instance.outputColorSpace = THREE.SRGBColorSpace;
+//        this.instance.outputEncoding = THREE.sRGBEncoding;
         this.renderer.toneMapping         = THREE.CineonToneMapping;
         this.renderer.toneMappingExposure = 1.75;
         this.renderer.shadowMap.enabled   = true;

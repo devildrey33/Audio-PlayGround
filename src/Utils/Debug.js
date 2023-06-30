@@ -140,11 +140,12 @@ export default class Debug {
             this.debugFloor = this.ui.addFolder("Floor").open(false);;
             // Color grid
             this.debugFloor.addColor(this.options, "floorColorGrid").name("Grid color").onChange(() => {
-                this.perlinSun.material.uniforms.uColorGrid = new THREE.Color(this.options.floorColorGrid);
+                this.floor.material.uniforms.uColorGrid.value = new THREE.Color(this.options.floorColorGrid);
             });
             // Color background
-            this.debugFloor.addColor(this.options, "floorColorBackground").name("Background color").onChange(() => {
-                this.perlinSun.material.uniforms.uColorBackground = new THREE.Color(this.options.floorColorBackground);
+            this.debugFloor.addColor(this.floor.material, "color").name("Background color").onChange(() => {
+//                this.floor.material.uniforms.uColorBackground.value = new THREE.Color(this.options.floorColorBackground);
+//                this.floor.material.color = new THREE.Color(this.options.floorColorBackground);
             });
 
             // Audio strength
@@ -221,7 +222,7 @@ export default class Debug {
             /*
              * Perlin sun
              */
-            this.debugPerlinSun = this.ui.addFolder("Perlin sun").open(false);
+            /*this.debugPerlinSun = this.ui.addFolder("Perlin sun").open(false);
             // PerlinSun background alpha
             this.debugPerlinSun.add(this.options, "perlinSunAlpha").min(0).max(1).step(0.01).name("Background apha").onChange(() => {
                 this.perlinSun.material.uniforms.uAlpha.value = this.options.perlinSunAlpha;
@@ -232,8 +233,8 @@ export default class Debug {
             });
 
             this.debugPerlinSun.addColor(this.options, "perlinSunColorSin").name("Color sin").onChange(() => {
-                this.perlinSun.material.uniforms.perlinSunColorSin.value = new THREE.Color(this.options.perlinSunColorSin);
-            });
+                this.perlinSun.material.uniforms.uColorSin.value = new THREE.Color(this.options.perlinSunColorSin);
+            });*/
 
 
             /*
@@ -244,11 +245,11 @@ export default class Debug {
             this.debugBarsCylinder          = this.debugSSPerlinSun.addFolder("Bars Cylinder").open(false);
             // Color Frequency
             this.debugSSPerlinSun.addColor(this.options, "ssPerlinSunColorFrequency").name("Color freq.").onChange(() => {
-                this.ssPerlinSun.material.uniforms.perlinSunColorFrequency.value = new THREE.Color(this.options.ssPerlinSunColorFrequency);
+                this.ssPerlinSun.material.uniforms.uColorFrequency.value = new THREE.Color(this.options.ssPerlinSunColorFrequency);
             });
             // Color Sin
             this.debugSSPerlinSun.addColor(this.options, "ssPerlinSunColorSin").name("Color sin").onChange(() => {
-                this.ssPerlinSun.material.uniforms.perlinSunColorSin.value = new THREE.Color(this.options.ssPerlinSunColorSin);
+                this.ssPerlinSun.material.uniforms.uColorSin.value = new THREE.Color(this.options.ssPerlinSunColorSin);
             });
             // Perlin noise strength
             this.debugSSPerlinSun.add(this.options, "ssPerlinSunNoiseStrength").min(.1).max(50).step(0.01).name("Noise strength").onChange(() => {

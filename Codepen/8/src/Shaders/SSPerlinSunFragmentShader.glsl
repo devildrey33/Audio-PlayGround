@@ -122,7 +122,9 @@ vec4 circleFreq(vec4 currentColor, vec2 center) {
 
     float audioValue = (texture2D(uAudioTexture, vec2(normAngle, 0.0)).r - 0.5) * .25 * uAudioStrengthFreq;
     // Perlin noise
+//    float distNS = dist * uNoiseStrength;
     float strength = cnoise(vec3(rad * 2.0, dist * uNoiseStrength,  uTime * uNoiseSpeed)) * 0.1;
+//    float strength = cnoise(vec3(-PI + (rad * 2.0), -(distNS * 0.5) + dist * uNoiseStrength,  uTime * uNoiseSpeed)) * 0.1;
 
     if (dist - audioValue + strength + 0.005 < uRadiusFreq) {
         float angle = uTime * .5 * PI;  // Ángulo de rotación en función del tiempo

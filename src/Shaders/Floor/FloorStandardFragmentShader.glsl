@@ -1,4 +1,5 @@
-varying vec2 vUv;
+uniform vec3  uColorGrid;
+varying vec2  vUv;
 
 #define STANDARD
 #ifdef PHYSICAL
@@ -96,8 +97,8 @@ void main() {
                     step(1.0 - position.y, ratio);
     
     // Mix colors
-    vec3 color = mix(diffuse, vec3(1.0, 1.0, 1.0), step(position.x, ratio) + step(position.y, ratio));
-    color = mix(color, vec3(1.0, 1.0, 1.0), border);
+    vec3 color = mix(diffuse, uColorGrid, step(position.x, ratio) + step(position.y, ratio));
+    color = mix(color, uColorGrid, border);
         
     // Set the final grid color
     diffuseColor = vec4(color, opacity);
@@ -129,9 +130,9 @@ void main() {
 		vec3 Fcc = F_Schlick( material.clearcoatF0, material.clearcoatF90, dotNVcc );
 		outgoingLight = outgoingLight * ( 1.0 - material.clearcoat * Fcc ) + clearcoatSpecular * material.clearcoat;
 	#endif
-	#include <output_fragment>
+	#include <opaque_fragment>
 	#include <tonemapping_fragment>
-	#include <encodings_fragment>
+	#include <colorspace_fragment>
 	#include <fog_fragment>
 	#include <premultiplied_alpha_fragment>
 	#include <dithering_fragment>

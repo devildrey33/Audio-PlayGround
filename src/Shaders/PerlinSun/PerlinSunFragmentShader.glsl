@@ -126,8 +126,8 @@ vec4 circleFreq(vec4 currentColor, vec2 center, float radius, vec3 color) {
     float strength = cnoise(vec3(rad * 2.0, dist * 15.0,  uTime + color.b)) * radius * 0.1;
 
     if (dist - audioValue + strength < radius) {
-        color.r += audioValue * 0.5;
-        color.b += audioValue * 0.5;
+        color.rgb += audioValue * 0.5;
+//        color.b += audioValue * 0.5;
         return vec4(color, 1.0);
     } 
     return currentColor;
@@ -152,7 +152,7 @@ vec4 circleSin(vec4 currentColor, vec2 center, float radius, vec3 color) {
     float strength = 0.0; //cnoise(vec3(rad * TAU * 5.0, dist * 100.0,  uTime + color.b)) * radius * 0.1;
 
     if (dist - audioValue + strength < radius) {
-        color.g += 1.0 - audioValue;
+        color.rgb += audioValue;
         return vec4(color, 1.0);
     } 
     return currentColor;
