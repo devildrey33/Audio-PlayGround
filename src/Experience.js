@@ -145,6 +145,8 @@ export default class Experience {
         ssPerlinSunColorSin              : new THREE.Color("#6060e6"),  //new THREE.Color("rgb(50, 50, 250)"),
         ssPerlinSunNoiseStrength         : 15.0,
         ssPerlinSunNoiseSpeed            : 1.0,
+        sphereAudioStrength              : 1.5,
+        sphereAudioZoom                  : 1,
         bloomThreshold                   : -0.8,
         bloomRadius                      : -1.32,
         bloomStrength                    : 0.55,

@@ -69,7 +69,7 @@ export default class OsciloscopeCylinder {
             this.mesh.customDepthMaterial.uniforms = shader.uniforms;
         }
 
-        this.mesh.scale.set(0.01, 0.01, 1.0);
+//        this.mesh.scale.set(0.01, 0.01, 1.0);
 
         group.add(this.mesh);
 

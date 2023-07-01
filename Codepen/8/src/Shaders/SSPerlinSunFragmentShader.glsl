@@ -134,7 +134,7 @@ vec4 circleFreq(vec4 currentColor, vec2 center) {
         float sinAngle = sin(angle);
         mat2 rotationMatrix = mat2(cosAngle, -sinAngle, sinAngle, cosAngle);
         vec2 rotatedUV = rotationMatrix * vUv;        
-        return vec4(abs(sin(uTime * 0.1)), abs(rotatedUV.x), abs(rotatedUV.y), 1.0);//vec4(color, 1.0);
+        return vec4(abs(sin(uTime * 0.1)), abs(rotatedUV.x), abs(rotatedUV.y), 1.0); //vec4(color, 1.0);
     }
     else if (dist - audioValue + strength < uRadiusFreq) {
         return vec4(1.0, 1.0, 1.0, 1.0);

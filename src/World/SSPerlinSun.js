@@ -40,8 +40,8 @@ export default class SSPerlinSun {
             fragmentShader  : SSPerlinSunFragmentShader,
             transparent     : true, 
             side            : THREE.DoubleSide,
-            depthFunc       : THREE.AlwaysDepth,
-            depthWrite      : false,
+//            depthFunc       : THREE.AlwaysDepth,
+/*            depthWrite      : false,*/
 //            blending        : THREE.AdditiveBlending
 
         });

@@ -18,7 +18,7 @@ export default class Environment {
     setSpotLight() {
         this.spotLight = new THREE.SpotLight(0xcccccc, this.experience.options.spotLightIntensity, 100, Math.PI * 0.1, 0.25, 0.25);
 //        this.spotLight.position.set(1, 20, 27);
-        this.spotLight.position.set(-5, 18, 27);
+        this.spotLight.position.set(-5, 36, 31);
 //        this.spotLight.target.position.set(-1, 0, 1)
         this.spotLight.castShadow = this.experience.debugOptions.shadows;
 

@@ -97,7 +97,7 @@ vec4 borderRoundRect(vec4 currentColor, vec2 size, float radius) {
     vec2  difference = position - rounded;
     float dist       = length(difference);
     vec4  color      = vec4(1.0, 1.0, 1.0, uHover); // Border color
-    float borderSize = 0.015 * 0.5;                       // Border size
+    float borderSize = 0.015 * 0.5;                 // Border size (half because its two times larger)
     float alpha      = step(0.2, smoothstep(radius - borderSize, radius- borderSize, dist) - smoothstep(radius, radius + borderSize, dist));
     color.a = alpha * uHover;
     // Its inside
@@ -108,6 +108,20 @@ vec4 borderRoundRect(vec4 currentColor, vec2 size, float radius) {
     return currentColor;
 }
 
+/*
+vec3 getColor(float time) {
+  float t = fract(time);  // Fracción de tiempo entre 0 y 1
+  
+  // Red, green y blue varían en ciclos independientes de tiempo
+  float red = cos(t * 6.2831);  // Variación sinusoidal en el rango [-1, 1]
+  float green = cos(t * 6.2831); // Variación cosinusoidal en el rango [-1, 1]
+  float blue = sin(t * 6.2831 * 2.0); // Variación sinusoidal rápida en el rango [-1, 1]
+  
+  // Normalización y asignación del color resultante
+  vec3 color = vec3(red, green, blue) * 0.5 + 0.75;
+  
+  return color;
+}*/
 
 // Make a circle with the frequency data
 vec4 circleFreq(vec4 currentColor, vec2 center, float radius, vec3 color) {
@@ -128,8 +142,10 @@ vec4 circleFreq(vec4 currentColor, vec2 center, float radius, vec3 color) {
 
     if (dist - audioValue + strength < radius) {
 //        color.rgb += audioValue * 0.5;
-        color.rgb = color.rgb + audioValue * 0.5;
+//        color.rgb = color.rgb + audioValue * 0.5;
         return vec4(color, 1.0);
+
+//        return vec4(getColor(uTime * 0.05) , 0.0 + (2.0 * dist) - sin(uTime) * 0.25);
     } 
     return currentColor;
 }
