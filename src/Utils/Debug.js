@@ -19,6 +19,8 @@ export default class Debug {
         this.yinYangSin         = this.experience.world.yinYangSin;
         this.perlinSun          = this.experience.world.perlinSun;
         this.ssPerlinSun        = this.experience.world.ssPerlinSun;
+        this.sphere             = this.experience.world.sphere;
+        this.sphereSin          = this.experience.world.sphereSin;
         this.bloomPass          = this.experience.renderer.bloomPass;
         this.options            = this.experience.debugOptions;
         this.songs              = this.experience.songs;
@@ -96,7 +98,7 @@ export default class Debug {
             /* 
              * Audio
              */
-            this.debugAudio = this.ui.addFolder("Audio").open(false);
+/*            this.debugAudio = this.ui.addFolder("Audio").open(false);
             this.playPauseButton = { playPause : () => { 
                 this.experience.audioAnalizer.playPause();
             }}                    
@@ -118,7 +120,7 @@ export default class Debug {
                 
                 this.experience.audioAnalizer.loadSong(this.experience.song.path);
                 this.experience.audioAnalizer.playPause();
-            });
+            });*/
 
 
             /*
@@ -281,7 +283,7 @@ export default class Debug {
              * Bars Cylinder
              */
             // Color 1
-            this.debugBarsCylinder.addColor(this.options, "barsCylinderColor1").name("Color one").onChange(() => {
+/*            this.debugBarsCylinder.addColor(this.options, "barsCylinderColor1").name("Color one").onChange(() => {
                 this.ssPerlinSun.barsCylinder.material.uniforms.uColor.value = new THREE.Color(this.options.barsCylinderColor1);
             });
             // Color 2
@@ -294,6 +296,38 @@ export default class Debug {
             });            
             // Rotation strength            
             this.debugBarsCylinder.add(this.options, "barsCylinderRotation").min(0).max(32).step(0.1).name("Rotation strength");
+            */
+
+            /*
+             * Sphere
+             */
+            this.debugSphere = this.ui.addFolder("Sphere").open(false);
+            // sphere audio strength
+            this.debugSphere.add(this.options, "sphereAudioStrength").min(0).max(6).step(0.01).name("Audio strength").onChange(() => {
+                this.sphere.material.uniforms.uAudioStrength.value = this.options.sphereAudioStrength;
+            });            
+            // sphere audio zoom
+            this.debugSphere.add(this.options, "sphereAudioZoom").min(1).max(8).step(0.01).name("Audio zoom").onChange(() => {
+                this.sphere.material.uniforms.uAudioZoom.value = this.options.sphereAudioZoom;
+            });            
+            // sphere audio zoom
+            this.debugSphere.add(this.sphere.material, "wireframe").name("wireframe");
+
+            /*
+             * SphereSin
+             */
+            this.debugSphereSin = this.ui.addFolder("Sphere Sin").open(false);
+            // sphere sin audio strength
+            this.debugSphereSin.add(this.options, "sphereSinAudioStrength").min(0).max(10).step(0.01).name("Audio strength").onChange(() => {
+                this.sphereSin.material.uniforms.uAudioStrength.value = this.options.sphereSinAudioStrength;
+            });            
+            // sphere sin audio zoom
+            this.debugSphereSin.add(this.options, "sphereSinAudioZoom").min(1).max(8).step(0.01).name("Audio zoom").onChange(() => {
+                this.sphereSin.material.uniforms.uAudioZoom.value = this.options.sphereSinAudioZoom;
+            });            
+            // sphere sin audio zoom
+            this.debugSphereSin.add(this.sphereSin.material, "wireframe").name("wireframe");
+
 
             /*
             * Bloom

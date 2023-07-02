@@ -2,6 +2,7 @@ import * as THREE from "three"
 import Experience from "../Experience";
 //import OsciloscopeCylinder from "./OsciloscopeCylinder.js"
 import SphereStandardVertextShader from "../Shaders/Sphere/SphereStandardVertexShader.glsl"
+import SphereDepthVertexShader from "../Shaders/Sphere/SphereDepthVertexShader.glsl"
 
 export default class Sphere {
     constructor(world) {
@@ -34,12 +35,13 @@ export default class Sphere {
                 shader.uniforms.uAudioStrength   = { value : this.experience.debugOptions.sphereAudioStrength };
                 shader.uniforms.uAudioZoom       = { value : this.experience.debugOptions.sphereAudioZoom },
                 shader.uniforms.uTime            = { value : 0 }
+                shader.uniforms.uHover           = { value : 0.0 }
                 // New fragment shader
                 shader.vertexShader = SphereStandardVertextShader;
                 // Make uniforms visible in the material
                 this.material.uniforms = shader.uniforms;                
             },
-            color : new THREE.Color("#b14444"),
+            color : new THREE.Color("#892d95"),
             emissive : new THREE.Color("#000000"),
             roughness : 0.2,
             metalness : .3,
@@ -50,14 +52,32 @@ export default class Sphere {
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.mesh.castShadow = true;
         this.mesh.receiveShadow = true;
-        this.mesh.rotation.y = -Math.PI * 0.5;        
+        this.mesh.rotation.y = -Math.PI * 0.5;       
+        this.mesh.name = "Sphere" ;
 
-        this.mesh.position.set(0, 3, -10);
+        this.mesh.position.set(-6, 3, -10);
+        
+        
+        // Custom depth material
+        this.mesh.customDepthMaterial = new THREE.MeshDepthMaterial({ 
+                depthPacking: THREE.RGBADepthPacking
+        });
+
+        // Create a pseudo uniforms before depth material is compiled, to not crash the update function
+        this.mesh.customDepthMaterial.uniforms = { uTime : { value : 0 } };
+        // Modify the default depth material
+        this.mesh.customDepthMaterial.onBeforeCompile = (shader) => {
+        shader.uniforms.uAudioStrength  = { value : this.experience.debugOptions.sphereSinAudioStrength };
+        shader.uniforms.uAudioZoom      = { value : this.experience.debugOptions.sphereSinAudioZoom };
+        shader.uniforms.uAudioTexture   = { value : this.audioAnalizer.bufferCanvasLinear.texture };
+        shader.uniforms.uTime           = { value : 0 };
+
+        shader.vertexShader            = SphereDepthVertexShader;
+        this.mesh.customDepthMaterial.uniforms = shader.uniforms;
+        }
+            
+        
         this.scene.add(this.mesh);
-/*        this.group.add(this.mesh);
-
-        this.group.position.set(0, 5, -10);
-        this.scene.add(this.group);*/
     }
 
 
@@ -109,7 +129,7 @@ export default class Sphere {
 
         // Scale of the main sphere
 //        this.mesh.scale.set(5 + 10.0 * high, 5 + 10.0 * high, 5 + 10.0 * high);
-        this.mesh.rotateY(advance * 1.15);
+//        this.mesh.rotateY(advance * 1.15);
 /*        this.mesh.rotateX(advance * .72);
         this.mesh.rotateZ(advance * 1.61);*/
         // update time for sphere perlin noise

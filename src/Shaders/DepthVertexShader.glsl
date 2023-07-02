@@ -1,3 +1,4 @@
+/* Basic DepthVertexShader with vUv */
 varying vec2 vUv;
 
 #include <common>

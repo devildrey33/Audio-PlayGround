@@ -1,7 +1,9 @@
+
 uniform sampler2D uAudioTexture;
 uniform float uTime;
 uniform float uAudioStrength;
 uniform float uAudioZoom;
+varying vec2  vUv;
 
 
 /* 
@@ -38,26 +40,22 @@ void main() {
     #include <normal_vertex>
     #include <begin_vertex>
 
-    // Audio value on Y axis
-//    float posX = (uv.x < 0.5) ? 0.0 + uv.x * 2.0 : 1.0 - uv.x;
-//    float posY = (uv.y < 0.5) ? 0.0 + uv.y * 2.0 : 1.0 - uv.y;
-//    float audioValue = ((texture2D(uAudioTexture, vec2(posX * uAudioZoom, posY * uAudioZoom)).r) * uAudioStrength);
 
     float audioValue = 0.0;
     float zoom = 1.0 - (1.0 / uAudioZoom);
     if (uv.x > 0.001 && uv.x < 0.999 && uv.y > 0.001 && uv.y < 0.999)  {
-//        audioValue = ((texture2D(uAudioTexture, vec2(uv.x * uAudioZoom, uv.y * uAudioZoom)).g - 0.5) * 0.55) * uAudioStrength;
-        audioValue = ((texture2D(uAudioTexture, vec2(zoom + (uv.x / uAudioZoom), zoom + (uv.y / uAudioZoom))).r) * uAudioStrength);
+        audioValue = ((texture2D(uAudioTexture, vec2(zoom + (uv.x / uAudioZoom), zoom + (uv.y / uAudioZoom))).g - 0.5) * 0.55) * uAudioStrength;
     }
     // On the edges of the shape use a medium value 
     else {
-//        audioValue = ((texture2D(uAudioTexture, vec2(0.0, uv.y * uAudioZoom)).g - 0.5) * 0.55) * uAudioStrength;
-        audioValue = ((texture2D(uAudioTexture, vec2(0.5, zoom + (uv.y / uAudioZoom))).r) * uAudioStrength);
+        audioValue = ((texture2D(uAudioTexture, vec2(1.0, zoom + (uv.y / uAudioZoom))).g - 0.5) * 0.55) * uAudioStrength;
     }
 
     transformed.z = transformed.z + (transformed.z * audioValue * uAudioStrength);
     transformed.x = transformed.x + (transformed.x * audioValue * uAudioStrength);
     transformed.y = transformed.y + (transformed.y * audioValue * uAudioStrength);
+
+    vUv = uv;
 
 
     /*

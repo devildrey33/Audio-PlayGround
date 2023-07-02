@@ -36,7 +36,7 @@ export default class SSPerlinSun {
                 uNoiseStrength  : { value : this.experience.debugOptions.ssPerlinSunNoiseStrength },
                 uNoiseSpeed     : { value : this.experience.debugOptions.ssPerlinSunNoiseSpeed }
             },
-            vertexShader    : PerlinSunVertexShader,
+            vertexShader    : SSPerlinSunVertexShader,
             fragmentShader  : SSPerlinSunFragmentShader,
             transparent     : true, 
             side            : THREE.DoubleSide,

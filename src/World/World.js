@@ -15,6 +15,7 @@ import PerlinSun from './PerlinSun.js';
 import AudioInfo from './AudioInfo.js';
 import SSPerlinSun from './SSPerlinSun.js';
 import Sphere from './Sphere.js';
+import SphereSin from './SphereSin.js';
 //import OsciloscopeSoft from './OsciloscopeSoft.js';
 
 
@@ -54,6 +55,7 @@ export default class World {
 //        this.perlinSun           = new PerlinSun(this);
         this.ssPerlinSun         = new SSPerlinSun(this);        
         this.sphere              = new Sphere(this);
+        this.sphereSin           = new SphereSin(this);
 //        const start = Math.PI * 2.0 * 0.33 * 0.5;
 
 //        this.experience.camera.controls.target.set(this.ssPerlinSun.group.position.x, this.ssPerlinSun.group.position.y, this.ssPerlinSun.group.position.z);
@@ -96,6 +98,8 @@ export default class World {
                 yinYangSin          : { name : "YinYangSin"          , hover : false, object : this.yinYangSin         },
                 perlinSun           : { name : "SSPerlinSun"         , hover : false, object : this.ssPerlinSun        },
                 audioInfo           : { name : "AudioInfo"           , hover : false, object : this.audioInfo          },            
+                sphere              : { name : "Sphere"              , hover : false, object : this.sphere             },            
+                sphereSin           : { name : "SphereSin"           , hover : false, object : this.sphereSin          },            
             }
             
             this.ready            = true;
@@ -120,12 +124,9 @@ export default class World {
         this.circularDistorsion.mesh.castShadow               = enable;
         this.circularSin.mesh.castShadow                      = enable;
         this.osciloscope.mesh.castShadow                      = enable;
-//        this.perlinSun.mesh.castShadow                        = enable;
         this.ssPerlinSun.mesh.castShadow                      = enable;
-//        this.ssPerlinSun.barsCylinder.mesh.castShadow         = enable;
-        this.ssPerlinSun.osciloscopeCylinder1.mesh.castShadow = enable;
-        this.ssPerlinSun.osciloscopeCylinder2.mesh.castShadow = enable;
-        this.ssPerlinSun.osciloscopeCylinder3.mesh.castShadow = enable;
+        this.sphere.mesh.castShadow                           = enable;
+        this.sphereSin.mesh.castShadow                        = enable;
 
     }
 
@@ -313,6 +314,7 @@ export default class World {
 //            this.perlinSun.update();
             this.ssPerlinSun.update();
             this.sphere.update();
+            this.sphereSin.update();
 
 //            this.osciloscope.update();
 //            this.osciloscopeSoft.update();
