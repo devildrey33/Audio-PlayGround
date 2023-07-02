@@ -27,7 +27,7 @@ export default class AudioAnalizer {
         this.gainNode                         = this.context.createGain();
         this.analizer                         = this.context.createAnalyser();
         this.analizer.fftSize                 = fftSize;
-        this.analizer.smoothingTimeConstant   = 0.8; // 
+        this.analizer.smoothingTimeConstant   = this.experience.debugOptions.smoothingTimeConstant; // 
 
         // Drag & drop event
         this.hEventDragEnter = this.eventDragEnter.bind(this);

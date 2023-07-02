@@ -153,7 +153,13 @@ export default class Experience {
         bloomRadius                      : -1.32,
         bloomStrength                    : 0.55,
         bloomEnabled                     : true,
-        frequencyTextureVisible          : true
+        // Only for a joke.. xd
+        displacementAmplitudeX           : 0.001,
+        displacementAmplitudeY           : 0.02,
+        displacementFrequencyX           : 8.6,
+        displacementFrequencyY           : 84.8,
+        displacementEnabled              : true,
+        smoothingTimeConstant            : 0.8, // from 0 to 0.99 (by default is 0.8)
     };
 
 

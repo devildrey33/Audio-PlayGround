@@ -4,6 +4,9 @@ import Experience from "./Experience";
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
+import DisplacementVertexShader from "./Shaders/PostProcessing/Displacement/DisplacementVertexShader.glsl"
+import DisplacementFragmentShader from "./Shaders/PostProcessing/Displacement/DisplacementFragmentShader.glsl"
 
 export default class Renderer {
     // Costructor
@@ -14,8 +17,21 @@ export default class Renderer {
         this.sizes      = this.experience.sizes;
         this.scene      = this.experience.scene;
         this.camera     = this.experience.camera;
+        this.time       = this.experience.time;
 
         this.setInstance();
+    }
+
+    // PostProcessing Displacement Pass
+    DisplacementPass = {
+        uniforms: {
+            tDiffuse   : { value : null },
+            uTime      : { value : 0 },
+            uAmplitude : { value : null },
+            uFrequency : { value : null }
+        },
+        vertexShader   : DisplacementVertexShader,
+        fragmentShader : DisplacementFragmentShader
     }
 
     /**
@@ -54,10 +70,25 @@ export default class Renderer {
         this.bloomPass.threshold = this.experience.debugOptions.bloomThreshold;
         this.bloomPass.strength  = this.experience.debugOptions.bloomStrength;
         this.bloomPass.radius    = this.experience.debugOptions.bloomRadius;        
+        this.bloomPass.enabled   = this.experience.debugOptions.bloomEnabled;     
 
         this.effectComposer.addPass(this.bloomPass);   
+
+        this.displacementPass = new ShaderPass(this.DisplacementPass);
+        this.displacementPass.material.uniforms.uAmplitude.value = this.experience.debugOptions.displacementAmplitude;
+        this.displacementPass.material.uniforms.uFrequency.value = this.experience.debugOptions.displacementFrequency;
+        this.displacementPass.material.uniforms.uAmplitude.value = new THREE.Vector2(
+            this.experience.debugOptions.displacementAmplitudeX, 
+            this.experience.debugOptions.displacementAmplitudeY
+        );
+        this.displacementPass.material.uniforms.uFrequency.value = new THREE.Vector2(
+            this.experience.debugOptions.displacementFrequencyX, 
+            this.experience.debugOptions.displacementFrequencyY
+        );
+
+        this.displacementPass.enabled   = this.experience.debugOptions.displacementEnabled;     
+        this.effectComposer.addPass(this.displacementPass);
         
-        this.bloomPass.enabled = this.experience.debugOptions.bloomEnabled;     
     }
 
     /**
@@ -72,6 +103,9 @@ export default class Renderer {
      * Function called on update
     */
     update() {
+        const advance = this.time.delta / 1000;
+        this.displacementPass.material.uniforms.uTime.value += advance;
+
         this.effectComposer.render();
         //this.instance.render(this.scene, this.camera.instance)
     }

@@ -22,6 +22,7 @@ export default class Debug {
         this.sphere             = this.experience.world.sphere;
         this.sphereSin          = this.experience.world.sphereSin;
         this.bloomPass          = this.experience.renderer.bloomPass;
+        this.displacementPass   = this.experience.renderer.displacementPass;
         this.options            = this.experience.debugOptions;
         this.songs              = this.experience.songs;
 //        this.active = true;
@@ -330,8 +331,8 @@ export default class Debug {
 
 
             /*
-            * Bloom
-            */
+             * Bloom PostProcessing
+             */
             this.debugBloom = this.ui.addFolder("Bloom (postprocessing)").open(false);
             // Enable / disable bloom
             this.debugBloom.add(this.options, "bloomEnabled").onChange(() => {
@@ -348,7 +349,46 @@ export default class Debug {
             // Bloom Strength
             this.debugBloom.add(this.options, "bloomStrength").min(0).max(1).step(0.01).name("Strength").onChange(() => {
                 this.bloomPass.strength = this.options.bloomStrength;
-            });            
+            });     
+            
+
+            /*
+            * Displacement PostProcessing
+            */
+            this.debugDisplacement = this.ui.addFolder("Displacement (postprocessing)").open(false);
+            // Enable / disable bloom
+            this.debugDisplacement.add(this.options, "displacementEnabled").onChange(() => {
+                this.displacementPass.enabled = this.options.displacementEnabled;
+            });
+            // Displacement Amplitude X
+            this.debugDisplacement.add(this.options, "displacementAmplitudeX").min(0.001).max(0.5).step(0.01).name("Amplitude X").onChange(() => {
+                this.displacementPass.uniforms.uAmplitude.value = new THREE.Vector2(
+                    this.options.displacementAmplitudeX,
+                    this.options.displacementAmplitudeY
+                );
+            });
+            // Displacement Amplitude Y
+            this.debugDisplacement.add(this.options, "displacementAmplitudeY").min(0.001).max(0.5).step(0.01).name("Amplitude Y").onChange(() => {
+                this.displacementPass.uniforms.uAmplitude.value = new THREE.Vector2(
+                    this.options.displacementAmplitudeX,
+                    this.options.displacementAmplitudeY
+                );
+            });
+            // Displacement Frequency X
+            this.debugDisplacement.add(this.options, "displacementFrequencyX").min(0.01).max(100).step(0.1).name("Frequency X").onChange(() => {
+                this.displacementPass.uniforms.uFrequency.value = new THREE.Vector2(
+                    this.options.displacementFrequencyX,
+                    this.options.displacementFrequencyY
+                );
+            });
+            // Displacement Frequency Y
+            this.debugDisplacement.add(this.options, "displacementFrequencyY").min(0.01).max(100).step(0.1).name("Frequency Y").onChange(() => {
+                this.displacementPass.uniforms.uFrequency.value = new THREE.Vector2(
+                    this.options.displacementFrequencyX,
+                    this.options.displacementFrequencyY
+                );
+            });
+            
 
             // environment
            /* this.debugEnvironment = this.ui.addFolder("environment");
