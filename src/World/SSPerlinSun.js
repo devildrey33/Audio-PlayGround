@@ -18,10 +18,10 @@ export default class SSPerlinSun {
     }
 
     setup() {        
-        this.group = new THREE.Group();
-        this.groupLookAt = new THREE.Group();
+//        this.group = new THREE.Group();
+//        this.groupLookAt = new THREE.Group();
 
-        this.geometry = new THREE.PlaneGeometry(7, 7);
+        this.geometry = new THREE.PlaneGeometry(3, 3);
 
 //        console.log(this.experience.debugOptions.perlinSunColorFrequency);
         this.material = new THREE.ShaderMaterial({
@@ -81,7 +81,7 @@ export default class SSPerlinSun {
         
         
       
-        this.mesh.position.set(7, 5, 0);
+        this.mesh.position.set(5, 7, 0);
         this.scene.add(this.mesh);
 
 

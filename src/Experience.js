@@ -149,16 +149,19 @@ export default class Experience {
         sphereAudioZoom                  : 1,
         sphereSinAudioStrength           : 5,
         sphereSinAudioZoom               : 1,
+        spiralAudioStrength              : 2,
+        spiralAudioZoom                  : 1,
+
         bloomThreshold                   : -0.8,
         bloomRadius                      : -1.32,
         bloomStrength                    : 0.55,
         bloomEnabled                     : true,
         // Only for a joke.. xd
-        displacementAmplitudeX           : 0.001,
-        displacementAmplitudeY           : 0.02,
-        displacementFrequencyX           : 8.6,
-        displacementFrequencyY           : 84.8,
-        displacementEnabled              : true,
+        displacementAmplitudeX           : 0.04,
+        displacementAmplitudeY           : 0.06,
+        displacementFrequencyX           : 2.6,
+        displacementFrequencyY           : 3.3,
+        displacementEnabled              : false,
         smoothingTimeConstant            : 0.8, // from 0 to 0.99 (by default is 0.8)
     };
 
@@ -190,8 +193,11 @@ export default class Experience {
         this.htmlElements   = new HTMLElements();
 
 
-
+        // Initialize canvas size
         this.sizes          = new Sizes();
+        // Initialize time
+        this.time           = new Time();
+
         this.canvas         = this.htmlElements.elementCanvas;
 
         this.audioAnalizer  = new AudioAnalizer();
@@ -206,6 +212,7 @@ export default class Experience {
             From Sky to Abyss   Quantum Ocean                          https://www.jamendo.com/track/1284951/quantum-ocean
             Convergence         Six Feet Under                         https://www.jamendo.com/track/80122/six-feet-under
         */
+        
 
         this.audioAnalizer.loadSong(this.song.path);
         //this.audioAnalizer.loadSong("./songs/BattleTrance.mp3");
@@ -217,7 +224,6 @@ export default class Experience {
 
 //        window.addEventListener("click", () => { this.audioAnalizer.playPause(); })
 
-        this.time           = new Time();
         this.scene          = new THREE.Scene();
         this.resources      = new Resources(sources);
         this.camera         = new Camera();

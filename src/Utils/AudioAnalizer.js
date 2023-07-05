@@ -6,11 +6,13 @@ import "./MathUtils.js"
 export default class AudioAnalizer {
     constructor() {
         this.experience     = new Experience();
-
+        this.time           = this.experience.time;
 //        this.audioSourceDD  = { context : { currentTime : 0 } };
         this.context        = new AudioContext();
         this.songLoaded     = false;
         this.htmlElements   = this.experience.htmlElements;
+        // Current time for the blue channel smoth function
+        this.curTimeB       = 0;
 //        this.songList       = [];
     
 //        start();
@@ -204,11 +206,31 @@ export default class AudioAnalizer {
                  values[4] / totalFreq ]; // Total average
     }
 
+    /* 
+     * The idea is simulate smoothingTimeConstant on the analizerDataSin making his values absolute (0 )
+     */
+/*    smoothSin(currentValue, newAnalizerValue) {
+        this.curTimeB += this.time.delta;
+        if (this.curTimeB > 1000) {
+            this.curTimeB = 0;
+            return newAnalizerValue;
+        }
+        const nCurrentValue = Math.abs(currentValue);
+        if (nCurrentValue < 0) return 0;
+        return (currentValue  >= 1) ? currentValue - 1 : 0;
+    }*/
 
     // Updates internal audio data textures
     // For the floor whe need a 32x32 texture, and for the rest of the effects a 1024x1 texture
     // Red channel is the Frequency data, and the Green channel is the time domain data
     paintAudioTexture() {
+/*        this.curTimeB += this.time.delta;
+        if (this.curTimeB > 800) {
+            this.curTimeB = 0;
+        }*/
+
+
+
         for (let y = 0; y < this.square; y++) {
             for (let x = 0; x < this.square * 2; x++) {
                 // position for a 1024 array
@@ -216,17 +238,20 @@ export default class AudioAnalizer {
                 // set red channel with the frequency, and the green channel with time domain
                 let rValue = this.analizerData[pos];
                 let gValue = this.analizerDataSin[pos];
+                let bValue = gValue;
+
                 // position for a 4098 array
                 pos = pos * 4;
+
                 // fill the 32*32 image
                 this.imageDataSquare.data[pos]     = rValue;
                 this.imageDataSquare.data[pos + 1] = gValue;
-                this.imageDataSquare.data[pos + 2] = 0;
+                this.imageDataSquare.data[pos + 2] = bValue;
                 this.imageDataSquare.data[pos + 3] = 255;
                 // fill the 1024*1 image
                 this.imageDataLinear.data[pos]     = rValue;
                 this.imageDataLinear.data[pos + 1] = gValue;
-                this.imageDataLinear.data[pos + 2] = 0;
+                this.imageDataLinear.data[pos + 2] = bValue;
                 this.imageDataLinear.data[pos + 3] = 255;
             }
         }

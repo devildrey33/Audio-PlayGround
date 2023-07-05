@@ -27,11 +27,11 @@ void main() {
     float audioValue = 0.0;
     float zoom = 1.0 - (1.0 / uAudioZoom);
     if (uv.x > 0.001 && uv.x < 0.999 && uv.y > 0.001 && uv.y < 0.999)  {
-        audioValue = abs((texture2D(uAudioTexture, vec2(uv.x / uAudioZoom, uv.y / uAudioZoom)).r) * uAudioStrength);
+        audioValue = ((texture2D(uAudioTexture, vec2(uv.x / uAudioZoom, uv.y / uAudioZoom)).r) * uAudioStrength);
     }
     // On the edges of the shape use a medium value 
     else {
-        audioValue = abs((texture2D(uAudioTexture, vec2(0.5, uv.y / uAudioZoom)).r) * uAudioStrength);
+        audioValue = ((texture2D(uAudioTexture, vec2(0.5, uv.y / uAudioZoom)).r) * uAudioStrength);
     }
 
     transformed.z = transformed.z + (transformed.z * audioValue);

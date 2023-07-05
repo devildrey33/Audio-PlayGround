@@ -11,11 +11,12 @@ import YinYang from './YinYang.js';
 import YinYangSin from './YinYangSin.js';
 import * as THREE from 'three'
 import { gsap } from "gsap";
-import PerlinSun from './PerlinSun.js';
+//import PerlinSun from './PerlinSun.js';
 import AudioInfo from './AudioInfo.js';
 import SSPerlinSun from './SSPerlinSun.js';
 import Sphere from './Sphere.js';
 import SphereSin from './SphereSin.js';
+import Spiral from './Spiral.js'
 //import OsciloscopeSoft from './OsciloscopeSoft.js';
 
 
@@ -56,11 +57,19 @@ export default class World {
         this.ssPerlinSun         = new SSPerlinSun(this);        
         this.sphere              = new Sphere(this);
         this.sphereSin           = new SphereSin(this);
+        this.spiral              = new Spiral(this);
 //        const start = Math.PI * 2.0 * 0.33 * 0.5;
 
 //        this.experience.camera.controls.target.set(this.ssPerlinSun.group.position.x, this.ssPerlinSun.group.position.y, this.ssPerlinSun.group.position.z);
 //        this.experience.camera.controls.update();
         
+        this.camera.position.set(5, 3, 22);
+        this.camera.lookAt(this.spiral.mesh.position);
+        this.experience.camera.controls.target.set(this.camera.position.x, this.camera.position.y, this.camera.position.z);
+        this.experience.camera.controls.update();
+        
+//        this.camera.target.set(this.spiral.mesh);
+
         // Last camera position
         this.lastCameraPosition = this.camera.position.clone();
         // Camera focus, if not free is one of the panels
@@ -303,7 +312,7 @@ export default class World {
             this.updateRaycaster();
 
 //            this.frequencyTexture.update();
-            // Floor need to be updated / painted first
+            // Floor need to be updated / painted firsªt
             this.floor.update();
 //            this.bars.update();
             this.circular.update();
@@ -315,6 +324,7 @@ export default class World {
             this.ssPerlinSun.update();
             this.sphere.update();
             this.sphereSin.update();
+            this.spiral.update();
 
 //            this.osciloscope.update();
 //            this.osciloscopeSoft.update();

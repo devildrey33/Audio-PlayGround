@@ -97,7 +97,7 @@ vec4 borderRoundRect(vec4 currentColor, vec2 size, float radius) {
     vec2  difference = position - rounded;
     float dist       = length(difference);
     vec4  color      = vec4(1.0, 1.0, 1.0, uHover); // Border color
-    float borderSize = 0.015 * 0.5;                 // Border size (half because its two times larger)
+    float borderSize = 0.015;                 // Border size (half because its two times larger)
     float alpha      = step(0.2, smoothstep(radius - borderSize, radius- borderSize, dist) - smoothstep(radius, radius + borderSize, dist));
     color.a = alpha * uHover;
     // Its inside

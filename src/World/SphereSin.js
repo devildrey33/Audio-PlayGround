@@ -55,7 +55,7 @@ export default class SphereSin {
         this.mesh.rotation.y = -Math.PI * 0.5;        
         this.mesh.name = "SphereSin";
 
-        this.mesh.position.set(6, 3, -10);
+        this.mesh.position.set(5, 3, -10);
 
         
         // Custom depth material
