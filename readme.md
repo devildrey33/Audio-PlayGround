@@ -24,7 +24,9 @@ live version : [Audio-PlayGround](https://devildrey33.es/Ejemplos/Three.js-Journ
 
 
 
-https://user-images.githubusercontent.com/15678544/232332632-74db47bc-60d3-4aae-baf4-2bbc2e0ce9e6.mp4
+
+https://github.com/devildrey33/Audio-PlayGround/assets/15678544/692b213f-ec32-4305-ab86-0eab711a14fe
+
 
 
 
