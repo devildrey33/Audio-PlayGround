@@ -56,17 +56,17 @@ export default class World {
 //        this.perlinSun           = new PerlinSun(this);
         this.ssPerlinSun         = new SSPerlinSun(this);        
         this.sphere              = new Sphere(this);
-        this.sphereSin           = new SphereSin(this);
+//        this.sphereSin           = new SphereSin(this);
         this.spiral              = new Spiral(this);
 //        const start = Math.PI * 2.0 * 0.33 * 0.5;
 
 //        this.experience.camera.controls.target.set(this.ssPerlinSun.group.position.x, this.ssPerlinSun.group.position.y, this.ssPerlinSun.group.position.z);
 //        this.experience.camera.controls.update();
         
-        this.camera.position.set(5, 3, 22);
-        this.camera.lookAt(this.spiral.mesh.position);
+        //this.camera.position.set(5, 3, 32);
+/*        this.camera.lookAt(this.spiral.mesh.position);
         this.experience.camera.controls.target.set(this.camera.position.x, this.camera.position.y, this.camera.position.z);
-        this.experience.camera.controls.update();
+        this.experience.camera.controls.update();*/
         
 //        this.camera.target.set(this.spiral.mesh);
 
@@ -323,7 +323,7 @@ export default class World {
 //            this.perlinSun.update();
             this.ssPerlinSun.update();
             this.sphere.update();
-            this.sphereSin.update();
+//            this.sphereSin.update();
             this.spiral.update();
 
 //            this.osciloscope.update();

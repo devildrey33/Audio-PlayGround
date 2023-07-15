@@ -19,7 +19,6 @@ void main() {
 	#endif
 	#include <begin_vertex>
 
-    vUv = uv;
 
 	#include <morphtarget_vertex>
 	#include <skinning_vertex>
@@ -28,4 +27,6 @@ void main() {
 	#include <logdepthbuf_vertex>
 	#include <clipping_planes_vertex>
 	vHighPrecisionZW = gl_Position.zw;
+
+    vUv = uv;
 }

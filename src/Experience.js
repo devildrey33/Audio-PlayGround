@@ -97,19 +97,23 @@ export default class Experience {
     /* debug options for lil.gui */
     debugOptions = {
         songName                         : "",
+
         shadows                          : true,
+
         sunLightVisible                  : false,
         sunLightIntensity                : 0.5,
         sunLightColor                    : new THREE.Color("#ffffff"),
         sunLightPosX                     : -5.0,
         sunLightPosY                     : 18.0,
         sunLightPosZ                     : 27.0,
+
         spotLightVisible                 : true,
         spotLightIntensity               : 0.5,
         spotLightColor                   : new THREE.Color(0xcccccc),
         spotLightPosX                    : -5.0,
         spotLightPosY                    : 46.8,
         spotLightPosZ                    : 36.3,
+
         osciloscopeLineSize              : 0.02,
         osciloscopeAlpha                 : this.panelAlpha,
         osciloscopeAudioStrength         : 0.5,
@@ -119,10 +123,12 @@ export default class Experience {
         osciloscopeCylinderAlpha         : this.panelAlpha,
         osciloscopeCylinderAudioStrength : 0.25,
         osciloscopeCylinderAudioZoom     : 1,
+
         floorAudioStrength               : 5,
         floorVisible                     : true,
         floorColorBackground             : new THREE.Color("#4747e1"), // 2a2a8d
         floorColorGrid                   : new THREE.Color("#ffffff"),
+
         barsAudioStrength                : 2,
         barsCount                        : 256,
         barsVisible                      : true,
@@ -130,12 +136,14 @@ export default class Experience {
         barsCylinderColor2               : new THREE.Color("#ff0000"),
         barsCylinderAudioStrength        : 1,
         barsCylinderRotation             : 10,
+
         circularAudioStrength            : 0.4,
         circularLineSize                 : 0.07,
         circularAlpha                    : this.panelAlpha,
         circularRVisible                 : true,
         circularGVisible                 : true,
         circularDistorsionVisible        : true,
+
         yinYangAlpha                     : this.panelAlpha,
         yinYangRotate                    : true,
 //        perlinSunAlpha                   : this.panelAlpha,
@@ -145,12 +153,23 @@ export default class Experience {
         ssPerlinSunColorSin              : new THREE.Color("#6060e6"),  //new THREE.Color("rgb(50, 50, 250)"),
         ssPerlinSunNoiseStrength         : 15.0,
         ssPerlinSunNoiseSpeed            : 1.0,
+        
         sphereAudioStrength              : 2,
         sphereAudioZoom                  : 1,
         sphereSinAudioStrength           : 5,
         sphereSinAudioZoom               : 1,
-        spiralAudioStrength              : 2,
-        spiralAudioZoom                  : 1,
+
+        spiralAudioStrength              : 0.75,
+        spiralAudioZoom                  : 1.4,
+        spiralAudioStrengthSin           : 1.0,
+        spiralAudioZoomSin               : 1.0,
+//        spiralRotateSpeed                : 0.5,
+        spiralSpeed                      : 0.7,
+        spiralFrequency                  : 0.2, // 0.1 are 10 lines, 0.01 are 100 lines
+        spiralThickness                  : 0.1, 
+        spiralSpeedSin                   : 1.5,
+        spiralFrequencySin               : 0.5, // 0.1 are 10 lines, 0.01 are 100 lines
+        spiralThicknessSin               : 0.02, 
 
         bloomThreshold                   : -0.8,
         bloomRadius                      : -1.32,
@@ -162,6 +181,7 @@ export default class Experience {
         displacementFrequencyX           : 2.6,
         displacementFrequencyY           : 3.3,
         displacementEnabled              : false,
+
         smoothingTimeConstant            : 0.8, // from 0 to 0.99 (by default is 0.8)
     };
 

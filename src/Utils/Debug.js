@@ -21,6 +21,7 @@ export default class Debug {
         this.ssPerlinSun        = this.experience.world.ssPerlinSun;
         this.sphere             = this.experience.world.sphere;
         this.sphereSin          = this.experience.world.sphereSin;
+        this.spiral             = this.experience.world.spiral;
         this.bloomPass          = this.experience.renderer.bloomPass;
         this.displacementPass   = this.experience.renderer.displacementPass;
         this.options            = this.experience.debugOptions;
@@ -317,18 +318,65 @@ export default class Debug {
             /*
              * SphereSin
              */
-            this.debugSphereSin = this.ui.addFolder("Sphere Sin").open(false);
-            // sphere sin audio strength
-            this.debugSphereSin.add(this.options, "sphereSinAudioStrength").min(0).max(10).step(0.01).name("Audio strength").onChange(() => {
-                this.sphereSin.material.uniforms.uAudioStrength.value = this.options.sphereSinAudioStrength;
-            });            
-            // sphere sin audio zoom
-            this.debugSphereSin.add(this.options, "sphereSinAudioZoom").min(1).max(8).step(0.01).name("Audio zoom").onChange(() => {
-                this.sphereSin.material.uniforms.uAudioZoom.value = this.options.sphereSinAudioZoom;
-            });            
-            // sphere sin audio zoom
-            this.debugSphereSin.add(this.sphereSin.material, "wireframe").name("wireframe");
+            if (typeof this.sphereSin !== "undefined") {
+                this.debugSphereSin = this.ui.addFolder("Sphere Sin").open(false);
+                // sphere sin audio strength
+                this.debugSphereSin.add(this.options, "sphereSinAudioStrength").min(0).max(10).step(0.01).name("Audio strength").onChange(() => {
+                    this.sphereSin.material.uniforms.uAudioStrength.value = this.options.sphereSinAudioStrength;
+                });            
+                // sphere sin audio zoom
+                this.debugSphereSin.add(this.options, "sphereSinAudioZoom").min(1).max(8).step(0.01).name("Audio zoom").onChange(() => {
+                    this.sphereSin.material.uniforms.uAudioZoom.value = this.options.sphereSinAudioZoom;
+                });            
+                // sphere sin audio zoom
+                this.debugSphereSin.add(this.sphereSin.material, "wireframe").name("wireframe");
+            }
 
+
+            /*
+             * Spiral
+             */
+            this.debugSpiral = this.ui.addFolder("Spiral").open(false);
+            // Spiral audio strength
+            this.debugSpiral.add(this.options, "spiralAudioStrength").min(0).max(10).step(0.01).name("Audio strength").onChange(() => {
+                this.spiral.material.uniforms.uAudioStrength.value = this.options.spiralAudioStrength;
+            });            
+            // Spiral audio zoom
+            this.debugSpiral.add(this.options, "spiralAudioZoom").min(1).max(8).step(0.01).name("Audio zoom").onChange(() => {
+                this.spiral.material.uniforms.uAudioZoom.value = this.options.spiralAudioZoom;
+            });            
+            // Spiral frequency
+            this.debugSpiral.add(this.options, "spiralFrequency").min(0.025).max(1).step(0.1).name("Frequency").onChange(() => {
+                this.spiral.material.uniforms.uFrequency.value = this.options.spiralFrequency;
+            });            
+            // Spiral speed
+            this.debugSpiral.add(this.options, "spiralSpeed").min(0.01).max(4).step(0.01).name("Speed").onChange(() => {
+                this.spiral.material.uniforms.uSpeed.value = this.options.spiralSpeed;
+            });            
+            // Spiral thickness
+            this.debugSpiral.add(this.options, "spiralThickness").min(0.01).max(0.75).step(0.01).name("Thickness").onChange(() => {
+                this.spiral.material.uniforms.uThickness.value = this.options.spiralThickness;
+            });            
+            // Spiral audio strength sin
+            this.debugSpiral.add(this.options, "spiralAudioStrengthSin").min(0).max(10).step(0.01).name("Audio strength Sin").onChange(() => {
+                this.spiral.material.uniforms.uAudioStrengthSin.value = this.options.spiralAudioStrengthSin;
+            });            
+            // Spiral audio zoom sin
+            this.debugSpiral.add(this.options, "spiralAudioZoomSin").min(1).max(8).step(0.01).name("Audio zoom Sin").onChange(() => {
+                this.spiral.material.uniforms.uAudioZoomSin.value = this.options.spiralAudioZoomSin;
+            });            
+            // Spiral frequency sin
+            this.debugSpiral.add(this.options, "spiralFrequencySin").min(0.025).max(1).step(0.1).name("Frequency Sin").onChange(() => {
+                this.spiral.material.uniforms.uFrequencySin.value = this.options.spiralFrequencySin;
+            });            
+            // Spiral speed sin
+            this.debugSpiral.add(this.options, "spiralSpeedSin").min(0.01).max(4).step(0.01).name("Speed Sin").onChange(() => {
+                this.spiral.material.uniforms.uSpeedSin.value = this.options.spiralSpeedSin;
+            });            
+            // Spiral thickness sin
+            this.debugSpiral.add(this.options, "spiralThicknessSin").min(0.01).max(0.75).step(0.01).name("Thickness Sin").onChange(() => {
+                this.spiral.material.uniforms.uThicknessSin.value = this.options.spiralThicknessSin;
+            });            
 
             /*
              * Bloom PostProcessing
