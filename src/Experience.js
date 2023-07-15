@@ -166,7 +166,7 @@ export default class Experience {
 //        spiralRotateSpeed                : 0.5,
         spiralSpeed                      : 0.7,
         spiralFrequency                  : 0.5, // 0.1 are 10 lines, 0.01 are 100 lines
-        spiralThickness                  : 0.35, 
+        spiralThickness                  : 0.66, 
         spiralSpeedSin                   : 1.5,
         spiralFrequencySin               : 0.5, // 0.1 are 10 lines, 0.01 are 100 lines
         spiralThicknessSin               : 0.02, 

@@ -57,7 +57,7 @@ void main() {
     float pSin = mod(nPosSin.y, uFrequencySin);
 
     if (p < (uFrequency * uThickness)) {
-        diffuseColor = vec4(0.0, 0.3, 0.1, 0.8);
+        diffuseColor = vec4(0.0, 0.3, 0.1, smoothstep(0.0, uFrequency * uThickness, p));
     }
 
     else if (pSin < (uFrequencySin * uThicknessSin)) {

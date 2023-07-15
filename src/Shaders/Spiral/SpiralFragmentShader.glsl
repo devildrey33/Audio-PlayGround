@@ -32,14 +32,14 @@ void main() {
     // Oscyloscope spiral
     float audioValueSin = (((texture2D(uAudioTexture, vec2(audioX / uAudioZoomSin, 0.0)).g - 0.5) * 0.55) * uAudioStrength) * uFrequency;
 
-    vec2 nPosSin = vec2(vUv.x, vUv.y + (vUv.x * uFrequencySin) - mod(uTime * uSpeedSin, 1.0) - audioValueSin);
+    vec2 nPosSin = vec2(vUv.x, vUv.y - (vUv.x * uFrequencySin) - mod(uTime * uSpeedSin, 1.0) - audioValueSin);
     float pSin = mod(nPosSin.y, uFrequencySin);
 
     if (pSin < (uFrequencySin * uThicknessSin)) {
         gl_FragColor = vec4(1.0, 1.0, 1.0, 0.8);
     }
-    else if (p < (uFrequency * uThickness)) {
-        gl_FragColor = vec4(0.0, 0.3, 0.1, 0.8);
+    else if (p < (uFrequency * uThickness)) {        
+        gl_FragColor = vec4(0.0, sin(uTime * 0.5), cos(uTime), smoothstep(0.0, uFrequency * uThickness, p));
     }
     else {
 //        gl_FragColor = vec4(1.0, 0.0, 0.0, 0.8);

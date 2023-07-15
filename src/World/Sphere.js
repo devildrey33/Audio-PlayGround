@@ -49,6 +49,10 @@ export default class Sphere {
 /*            transparent : true,
             opacity : 0.85*/
         });
+
+        this.material.uniforms = { uTime : { value : 0.0 }};
+
+
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.mesh.castShadow = true;
         this.mesh.receiveShadow = true;
@@ -84,6 +88,7 @@ export default class Sphere {
     update() {
         //
         const advance = this.time.delta / 1000;
+        
         // update time on sphere
         this.material.uniforms.uTime.value += advance;   
         // update time on custom depth material
