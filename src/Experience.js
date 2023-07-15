@@ -160,13 +160,13 @@ export default class Experience {
         sphereSinAudioZoom               : 1,
 
         spiralAudioStrength              : 0.75,
-        spiralAudioZoom                  : 1.4,
+        spiralAudioZoom                  : 2.0,
         spiralAudioStrengthSin           : 1.0,
         spiralAudioZoomSin               : 1.0,
 //        spiralRotateSpeed                : 0.5,
         spiralSpeed                      : 0.7,
-        spiralFrequency                  : 0.2, // 0.1 are 10 lines, 0.01 are 100 lines
-        spiralThickness                  : 0.1, 
+        spiralFrequency                  : 0.5, // 0.1 are 10 lines, 0.01 are 100 lines
+        spiralThickness                  : 0.35, 
         spiralSpeedSin                   : 1.5,
         spiralFrequencySin               : 0.5, // 0.1 are 10 lines, 0.01 are 100 lines
         spiralThicknessSin               : 0.02, 

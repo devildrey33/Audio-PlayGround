@@ -84,6 +84,11 @@ export default class Sphere {
     update() {
         //
         const advance = this.time.delta / 1000;
+        // update time on sphere
+        this.material.uniforms.uTime.value += advance;   
+        // update time on custom depth material
+        this.mesh.customDepthMaterial.uniforms.uTime.value = this.material.uniforms.uTime.value;
+
 /*
         // make the perlin sun look at the camera
         //        this.groupLookAt.lookAt(this.experience.camera.instance.position);

@@ -35,11 +35,11 @@ void main() {
     vec2 nPosSin = vec2(vUv.x, vUv.y + (vUv.x * uFrequencySin) - mod(uTime * uSpeedSin, 1.0) - audioValueSin);
     float pSin = mod(nPosSin.y, uFrequencySin);
 
-    if (p < (uFrequency * uThickness)) {
-        gl_FragColor = vec4(0.0, 0.3, 0.1, 0.8);
-    }
-    else if (pSin < (uFrequencySin * uThicknessSin)) {
+    if (pSin < (uFrequencySin * uThicknessSin)) {
         gl_FragColor = vec4(1.0, 1.0, 1.0, 0.8);
+    }
+    else if (p < (uFrequency * uThickness)) {
+        gl_FragColor = vec4(0.0, 0.3, 0.1, 0.8);
     }
     else {
 //        gl_FragColor = vec4(1.0, 0.0, 0.0, 0.8);

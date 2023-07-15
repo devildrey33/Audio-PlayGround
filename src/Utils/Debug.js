@@ -340,42 +340,52 @@ export default class Debug {
             // Spiral audio strength
             this.debugSpiral.add(this.options, "spiralAudioStrength").min(0).max(10).step(0.01).name("Audio strength").onChange(() => {
                 this.spiral.material.uniforms.uAudioStrength.value = this.options.spiralAudioStrength;
+                this.spiral.mesh.customDepthMaterial.uniforms.uAudioStrength.value = this.options.spiralAudioStrength;
             });            
             // Spiral audio zoom
             this.debugSpiral.add(this.options, "spiralAudioZoom").min(1).max(8).step(0.01).name("Audio zoom").onChange(() => {
                 this.spiral.material.uniforms.uAudioZoom.value = this.options.spiralAudioZoom;
+                this.spiral.mesh.customDepthMaterial.uniforms.uAudioZoom.value = this.options.spiralAudioZoom;
             });            
             // Spiral frequency
             this.debugSpiral.add(this.options, "spiralFrequency").min(0.025).max(1).step(0.1).name("Frequency").onChange(() => {
                 this.spiral.material.uniforms.uFrequency.value = this.options.spiralFrequency;
+                this.spiral.mesh.customDepthMaterial.uniforms.uFrequency.value = this.options.spiralFrequency;
             });            
             // Spiral speed
             this.debugSpiral.add(this.options, "spiralSpeed").min(0.01).max(4).step(0.01).name("Speed").onChange(() => {
                 this.spiral.material.uniforms.uSpeed.value = this.options.spiralSpeed;
+                this.spiral.mesh.customDepthMaterial.uniforms.uSpeed.value = this.options.spiralSpeed;
             });            
             // Spiral thickness
             this.debugSpiral.add(this.options, "spiralThickness").min(0.01).max(0.75).step(0.01).name("Thickness").onChange(() => {
                 this.spiral.material.uniforms.uThickness.value = this.options.spiralThickness;
+                this.spiral.mesh.customDepthMaterial.uniforms.uThickness.value = this.options.spiralThickness;
             });            
             // Spiral audio strength sin
             this.debugSpiral.add(this.options, "spiralAudioStrengthSin").min(0).max(10).step(0.01).name("Audio strength Sin").onChange(() => {
                 this.spiral.material.uniforms.uAudioStrengthSin.value = this.options.spiralAudioStrengthSin;
+                this.spiral.mesh.customDepthMaterial.uniforms.uAudioStrengthSin.value = this.options.spiralAudioStrengthSin;
             });            
             // Spiral audio zoom sin
             this.debugSpiral.add(this.options, "spiralAudioZoomSin").min(1).max(8).step(0.01).name("Audio zoom Sin").onChange(() => {
                 this.spiral.material.uniforms.uAudioZoomSin.value = this.options.spiralAudioZoomSin;
+                this.spiral.mesh.customDepthMaterial.uniforms.uAudioZoomSin.value = this.options.spiralAudioZoomSin;
             });            
             // Spiral frequency sin
             this.debugSpiral.add(this.options, "spiralFrequencySin").min(0.025).max(1).step(0.1).name("Frequency Sin").onChange(() => {
                 this.spiral.material.uniforms.uFrequencySin.value = this.options.spiralFrequencySin;
+                this.spiral.mesh.customDepthMaterial.uniforms.uFrequencySin.value = this.options.spiralFrequencySin;
             });            
             // Spiral speed sin
             this.debugSpiral.add(this.options, "spiralSpeedSin").min(0.01).max(4).step(0.01).name("Speed Sin").onChange(() => {
                 this.spiral.material.uniforms.uSpeedSin.value = this.options.spiralSpeedSin;
+                this.spiral.mesh.customDepthMaterial.uniforms.uSpeedSin.value = this.options.spiralSpeedSin;
             });            
             // Spiral thickness sin
             this.debugSpiral.add(this.options, "spiralThicknessSin").min(0.01).max(0.75).step(0.01).name("Thickness Sin").onChange(() => {
                 this.spiral.material.uniforms.uThicknessSin.value = this.options.spiralThicknessSin;
+                this.spiral.mesh.customDepthMaterial.uniforms.uThicknessSin.value = this.options.spiralThicknessSin;
             });            
 
             /*

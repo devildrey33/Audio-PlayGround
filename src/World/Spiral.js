@@ -82,6 +82,7 @@ export default class Spiral {
             this.mesh.customDepthMaterial.uniforms = shader.uniforms;
         }
 
+        this.mesh.customDepthMaterial.uniforms = { uTime : { value : 0 }};
 
 //        this.group = new THREE.Group();
         this.mesh.position.set(5, 3, 0);
@@ -91,13 +92,13 @@ export default class Spiral {
     }
 
     update() {
-        //
+        // get an average advance value
         const advance = this.time.delta / 1000;
-        // update time on spiral
-        this.material.uniforms.uTime.value         += advance;   
+        // update rotation on the cilynder
         this.mesh.rotation.y += advance;
-        // update time on perlin sun shadow
-//        this.mesh.customDepthMaterial.uniforms.uTime.value = this.material.uniforms.uTime.value;
-
+        // update time on spiral
+        this.material.uniforms.uTime.value += advance;   
+        // update time on custom depth material
+        this.mesh.customDepthMaterial.uniforms.uTime.value = this.material.uniforms.uTime.value;
     }
 }
