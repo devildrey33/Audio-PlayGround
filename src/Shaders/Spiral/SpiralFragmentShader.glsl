@@ -22,27 +22,30 @@ void main() {
     if (vUv.x < 0.5) audioX = vUv.x * 2.0;
     else             audioX = 1.0 - ((vUv.x  - 0.5) * 2.0);
 
+    // Get audio bars value
     float audioValue = ((texture2D(uAudioTexture, vec2((audioX / uAudioZoom), 0.0)).r) * uAudioStrength) * uFrequency;
-    //float audioValue = (((texture2D(uAudioTexture, vec2(audioX / uAudioZoom, 0.0)).g - 0.5) * 0.55) * uAudioStrength) * uFrequency;
 
     // Bars spiral
     vec2 nPos = vec2(vUv.x, vUv.y + (vUv.x * uFrequency) - mod(uTime * uSpeed, 1.0) - audioValue);
     float p = mod(nPos.y, uFrequency);
 
-    // Oscyloscope spiral
+    // Get audio osciloscpe value
     float audioValueSin = (((texture2D(uAudioTexture, vec2(audioX / uAudioZoomSin, 0.0)).g - 0.5) * 0.55) * uAudioStrength) * uFrequency;
 
+    // Oscyloscope spiral
     vec2 nPosSin = vec2(vUv.x, vUv.y - (vUv.x * uFrequencySin) - mod(uTime * uSpeedSin, 1.0) - audioValueSin);
     float pSin = mod(nPosSin.y, uFrequencySin);
 
+    // First paint the osciloscope
     if (pSin < (uFrequencySin * uThicknessSin)) {
         gl_FragColor = vec4(1.0, 1.0, 1.0, 0.8);
     }
+    // Then paint the bars
     else if (p < (uFrequency * uThickness)) {        
         gl_FragColor = vec4(0.0, sin(uTime * 0.5), cos(uTime), smoothstep(0.0, uFrequency * uThickness, p));
     }
+    // discard the rest
     else {
-//        gl_FragColor = vec4(1.0, 0.0, 0.0, 0.8);
         discard;
     }
 }

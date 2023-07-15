@@ -114,7 +114,7 @@ export default class Experience {
         spotLightPosY                    : 46.8,
         spotLightPosZ                    : 36.3,
 
-        osciloscopeLineSize              : 0.02,
+        osciloscopeLineSize              : 0.04,
         osciloscopeAlpha                 : this.panelAlpha,
         osciloscopeAudioStrength         : 0.5,
         osciloscopeAudioZoom             : 1,
