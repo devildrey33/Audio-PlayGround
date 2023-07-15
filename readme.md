@@ -12,7 +12,8 @@ Red channel has the Frequency, and green channel the TimeDomain of the song.
 - Fragment shader Circular TimeDomain (green channel)
 - Fragment shader Circular Distortion (red channel)
 - Fragment shader Perlin sun (a mix of circular freuency + circular time domain + perlin noise)
-- Super Sayan Perlin sun (a combination of various effects)
+- Vertex shader bars sphere 3d
+- Fragment shader spiral tunnel
 - Shadows added for all the effects
 
 You can drag & drop a song of your hard disk into the experience to play it.
