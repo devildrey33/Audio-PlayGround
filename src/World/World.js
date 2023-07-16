@@ -135,7 +135,7 @@ export default class World {
         this.osciloscope.mesh.castShadow                      = enable;
         this.ssPerlinSun.mesh.castShadow                      = enable;
         this.sphere.mesh.castShadow                           = enable;
-        this.sphereSin.mesh.castShadow                        = enable;
+        this.spiral.mesh.castShadow                           = enable;
 
     }
 
@@ -153,6 +153,7 @@ export default class World {
 
     // Click event
     eventClick(event) {
+        /*
         event.preventDefault();
 
         if (this.hover === "AudioInfo") {
@@ -229,13 +230,13 @@ export default class World {
             });
             this.cameraFocus = "free";
         }
-
+*/
         
     }
 
 
     updateRaycaster() {
-        this.raycaster.setFromCamera(this.mouse, this.camera);
+/*        this.raycaster.setFromCamera(this.mouse, this.camera);
         const intersects = this.raycaster.intersectObjects(this.scene.children);
         // Clear hover values
         for (const object in this.objects) {
@@ -265,10 +266,10 @@ export default class World {
                         duration : this.ani.duration, 
                         ease     : this.ani.ease,
                         value    : 1.0,
-/*                        onUpdate : () => {
-                            // Copy the hover value to the depthMaterial
-                            o.object.mesh.customDepthMaterial.uniforms.uHover = o.object.material.uniforms.uHover;
-                        }*/
+//                        onUpdate : () => {
+//                            // Copy the hover value to the depthMaterial
+//                            o.object.mesh.customDepthMaterial.uniforms.uHover = o.object.material.uniforms.uHover;
+//                        }
                     });
                 }
             }
@@ -283,10 +284,10 @@ export default class World {
                         duration : this.ani.duration, 
                         ease     : this.ani.ease,
                         value    : 0.0,
-/*                        onUpdate : () => {
-                            // Copy the hover value to the depthMaterial
-                            o.object.mesh.customDepthMaterial.uniforms.uHover = o.object.material.uniforms.uHover;
-                        }*/
+//                        onUpdate : () => {
+//                            // Copy the hover value to the depthMaterial
+//                            o.object.mesh.customDepthMaterial.uniforms.uHover = o.object.material.uniforms.uHover;
+//                        }
                     });
                     break;
                 }
@@ -295,7 +296,7 @@ export default class World {
 
             this.lastHover = this.hover;
 
-        }
+        }*/
 
     }
 

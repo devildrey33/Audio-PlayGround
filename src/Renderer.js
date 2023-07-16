@@ -62,18 +62,12 @@ export default class Renderer {
         this.effectComposer.setSize(this.sizes.width, this.sizes.height);
         this.effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        // first pass 
+        // render pass
         this.renderPass = new RenderPass(this.scene, this.camera.instance);
         this.effectComposer.addPass(this.renderPass);
 
-        this.bloomPass = new UnrealBloomPass( new THREE.Vector2( this.sizes.width, this.sizes.height ), 1.5, 0.4, 0.85 );
-        this.bloomPass.threshold = this.experience.debugOptions.bloomThreshold;
-        this.bloomPass.strength  = this.experience.debugOptions.bloomStrength;
-        this.bloomPass.radius    = this.experience.debugOptions.bloomRadius;        
-        this.bloomPass.enabled   = this.experience.debugOptions.bloomEnabled;     
 
-        this.effectComposer.addPass(this.bloomPass);   
-
+        // displacement pass
         this.displacementPass = new ShaderPass(this.DisplacementPass);
         this.displacementPass.material.uniforms.uAmplitude.value = this.experience.debugOptions.displacementAmplitude;
         this.displacementPass.material.uniforms.uFrequency.value = this.experience.debugOptions.displacementFrequency;
@@ -88,6 +82,16 @@ export default class Renderer {
 
         this.displacementPass.enabled   = this.experience.debugOptions.displacementEnabled;     
         this.effectComposer.addPass(this.displacementPass);
+
+        // bloom pass
+        this.bloomPass = new UnrealBloomPass( new THREE.Vector2( this.sizes.width, this.sizes.height ), 1.5, 0.4, 0.85 );
+        this.bloomPass.threshold = this.experience.debugOptions.bloomThreshold;
+        this.bloomPass.strength  = this.experience.debugOptions.bloomStrength;
+        this.bloomPass.radius    = this.experience.debugOptions.bloomRadius;        
+        this.bloomPass.enabled   = this.experience.debugOptions.bloomEnabled;     
+
+        this.effectComposer.addPass(this.bloomPass);   
+
         
     }
 

@@ -242,9 +242,9 @@ export default class Debug {
 
 
             /*
-             * SSPerlin sun
+             * Perlin sun
              */
-            this.debugSSPerlinSun           = this.ui.addFolder("SSPerlin sun").open(false);
+            this.debugSSPerlinSun           = this.ui.addFolder("Perlin sun").open(false);
             this.debugOsciloscopeCylinder   = this.debugSSPerlinSun.addFolder("Osciloscope Cylinder").open(false);
             this.debugBarsCylinder          = this.debugSSPerlinSun.addFolder("Bars Cylinder").open(false);
             // Color Frequency

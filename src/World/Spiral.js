@@ -20,7 +20,7 @@ export default class Spiral {
 
     
     setup() {
-        this.geometry = new THREE.CylinderGeometry( 2, 2, 60, 32, 1, true );
+        this.geometry = new THREE.CylinderGeometry( 2, 0.5, 60, 32, 1, true );
 //        this.geometry = new THREE.PlaneGeometry(3, 3);
 
 //        console.log(this.experience.debugOptions.perlinSunColorFrequency);
@@ -83,6 +83,7 @@ export default class Spiral {
         }
 
         this.mesh.customDepthMaterial.uniforms = { uTime : { value : 0 }};
+//        this.mesh.customDepthMaterial.transparent = true;
 
 //        this.group = new THREE.Group();
         this.mesh.position.set(5, 3, 0);

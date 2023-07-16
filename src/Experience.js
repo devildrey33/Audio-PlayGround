@@ -164,10 +164,10 @@ export default class Experience {
         spiralAudioStrengthSin           : 1.0,
         spiralAudioZoomSin               : 1.0,
 //        spiralRotateSpeed                : 0.5,
-        spiralSpeed                      : 0.7,
+        spiralSpeed                      : 1.14,
         spiralFrequency                  : 0.5, // 0.1 are 10 lines, 0.01 are 100 lines
         spiralThickness                  : 0.66, 
-        spiralSpeedSin                   : 1.5,
+        spiralSpeedSin                   : 1.67,
         spiralFrequencySin               : 0.5, // 0.1 are 10 lines, 0.01 are 100 lines
         spiralThicknessSin               : 0.02, 
 
@@ -180,7 +180,7 @@ export default class Experience {
         displacementAmplitudeY           : 0.06,
         displacementFrequencyX           : 2.6,
         displacementFrequencyY           : 3.3,
-        displacementEnabled              : false,
+        displacementEnabled              : true,
 
         smoothingTimeConstant            : 0.8, // from 0 to 0.99 (by default is 0.8)
     };

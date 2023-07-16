@@ -32,11 +32,11 @@ export default class Environment {
 
         this.scene.add(this.spotLight, this.spotLight.target);
 
-        if (this.debug.active) {
+/*        if (this.debug.active) {
             this.splhelper = new THREE.SpotLightHelper(this.spotLight);
             this.splhelper.visible = this.experience.debugOptions.spotLightVisible; 
             this.scene.add(this.splhelper);  
-        }
+        }*/
 
     }
 
@@ -57,11 +57,11 @@ export default class Environment {
         this.scene.add(this.sunLight)
 
         //debug
-        if (this.debug.active) {
+/*        if (this.debug.active) {
             this.sunLightHelper = new THREE.DirectionalLightHelper(this.sunLight, 1);
             this.sunLightHelper.visible = this.experience.debugOptions.sunLightVisible;
             this.scene.add(this.sunLightHelper);
-        }
+        }*/
     }
 
     setSunLight2() {
