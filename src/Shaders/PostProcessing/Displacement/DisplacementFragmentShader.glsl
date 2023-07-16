@@ -10,7 +10,11 @@ void main() {
         vUv.x + sin(vUv.y * uFrequency.y + uTime) * uAmplitude.y,
         vUv.y + -sin(vUv.x * uFrequency.x + uTime) * uAmplitude.x
     );
-    vec4 color = texture2D(tDiffuse, newUv);
+
+    vec4 color = vec4(0.0, 0.0, 0.0, 1.0);
+    if ((newUv.x > 0.0 && newUv.x < 1.0) && (newUv.y > 0.0 && newUv.y < 1.0)) {
+        color = texture2D(tDiffuse, newUv);
+    }
 
     gl_FragColor = color;
 }
