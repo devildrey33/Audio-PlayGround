@@ -117,7 +117,11 @@ export default class AudioAnalizer {
     // Función que detecta si está en play o en pausa, y asigna el estado contrario
     playPause() {
         this.context.resume();
-        
+        const t = typeof(this.song.play);
+        if (this.songLoaded === false) {
+            window.alert("Error playing song");
+            return;
+        }
         
         // If song is playing
         if (this.song.duration > 0 && !this.song.paused) { 
@@ -125,8 +129,14 @@ export default class AudioAnalizer {
             return false;  
         } 
         else {
-            this.song.play();   
-            return true;   
+            try {
+                this.song.play();   
+                return true;   
+            }
+            catch (error)  {
+                window.alert("Error playing song : " + error);
+            }
+            
         }        
     };
 

@@ -179,8 +179,8 @@ export default class Experience {
         displacementAmplitudeX           : 0.04,
         displacementAmplitudeY           : 0.06,
         displacementFrequencyX           : 2.6,
-        displacementFrequencyY           : 3.3,
-        displacementEnabled              : true,
+        displacementFrequencyY           : 3.2,
+        displacementEnabled              : false,
 
         smoothingTimeConstant            : 0.8, // from 0 to 0.99 (by default is 0.8)
     };
