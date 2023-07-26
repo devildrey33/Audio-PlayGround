@@ -119,7 +119,7 @@ export default class AudioAnalizer {
         this.context.resume();
         const t = typeof(this.song.play);
         if (this.songLoaded === false) {
-            window.alert("Error playing song");
+            window.alert("Error playing song, its not loaded");
             return;
         }
         

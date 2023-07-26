@@ -18,6 +18,10 @@
 
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
 import * as THREE from 'three'
 
 
@@ -62,7 +66,13 @@ export default class CodepenThreeAudio {
         // OrbitControls enabled by default
         orbitControls           : true,
         // Song path
-        songPath                : "https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/songs/Alone_-_Color_Out.mp3"
+        songPath                : "https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/songs/Alone_-_Color_Out.mp3",
+        // Bloom post processing values
+        bloomThreshold                   : -0.8,
+        bloomRadius                      : -1.32,
+        bloomStrength                    : 0.55,
+        bloomEnabled                     : true,
+
     };    
     
 
@@ -85,11 +95,11 @@ export default class CodepenThreeAudio {
         this.bufferCanvasLinear.texture.generateMipMaps = false;
         this.bufferCanvasLinear.texture.minFilter = THREE.NearestFilter;
         this.bufferCanvasLinear.texture.magFilter = THREE.NearestFilter;           
-        this.bufferCanvasSquare         = new BufferCanvas(this.square, this.square);
+/*        this.bufferCanvasSquare         = new BufferCanvas(this.square, this.square);
         this.bufferCanvasSquare.texture = new THREE.CanvasTexture(this.bufferCanvasSquare.canvas);
         this.bufferCanvasSquare.texture.minFilter = THREE.NearestFilter;
         this.bufferCanvasSquare.texture.magFilter = THREE.NearestFilter;           
-        this.imageDataSquare            = this.bufferCanvasSquare.context.createImageData(this.square, this.square);
+        this.imageDataSquare            = this.bufferCanvasSquare.context.createImageData(this.square, this.square);*/
 
         // Setup buffers for audio data
         this.analizerData    = new Uint8Array(this.fftSize * 0.5);
@@ -302,11 +312,33 @@ export default class CodepenThreeAudio {
 //        this.renderer.outputEncoding = THREE.sRGBEncoding;
         this.renderer.toneMapping         = THREE.CineonToneMapping;
         this.renderer.toneMappingExposure = 1.75;
-        this.renderer.shadowMap.enabled   = true;
-        this.renderer.shadowMap.type      = THREE.PCFSoftShadowMap;
+//        this.renderer.shadowMap.enabled   = true;
+//        this.renderer.shadowMap.type      = THREE.PCFSoftShadowMap;
         this.renderer.setClearColor('#211d20');
         this.renderer.setSize(this.width, this.height);
         this.renderer.setPixelRatio(this.pixelRatio);
+
+        /**
+         * Post processing
+         */
+        this.effectComposer = new EffectComposer(this.renderer);
+        this.effectComposer.setSize(this.width, this.height);
+        this.effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // render pass
+        this.renderPass = new RenderPass(this.scene, this.camera);
+        this.effectComposer.addPass(this.renderPass);
+
+
+
+        // bloom pass
+        this.bloomPass = new UnrealBloomPass( new THREE.Vector2( this.width, this.height ), 1.5, 0.4, 0.85 );
+        this.bloomPass.threshold = this.options.bloomThreshold;
+        this.bloomPass.strength  = this.options.bloomStrength;
+        this.bloomPass.radius    = this.options.bloomRadius;        
+        this.bloomPass.enabled   = this.options.bloomEnabled;     
+
+        this.effectComposer.addPass(this.bloomPass);           
     }
 
     /*
@@ -317,7 +349,8 @@ export default class CodepenThreeAudio {
         this.scene = new THREE.Scene();
         // Create the camera
         this.camera = new THREE.PerspectiveCamera(35, this.width / this.height, 0.1, 1000);
-        this.camera.position.set(4, 16, this.width > this.height ? 15 : 25);
+        this.camera.position.set(0, 0, -10);
+//        this.camera.position.set(4, 16, this.width > this.height ? 15 : 25);
         this.scene.add(this.camera);       
         
         if (this.options.orbitControls === true) {
@@ -403,7 +436,8 @@ export default class CodepenThreeAudio {
         this.update(this.timeElapsed, this.timeDelta);
 
         // Render contents
-        this.renderer.render(this.scene, this.camera);  
+        //this.renderer.render(this.scene, this.camera);  
+        this.effectComposer.render();
         
         // Call requestAnimationFrame for the next frame
         window.requestAnimationFrame(() => {
@@ -627,10 +661,10 @@ export default class CodepenThreeAudio {
                 pos = pos * 4;
 
                 // fill the 32*32 image
-                this.imageDataSquare.data[pos]     = rValue;
+/*                this.imageDataSquare.data[pos]     = rValue;
                 this.imageDataSquare.data[pos + 1] = gValue;
                 this.imageDataSquare.data[pos + 2] = 0;
-                this.imageDataSquare.data[pos + 3] = 255;
+                this.imageDataSquare.data[pos + 3] = 255;*/
 
                 // fill the 1024*1 image
                 this.imageDataLinear.data[pos]     = rValue;
@@ -643,7 +677,7 @@ export default class CodepenThreeAudio {
         this.bufferCanvasLinear.context.putImageData(this.imageDataLinear, 0, 0, 0, 0, 1024, 1);
         this.bufferCanvasLinear.texture.needsUpdate = true;
 
-        this.bufferCanvasSquare.context.putImageData(this.imageDataSquare, 0, 0, 0, 0, 32, 32);
-        this.bufferCanvasSquare.texture.needsUpdate = true;
+//        this.bufferCanvasSquare.context.putImageData(this.imageDataSquare, 0, 0, 0, 0, 32, 32);
+//        this.bufferCanvasSquare.texture.needsUpdate = true;
     }
 }
