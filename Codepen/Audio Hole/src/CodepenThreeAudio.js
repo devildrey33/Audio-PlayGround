@@ -20,7 +20,10 @@
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
+import { ColorCorrectionShader } from 'three/addons/shaders/ColorCorrectionShader.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+//import { FXAAShader } from 'three/addons/shaders/FXAAShader.js'
 
 import * as THREE from 'three'
 
@@ -66,12 +69,13 @@ export default class CodepenThreeAudio {
         // OrbitControls enabled by default
         orbitControls           : true,
         // Song path
-        songPath                : "https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/songs/Alone_-_Color_Out.mp3",
+        songPath                : "https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/songs/Jount_-_Lost_-_Jount.mp3",
         // Bloom post processing values
-        bloomThreshold                   : -0.8,
-        bloomRadius                      : -1.32,
-        bloomStrength                    : 0.55,
+        bloomThreshold                   : -15.4,
+        bloomRadius                      : -5.32,
+        bloomStrength                    : 0.0,
         bloomEnabled                     : true,
+        colorCorrectionEnabled           : true
 
     };    
     
@@ -218,12 +222,12 @@ export default class CodepenThreeAudio {
                             <tr>
                                 <td>Name</td>
                                 <td>:</td>
-                                <td><a href="https://www.jamendo.com/track/1886257/alone" target="_blank">Alone</a></td>
+                                <td><a href="https://www.jamendo.com/track/1910909/jount-lost" target="_blank">Lost</a></td>
                             </tr>
                             <tr>
                                 <td>Artist</td>
                                 <td>:</td>
-                                <td><a href="https://www.jamendo.com/artist/479140/color-out" target="_blank">Color Out</a></td>
+                                <td><a href="https://www.jamendo.com/artist/500964/jount" target="_blank">Jount</a></td>
                             </tr>
                         </table>
                     </div>`;        
@@ -329,8 +333,6 @@ export default class CodepenThreeAudio {
         this.renderPass = new RenderPass(this.scene, this.camera);
         this.effectComposer.addPass(this.renderPass);
 
-
-
         // bloom pass
         this.bloomPass = new UnrealBloomPass( new THREE.Vector2( this.width, this.height ), 1.5, 0.4, 0.85 );
         this.bloomPass.threshold = this.options.bloomThreshold;
@@ -338,7 +340,21 @@ export default class CodepenThreeAudio {
         this.bloomPass.radius    = this.options.bloomRadius;        
         this.bloomPass.enabled   = this.options.bloomEnabled;     
 
-        this.effectComposer.addPass(this.bloomPass);           
+        this.effectComposer.addPass(this.bloomPass);       
+        
+        // Color correction pass
+        this.colorCorrectionPass = new ShaderPass( ColorCorrectionShader );
+        this.effectComposer.addPass(this.colorCorrectionPass);       
+
+        // antialias pass
+/*        this.fxaaPass = new ShaderPass( FXAAShader );
+        const pixelRatio = this.renderer.getPixelRatio();
+        this.fxaaPass.material.uniforms[ 'resolution' ].value.x = 1 / ( this.width * pixelRatio );
+        this.fxaaPass.material.uniforms[ 'resolution' ].value.y = 1 / ( this.height * pixelRatio );
+
+        this.effectComposer.addPass(this.fxaaPass);       */
+
+
     }
 
     /*
@@ -367,14 +383,14 @@ export default class CodepenThreeAudio {
      */
     setupLight() {
         this.sunLight = new THREE.DirectionalLight('#ffffff', 1)
-        this.sunLight.castShadow = true;
+/*        this.sunLight.castShadow = true;
         this.sunLight.shadow.camera.far = 64;
         this.sunLight.shadow.mapSize.set(1024, 1024);
         this.sunLight.shadow.normalBias = 0.05;
         this.sunLight.shadow.camera.bottom = -16;
         this.sunLight.shadow.camera.top    =  16;
         this.sunLight.shadow.camera.left   = -16;
-        this.sunLight.shadow.camera.right  =  16;
+        this.sunLight.shadow.camera.right  =  16;*/
         this.sunLight.position.set(-5, 18, 27);
 
 
@@ -423,17 +439,21 @@ export default class CodepenThreeAudio {
             this.analizer.getByteTimeDomainData(this.analizerDataSin);        
             
             // get average frequency
-//            this.averageFrequency = this.getAverageFrequency();
-
-            // Update light intensity adding averageFrequency of low sounds
-//            this.sunLight.intensity = 1.0 + (this.averageFrequency[2] / 255);
-
+            this.averageFrequency = this.getAverageFrequency();
+            // Modify bloom strenght using low frequency (bass) 
+            this.bloomPass.strength = (this.averageFrequency[2] / 255);
+            // Set bloom radius using a sine wave and time to go from -1.5 to 3.5
+            this.bloomPass.radius = -1.5 + (Math.sin(currentTime / 1000) * 5);
         }
+
+
         // paint audio texture ussing analizerData
         this.paintAudioTexture();
         
         // Vistual update from the parent class
         this.update(this.timeElapsed, this.timeDelta);
+
+
 
         // Render contents
         //this.renderer.render(this.scene, this.camera);  

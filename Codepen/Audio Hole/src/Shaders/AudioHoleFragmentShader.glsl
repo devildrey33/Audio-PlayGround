@@ -121,53 +121,39 @@ vec4 drawAudio(vec2 pos) {
     float audioValue = ((texture2D(uAudioTexture, vec2((audioX / uAudioZoom), 0.0)).r) * uAudioStrength) * uFrequency;
 
     // Bars spiral
-    vec2 nPos = vec2(pos.x, pos.y + (pos.x * uFrequency) + mod(uTime * uSpeed, 1.0) - audioValue);
+    vec2 nPos = vec2(pos.x, pos.y - (pos.x * uFrequency) + mod(uTime * uSpeed, 1.0) - audioValue);
     // pos y of each line
     float p = mod(nPos.y, uFrequency);
 
     // Get audio osciloscpe value
-    float audioValueSin = (((texture2D(uAudioTexture, vec2(audioXSin / uAudioZoomSin, 0.0)).g - 0.5) * 0.55) * uAudioStrength) * uFrequency;
+    float audioValueSin = (((texture2D(uAudioTexture, vec2(audioXSin / uAudioZoomSin, 0.0)).g - 0.5) * 0.55) * uAudioStrengthSin) * uFrequencySin;
 
     // Oscyloscope spiral
     vec2 nPosSin = vec2(pos.x, pos.y - (pos.x * uFrequencySin) + mod(uTime * uSpeedSin, 1.0) - audioValueSin);
     float pSin = mod(nPosSin.y, uFrequencySin);
 
     
-    vec4 color = vec4(1.0);
-    bool discardThis = true;
 
-    // Paint the spiral bars
-    if (p < 0.001) {
-        color = vec4(1.0, 1.0, 0.0, 0.8);
-        discardThis = false;
-    }
-    else if (p < (uFrequency * uThickness)) {        
-        color = vec4(hsl2rgb(vec3(uTime * 0.25, 1, pos.y * 0.75 )), p * 10.0);
-        discardThis = false;
-    }
     // Paint the spiral osciloscope
-    if (pSin < 0.001) {
-        color = vec4(1.0, 1.0, 1.0, 0.8);
-        discardThis = false;
+    if (pSin < (uFrequencySin * uThicknessSin)) {        
+        return vec4(1.0, 1.0, 1.0, (1.0 - pos.y));
+        //return vec4(hsl2rgb(vec3(uTime * 0.331, 1, pos.y * 0.75 )), pSin * 10.0) * 1.5;
     }
-    else if (pSin < (uFrequencySin * uThicknessSin)) {        
-        color = vec4(hsl2rgb(vec3(uTime * 0.331, 1, pos.y * 0.75 )), pSin * 10.0) * 1.5;
-//        color = vec4(1.0, 1.0, 1.0, 1.0 - (pSin * 1.0));
-        discardThis = false;
+    // Paint the spiral bars
+    /*if (p < 0.001) {
+        return vec4(0.0, 0.0, 0.0, 1.0);        
+    }
+    else*/ if (p < (uFrequency * uThickness)) {        
+        return vec4(hsl2rgb(vec3(uTime * -0.25, 1, (1.0 - pos.y) * 0.75 )), 1.0);
     }
 
-    if (discardThis == true) {
-        discard;
-    }
-    return color;
+    discard;
 }
 
 
 
 void main() {
     vec4 color = drawAudio(vUv);
-    // depth transparency
-//    color.a *=  1.0 + vUv.y ;
     gl_FragColor = color;
 //    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 }

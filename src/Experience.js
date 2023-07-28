@@ -63,7 +63,13 @@ export default class Experience {
             group : "Color out", 
             path  : "./songs/Alone_-_Color_Out.mp3", 
             url   : "https://www.jamendo.com/track/1886257/alone" 
+        }, {
+            name  : "Lost",
+            group : "Jount",
+            path  : "./songs/Jount_-_Lost_-_Jount.mp3",
+            url   : "https://www.jamendo.com/track/1910909/jount-lost" 
         }
+
     ]
 
     optionsExperienceByDefault = {

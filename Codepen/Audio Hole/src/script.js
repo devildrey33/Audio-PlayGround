@@ -9,17 +9,17 @@ import * as lil from 'lil-gui'
 class AudioHole extends CodepenThreeAudio {
     // lil.gui data
     spiralOptions = {
-        spiralAudioStrength              : 0.75,
+        spiralAudioStrength              : 0.2,
         spiralAudioZoom                  : 2.0,
         spiralAudioStrengthSin           : 1.0,
         spiralAudioZoomSin               : 1.0,
 //        spiralRotateSpeed                : 0.5,
         spiralSpeed                      : 0.32,
         spiralFrequency                  : 0.5, // 0.1 are 10 lines, 0.01 are 100 lines
-        spiralThickness                  : 0.33, 
-        spiralSpeedSin                   : 0.19,
-        spiralFrequencySin               : 0.5, // 0.1 are 10 lines, 0.01 are 100 lines
-        spiralThicknessSin               : 0.2, 
+        spiralThickness                  : 0.2, 
+        spiralSpeedSin                   : 0.95,
+        spiralFrequencySin               : 1.0, // 0.1 are 10 lines, 0.01 are 100 lines
+        spiralThicknessSin               : 0.05, 
     }
     
     // Main
@@ -39,7 +39,8 @@ class AudioHole extends CodepenThreeAudio {
      */ 
     setupScene() {                
        
-        this.geometry = new THREE.CylinderGeometry( 0.1, 2, 16, 64, 1, true );
+        this.geometry = new THREE.CylinderGeometry( 0.01, 2, 16, 256, 1, true );
+        this.geometry2D = new THREE.PlaneGeometry(3, 16);
 
 //        console.log(this.experience.debugOptions.perlinSunColorFrequency);
         this.material = new THREE.ShaderMaterial({
@@ -69,11 +70,13 @@ class AudioHole extends CodepenThreeAudio {
 
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.mesh.rotation.x = Math.PI * 0.5;
-
-        this.mesh.name = "AudioHole";
-
-
         this.scene.add(this.mesh);
+
+        this.mesh2D = new THREE.Mesh(this.geometry2D, this.material);
+        this.mesh2D.rotation.z = Math.PI * 1.0;
+        this.mesh2D.position.x = 10;
+        //this.mesh2D.rotation.x = Math.PI * 0.5;
+        this.scene.add(this.mesh2D);
         
         
         this.loading = false;
@@ -127,6 +130,32 @@ class AudioHole extends CodepenThreeAudio {
         this.debugOsciloscope.add(this.spiralOptions, "spiralThicknessSin").min(0.01).max(0.75).step(0.01).name("Thickness Sin").onChange(() => {
             this.material.uniforms.uThicknessSin.value = this.spiralOptions.spiralThicknessSin;
         });         
+
+        /*
+         * Bloom PostProcessing
+         */
+        this.debugBloom = this.ui.addFolder("Postprocessing").open(true);
+        // Enable / disable color Correction
+        this.debugBloom.add(this.options, "colorCorrectionEnabled").name("Color correction enabled").onChange(() => {
+            this.colorCorrectionPass.enabled = this.options.colorCorrectionEnabled;
+        });
+        // Enable / disable bloom
+        this.debugBloom.add(this.options, "bloomEnabled").name("Bloom enabled").onChange(() => {
+            this.bloomPass.enabled = this.options.bloomEnabled;
+        });
+        // Bloom Threshold
+        this.debugBloom.add(this.options, "bloomThreshold").min(-20).max(20).step(0.01).name("Bloom Threshold").onChange(() => {
+            this.bloomPass.threshold = this.options.bloomThreshold;
+        });
+        // Bloom Radius
+/*        this.debugBloom.add(this.options, "bloomRadius").min(-20).max(20).step(0.01).name("Radius").onChange(() => {
+            this.bloomPass.radius = this.options.bloomRadius;
+        });
+        // Bloom Strength
+        this.debugBloom.add(this.options, "bloomStrength").min(0).max(1).step(0.01).name("Strength").onChange(() => {
+            this.bloomPass.strength = this.options.bloomStrength;
+        });     */
+        
     }
 
 
