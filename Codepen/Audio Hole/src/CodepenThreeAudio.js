@@ -3,17 +3,17 @@
  *     https://github.com/devildrey33/Audio-PlayGround
  * 
  *  #8 Perlin sun effect.
- *      - This effect is a mix of Onion #4 and Circular osciloscope #2 effects.
+ *      - This effect consists on twop spirals one for bars, and the other for the osciloscope
  *      - This script creates an audio data texture with the getByteTimeFrequency values 
  *        on the red channel and the getByteTimeByDomain on the green channel. (Its more easy than creating extra attributes, and looks better)
  *      - Then this texture is sent to the sunset shader and the sunset depth shader.
  *      - You can drag & drop any song of your computer to play it.
- *      - Song name   : Alone
- *        Song artist : Color Out
- *        URL         : https://www.jamendo.com/track/1886257/alone
+ *      - Song name   : Lost
+ *        Song artist : Jount
+ *        URL         : https://www.jamendo.com/track/1910909/jount-lost
  * 
- *  Created on        : 25/05/2023
- *  Last modification : 25/05/2023
+ *  Created on        : 26/07/2023
+ *  Last modification : 28/07/2023
  */
 
 
@@ -23,7 +23,6 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
 import { ColorCorrectionShader } from 'three/addons/shaders/ColorCorrectionShader.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-//import { FXAAShader } from 'three/addons/shaders/FXAAShader.js'
 
 import * as THREE from 'three'
 
@@ -345,16 +344,6 @@ export default class CodepenThreeAudio {
         // Color correction pass
         this.colorCorrectionPass = new ShaderPass( ColorCorrectionShader );
         this.effectComposer.addPass(this.colorCorrectionPass);       
-
-        // antialias pass
-/*        this.fxaaPass = new ShaderPass( FXAAShader );
-        const pixelRatio = this.renderer.getPixelRatio();
-        this.fxaaPass.material.uniforms[ 'resolution' ].value.x = 1 / ( this.width * pixelRatio );
-        this.fxaaPass.material.uniforms[ 'resolution' ].value.y = 1 / ( this.height * pixelRatio );
-
-        this.effectComposer.addPass(this.fxaaPass);       */
-
-
     }
 
     /*
@@ -383,14 +372,6 @@ export default class CodepenThreeAudio {
      */
     setupLight() {
         this.sunLight = new THREE.DirectionalLight('#ffffff', 1)
-/*        this.sunLight.castShadow = true;
-        this.sunLight.shadow.camera.far = 64;
-        this.sunLight.shadow.mapSize.set(1024, 1024);
-        this.sunLight.shadow.normalBias = 0.05;
-        this.sunLight.shadow.camera.bottom = -16;
-        this.sunLight.shadow.camera.top    =  16;
-        this.sunLight.shadow.camera.left   = -16;
-        this.sunLight.shadow.camera.right  =  16;*/
         this.sunLight.position.set(-5, 18, 27);
 
 
@@ -680,12 +661,6 @@ export default class CodepenThreeAudio {
                 // position for a 4098 array
                 pos = pos * 4;
 
-                // fill the 32*32 image
-/*                this.imageDataSquare.data[pos]     = rValue;
-                this.imageDataSquare.data[pos + 1] = gValue;
-                this.imageDataSquare.data[pos + 2] = 0;
-                this.imageDataSquare.data[pos + 3] = 255;*/
-
                 // fill the 1024*1 image
                 this.imageDataLinear.data[pos]     = rValue;
                 this.imageDataLinear.data[pos + 1] = gValue;
@@ -696,8 +671,5 @@ export default class CodepenThreeAudio {
         // Put the final data from imageDataLinear into bufferCanvasLinear texture
         this.bufferCanvasLinear.context.putImageData(this.imageDataLinear, 0, 0, 0, 0, 1024, 1);
         this.bufferCanvasLinear.texture.needsUpdate = true;
-
-//        this.bufferCanvasSquare.context.putImageData(this.imageDataSquare, 0, 0, 0, 0, 32, 32);
-//        this.bufferCanvasSquare.texture.needsUpdate = true;
     }
 }

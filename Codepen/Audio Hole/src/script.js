@@ -62,9 +62,6 @@ class AudioHole extends CodepenThreeAudio {
             fragmentShader  : AudioHoleFragmentShader,
             transparent     : true, 
             side            : THREE.DoubleSide,
-//            depthFunc       : THREE.AlwaysDepth,
-//            depthWrite      : false,
-//            blending        : THREE.AdditiveBlending
 
         });
 
@@ -76,7 +73,6 @@ class AudioHole extends CodepenThreeAudio {
         this.mesh2D = new THREE.Mesh(this.geometry2D, this.material);
         this.mesh2D.rotation.z = Math.PI * 1.0;
         this.mesh2D.position.x = 10;
-        //this.mesh2D.rotation.x = Math.PI * 0.5;
         this.scene.add(this.mesh2D);
         
         
@@ -126,10 +122,6 @@ class AudioHole extends CodepenThreeAudio {
         // Spiral speed sin
         this.debugOsciloscope.add(this.spiralOptions, "spiralSpeedSin").min(0.01).max(4).step(0.01).name("Speed Sin").onChange(() => {
             this.material.uniforms.uSpeedSin.value = this.spiralOptions.spiralSpeedSin;
-        });            
-        // Spiral thickness sin
-        this.debugOsciloscope.add(this.spiralOptions, "spiralThicknessSin").min(0.01).max(0.75).step(0.01).name("Thickness Sin").onChange(() => {
-            this.material.uniforms.uThicknessSin.value = this.spiralOptions.spiralThicknessSin;
         });         
 
         /*
@@ -148,14 +140,6 @@ class AudioHole extends CodepenThreeAudio {
         this.debugBloom.add(this.options, "bloomThreshold").min(-20).max(20).step(0.01).name("Bloom Threshold").onChange(() => {
             this.bloomPass.threshold = this.options.bloomThreshold;
         });
-        // Bloom Radius
-/*        this.debugBloom.add(this.options, "bloomRadius").min(-20).max(20).step(0.01).name("Radius").onChange(() => {
-            this.bloomPass.radius = this.options.bloomRadius;
-        });
-        // Bloom Strength
-        this.debugBloom.add(this.options, "bloomStrength").min(0).max(1).step(0.01).name("Strength").onChange(() => {
-            this.bloomPass.strength = this.options.bloomStrength;
-        });     */
         
     }
 
@@ -170,16 +154,8 @@ class AudioHole extends CodepenThreeAudio {
         this.mesh.rotation.y += advance;
 
         if (this.songLoaded === true) {
-            this.material.uniforms.uThicknessSin.value = 0.01 + ((this.averageFrequency[2] / 255) * 0.1);
+            this.material.uniforms.uThicknessSin.value = 0.01 + ((this.averageFrequency[2] / 255) * 0.05);
         }
-
-        // update time on perlin sun shadow
-//        this.mesh.customDepthMaterial.uniforms.uTime.value = this.material.uniforms.uTime.value;
-
-
-        // make the perlin sun look at the camera
-//        this.groupLookAt.lookAt(this.camera.position);
-
     }
 }
 
