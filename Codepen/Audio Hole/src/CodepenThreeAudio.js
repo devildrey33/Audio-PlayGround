@@ -443,7 +443,7 @@ export default class CodepenThreeAudio {
             // Modify bloom strenght using low frequency (bass) 
             this.bloomPass.strength = (this.averageFrequency[2] / 255);
             // Set bloom radius using a sine wave and time to go from -1.5 to 3.5
-            this.bloomPass.radius = -1.5 + (Math.sin(currentTime / 1000) * 5);
+            this.bloomPass.radius = -1.5 + (Math.sin(currentTime / 10000) * 5);
         }
 
 

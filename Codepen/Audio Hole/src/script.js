@@ -9,17 +9,17 @@ import * as lil from 'lil-gui'
 class AudioHole extends CodepenThreeAudio {
     // lil.gui data
     spiralOptions = {
-        spiralAudioStrength              : 0.2,
+        spiralAudioStrength              : 0.4,
         spiralAudioZoom                  : 2.0,
         spiralAudioStrengthSin           : 1.0,
         spiralAudioZoomSin               : 1.0,
 //        spiralRotateSpeed                : 0.5,
-        spiralSpeed                      : 0.32,
-        spiralFrequency                  : 0.5, // 0.1 are 10 lines, 0.01 are 100 lines
-        spiralThickness                  : 0.2, 
-        spiralSpeedSin                   : 0.95,
-        spiralFrequencySin               : 1.0, // 0.1 are 10 lines, 0.01 are 100 lines
-        spiralThicknessSin               : 0.05, 
+        spiralSpeed                      : 0.12,
+        spiralFrequency                  : 0.2, // 0.1 are 10 lines, 0.01 are 100 lines
+        spiralThickness                  : 0.1, 
+        spiralSpeedSin                   : 0.45,
+        spiralFrequencySin               : 0.5, // 0.1 are 10 lines, 0.01 are 100 lines
+        spiralThicknessSin               : 0.01, 
     }
     
     // Main
@@ -39,7 +39,7 @@ class AudioHole extends CodepenThreeAudio {
      */ 
     setupScene() {                
        
-        this.geometry = new THREE.CylinderGeometry( 0.01, 2, 16, 256, 1, true );
+        this.geometry = new THREE.CylinderGeometry( 0.01, 2, 64, 256, 1, true );
         this.geometry2D = new THREE.PlaneGeometry(3, 16);
 
 //        console.log(this.experience.debugOptions.perlinSunColorFrequency);
@@ -70,6 +70,7 @@ class AudioHole extends CodepenThreeAudio {
 
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.mesh.rotation.x = Math.PI * 0.5;
+        this.mesh.position.z = 22;
         this.scene.add(this.mesh);
 
         this.mesh2D = new THREE.Mesh(this.geometry2D, this.material);
@@ -167,6 +168,10 @@ class AudioHole extends CodepenThreeAudio {
 
         // update cylinder rotation
         this.mesh.rotation.y += advance;
+
+        if (this.songLoaded === true) {
+            this.material.uniforms.uThicknessSin.value = 0.01 + ((this.averageFrequency[2] / 255) * 0.1);
+        }
 
         // update time on perlin sun shadow
 //        this.mesh.customDepthMaterial.uniforms.uTime.value = this.material.uniforms.uTime.value;

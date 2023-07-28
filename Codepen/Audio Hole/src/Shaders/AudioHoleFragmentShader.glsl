@@ -129,22 +129,19 @@ vec4 drawAudio(vec2 pos) {
     float audioValueSin = (((texture2D(uAudioTexture, vec2(audioXSin / uAudioZoomSin, 0.0)).g - 0.5) * 0.55) * uAudioStrengthSin) * uFrequencySin;
 
     // Oscyloscope spiral
-    vec2 nPosSin = vec2(pos.x, pos.y - (pos.x * uFrequencySin) + mod(uTime * uSpeedSin, 1.0) - audioValueSin);
+    vec2 nPosSin = vec2(pos.x, pos.y + (pos.x * uFrequencySin) + mod(uTime * uSpeedSin, 1.0) - audioValueSin);
     float pSin = mod(nPosSin.y, uFrequencySin);
 
     
 
     // Paint the spiral osciloscope
     if (pSin < (uFrequencySin * uThicknessSin)) {        
-        return vec4(1.0, 1.0, 1.0, (1.0 - pos.y));
+        return vec4(1.0, 1.0, 1.0, (1.0 - pos.y) * 1.5);
         //return vec4(hsl2rgb(vec3(uTime * 0.331, 1, pos.y * 0.75 )), pSin * 10.0) * 1.5;
     }
-    // Paint the spiral bars
-    /*if (p < 0.001) {
-        return vec4(0.0, 0.0, 0.0, 1.0);        
-    }
-    else*/ if (p < (uFrequency * uThickness)) {        
-        return vec4(hsl2rgb(vec3(uTime * -0.25, 1, (1.0 - pos.y) * 0.75 )), 1.0);
+    // Paint the spiral
+    if (p < (uFrequency * uThickness)) {        
+        return vec4(hsl2rgb(vec3(uTime * -0.05, 1, (1.0 - pos.y) * 0.5 )), 1.0);
     }
 
     discard;
