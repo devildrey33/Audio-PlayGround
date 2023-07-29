@@ -107,3 +107,10 @@ https://github.com/devildrey33/Audio-PlayGround/assets/15678544/1af81003-cc71-41
 
 Live version : [Audio-Shader #8 Perlin SUn](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/8/)
 
+
+
+https://github.com/devildrey33/Audio-PlayGround/assets/15678544/88c24458-34cf-4e3d-aba4-0bb8f37be51b
+
+
+Live version : [Audio-Shader #9 Audio Hole](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/9/)
+
