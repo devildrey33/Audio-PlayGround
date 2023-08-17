@@ -54,7 +54,6 @@ export default class HTMLElements {
         this.elementAudioTime.addEventListener('mousedown', (e) => { 
             this.dragTime = true;
         }); 
-
         // Audio time slider element touchstart
         this.elementAudioTime.addEventListener('touchstart', (e) => { 
             this.dragTime = true;
@@ -140,7 +139,7 @@ export default class HTMLElements {
                             "</div>";                
             }
 
-            // Show full screen button
+            // Show github button
             if (this.options.buttonGitHub === true) {
                 strHTML +=  "<a href='" + this.options.urlGitHub + "' target='_blank' class='Experience_Panel Experience_Control' title='GitHub project'>" +
                                 "<img draggable='false' src='icos.svg#svg-github' />" +            

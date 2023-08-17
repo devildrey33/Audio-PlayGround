@@ -16,7 +16,7 @@ import AudioInfo from './AudioInfo.js';
 import SSPerlinSun from './SSPerlinSun.js';
 import Sphere from './Sphere.js';
 import SphereSin from './SphereSin.js';
-import Spiral from './Spiral.js'
+//import Spiral from './Spiral.js'
 //import OsciloscopeSoft from './OsciloscopeSoft.js';
 
 
@@ -57,7 +57,7 @@ export default class World {
         this.ssPerlinSun         = new SSPerlinSun(this);        
         this.sphere              = new Sphere(this);
 //        this.sphereSin           = new SphereSin(this);
-        this.spiral              = new Spiral(this);
+//        this.spiral              = new Spiral(this);
 //        const start = Math.PI * 2.0 * 0.33 * 0.5;
 
 //        this.experience.camera.controls.target.set(this.ssPerlinSun.group.position.x, this.ssPerlinSun.group.position.y, this.ssPerlinSun.group.position.z);
@@ -135,7 +135,7 @@ export default class World {
         this.osciloscope.mesh.castShadow                      = enable;
         this.ssPerlinSun.mesh.castShadow                      = enable;
         this.sphere.mesh.castShadow                           = enable;
-        this.spiral.mesh.castShadow                           = enable;
+//        this.spiral.mesh.castShadow                           = enable;
 
     }
 
@@ -325,7 +325,7 @@ export default class World {
             this.ssPerlinSun.update();
             this.sphere.update();
 //            this.sphereSin.update();
-            this.spiral.update();
+//            this.spiral.update();
 
 //            this.osciloscope.update();
 //            this.osciloscopeSoft.update();

@@ -77,6 +77,13 @@ export default class AudioAnalizer {
             this.experience.htmlElements.elementPause.setAttribute("play", "true");
     //            this.fnEnded.bind(this);
         });                
+
+        this.song.addEventListener('error'  , (e) => { 
+            this.experience.htmlElements.elementPlay.setAttribute("play", "true");
+            this.experience.htmlElements.elementPause.setAttribute("play", "true");
+            console.log(e);
+            window.alert("Error loading the song");
+        });
         // Update max time
         this.song.addEventListener('durationchange'  , () => { 
             // Update max time on the time slider
@@ -117,11 +124,6 @@ export default class AudioAnalizer {
     // Función que detecta si está en play o en pausa, y asigna el estado contrario
     playPause() {
         this.context.resume();
-        const t = typeof(this.song.play);
-        if (this.songLoaded === false) {
-            window.alert("Error playing song, its not loaded");
-            return;
-        }
         
         // If song is playing
         if (this.song.duration > 0 && !this.song.paused) { 
@@ -129,14 +131,8 @@ export default class AudioAnalizer {
             return false;  
         } 
         else {
-            try {
-                this.song.play();   
-                return true;   
-            }
-            catch (error)  {
-                window.alert("Error playing song : " + error);
-            }
-            
+            this.song.play();   
+            return true;   
         }        
     };
 
@@ -194,19 +190,19 @@ export default class AudioAnalizer {
         // greus  de 0hz a 256hz
         // mitjos de 257hz a 2000hz
         // aguts  de 2001hz a 16000hz
-        var hzBar      = this.context.sampleRate / this.fftSize;
-        var divisions  = [ 256, 2000, 16000, 50000 ];
-        var total      = [ 0, 0, 0, 0, 0 ];// Graves, Medios, Agudos, Agudos inaudibles, Media de todo
-        var values     = [ 0, 0, 0, 0, 0 ];// Graves, Medios, Agudos, Agudos inaudibles, Media de todo
-        var pos        = 0;        
-        var totalFreq = this.fftSize / 2;
-        for (var i = 0; i < totalFreq; i++) {
+        let hzBar      = this.context.sampleRate / this.fftSize;
+        let divisions  = [ 256, 2000, 16000, 50000 ];
+        let total      = [ 0, 0, 0, 0, 0 ];// Graves, Medios, Agudos, Agudos inaudibles, Media de todo
+        let values     = [ 0, 0, 0, 0, 0 ];// Graves, Medios, Agudos, Agudos inaudibles, Media de todo
+        let pos        = 0;        
+        let totalFreq = this.fftSize / 2;
+        for (let i = 0; i < totalFreq; i++) {
             if (i * hzBar > divisions[pos]) {
                 pos++;
             }
-            total[pos] ++;
+            total[pos]  ++;
             values[pos] += this.analizerData[i];            
-            values[4] += this.analizerData[i];
+            values[4]   += this.analizerData[i];
         }
         
         return [ values[0] / total[0],    // High
