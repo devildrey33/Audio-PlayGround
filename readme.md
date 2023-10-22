@@ -1,6 +1,6 @@
 # Audio-PlayGround
  
-First i want to see how hard i can push a mobile device, in my mobile works at 25fps +o-... but its 6 years old. My friends told me it runs at 60fps on hig end mobiles. Need to implement a shadows removal if framerate drops on 3 first seconds or something like that
+First i want to see how hard i can push a mobile device, in my mobile works at 25fps +o-... but its 6 years old. My friends told me it runs at 60fps on hig end mobiles. 
 
 Based on two textures : 32x32 for square operations and 1024x1 for lineal operations.
 Red channel has the Frequency, and green channel the TimeDomain of the song.
