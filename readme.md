@@ -113,4 +113,5 @@ https://github.com/devildrey33/Audio-PlayGround/assets/15678544/88c24458-34cf-4e
 
 
 Live version : [Audio-Shader #9 Audio Hole](https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/9/)
+
 Take a look to the new Audio-Hole with 6 channels analisis (bass, drum, piano, other, vocal, and full song) and with a loot of effects : https://github.com/devildrey33/Audio-Hole
