@@ -18,8 +18,10 @@ import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 
-import * as dat from 'lil-gui'
+import * as lil from 'lil-gui'
 
+
+//window.AudioContext = null;
 
 /* 
  * Event Emitter
@@ -568,10 +570,10 @@ class Debug {
         this.songs              = this.experience.songs;
         this.active = true;
         
-        this.active = window.location.hash === '#debug';
+//        this.active = window.location.hash === '#debug';
 
         if (this.active) {
-            this.ui = new dat.GUI();
+            this.ui = new lil.GUI();
 
             /*
              * Lights
@@ -1041,23 +1043,23 @@ class HTMLElements {
             // Show full screen button
             if (this.options.buttonFullScreen === true) {
                 strHTML +=  "<div id='fullScreen' class='Experience_Panel Experience_Control' title='Full screen mode'>" +
-                                "<img draggable='false' src='icos.svg#svg-pantalla-completa' />" +
+                                "<img draggable='false' src='https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/icos.svg#svg-pantalla-completa' />" +
                             "</div>" +
                             "<div id='restoreScreen' class='Experience_Panel Experience_Control' title='Restore screen'>" +
-                                "<img draggable='false' src='icos.svg#svg-restaurar-pantalla' />" +
+                                "<img draggable='false' src='https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/icos.svg#svg-restaurar-pantalla' />" +
                             "</div>";                
             }
 
             // Show github button
             if (this.options.buttonGitHub === true) {
                 strHTML +=  "<a href='" + this.options.urlGitHub + "' target='_blank' class='Experience_Panel Experience_Control' title='GitHub project'>" +
-                                "<img draggable='false' src='icos.svg#svg-github' />" +            
+                                "<img draggable='false' src='https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/icos.svg#svg-github' />" +            
                             "</a>";
             }
             // Show devildrey33 logo button
             if (this.options.buttonLogo === true) {
                 strHTML +=  "<a href='https://devildrey33.es' target='_blank' id='Logo' class='Experience_Panel Experience_Control'>" +
-                                "<img draggable='false' src='icos.svg#svg-logo' />" +
+                                "<img draggable='false' src='https://devildrey33.es/Ejemplos/Three.js-Journey/Audio-PlayGround/icos.svg#svg-logo' />" +
                                 "<div id='LogoText'>" +
                                     "<span>D</span>" + "<span>E</span>" + "<span>V</span>" + "<span>I</span>" + "<span>L</span>" + "<span>D</span>" + "<span>R</span>" + "<span>E</span>" + "<span>Y</span>" + "<span>&nbsp;</span>" + "<span>3</span>" + "<span>3</span>" +
                                 "</div>" +
@@ -1224,15 +1226,26 @@ class AudioAnalizer {
         this.experience     = new Experience();
         this.time           = this.experience.time;
 //        this.audioSourceDD  = { context : { currentTime : 0 } };
-        this.context        = new AudioContext();
         this.songLoaded     = false;
         this.htmlElements   = this.experience.htmlElements;
         // Current time for the blue channel smoth function
         this.curTimeB       = 0;
+
+        this.averageFrequency = [ 0, 0, 0, 0, 0 ];
 //        this.songList       = [];
     
 //        start();
     }
+
+    setupAudio() {
+        this.context        = new AudioContext();
+
+        this.gainNode                         = this.context.createGain();
+        this.analizer                         = this.context.createAnalyser();
+        this.analizer.fftSize                 = this.fftSize;
+        this.analizer.smoothingTimeConstant   = this.experience.debugOptions.smoothingTimeConstant; // 
+    }
+
 
     start(fftSize = 2048/*, fnReady = () => {}, fnEnded = () => {}*/) {
         this.fftSize         = fftSize;
@@ -1242,10 +1255,6 @@ class AudioAnalizer {
         this.analizerData    = new Uint8Array(fftSize * 0.5);
         this.analizerDataSin = new Uint8Array(fftSize * 0.5);
 
-        this.gainNode                         = this.context.createGain();
-        this.analizer                         = this.context.createAnalyser();
-        this.analizer.fftSize                 = fftSize;
-        this.analizer.smoothingTimeConstant   = this.experience.debugOptions.smoothingTimeConstant; // 
 
         // Drag & drop event
         this.hEventDragEnter = this.eventDragEnter.bind(this);
@@ -1287,7 +1296,7 @@ class AudioAnalizer {
         this.song.controls       = true;
         this.song.crossOrigin    = "anonymous";
         this.song.src            = path;          // "/Canciones/cancion.mp3"
-        this.song.addEventListener('canplay', this.canPlay.bind(this));
+        this.song.addEventListener('canplay', () => { this.canPlay() });
         this.song.addEventListener('ended'  , () => { 
             this.experience.htmlElements.elementPlay.setAttribute("play", "true");
             this.experience.htmlElements.elementPause.setAttribute("play", "true");
@@ -1339,6 +1348,12 @@ class AudioAnalizer {
 
     // Función que detecta si está en play o en pausa, y asigna el estado contrario
     playPause() {
+        if (typeof this.context === "undefined") {
+            this.setupAudio();
+            this.loadSong(this.experience.song.path);
+        }
+
+
         this.context.resume();
         
         // If song is playing
@@ -1351,6 +1366,8 @@ class AudioAnalizer {
             return true;   
         }        
     };
+
+
 
     canPlay() {
         if (this.songLoaded !== true) {
@@ -1386,6 +1403,7 @@ class AudioAnalizer {
     }
 
     update() {
+        if (typeof(this.analizer)=== "undefined") return;
         // get wave frequancy buffers
         this.analizer.getByteFrequencyData(this.analizerData);
         this.analizer.getByteTimeDomainData(this.analizerDataSin);        
@@ -2290,8 +2308,6 @@ class Bars {
     constructor(world) {
         this.experience      = new Experience();
         this.audioAnalizer   = this.experience.audioAnalizer;
-        this.fftSize         = this.audioAnalizer.analizer.fftSize;
-        this.data            = this.audioAnalizer.analizerData;
         this.scene           = this.experience.scene;
         this.world           = world;
         
@@ -2784,7 +2800,7 @@ class Experience {
         */
         
 
-        this.audioAnalizer.loadSong(this.song.path);
+        
 
         this.scene          = new THREE.Scene();
         this.resources      = new Resources([
@@ -2805,6 +2821,7 @@ class Experience {
         this.sizes.on('resize', () => { this.resize(); })
         this.time.on ('tick'  , () => { this.update(); })
 
+//        this.audioAnalizer.loadSong(this.song.path);
     }
 
 
