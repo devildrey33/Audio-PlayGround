@@ -1,0 +1,2219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Hole</title>
+    <link rel="stylesheet" href="./style.css">
+
+    <!-- 
+        SHADERS
+    -->
+    <script id="BarsVertexShader" type="x-shader/x-vertex">
+        uniform sampler2D uAudioTexture;  // Linear texture (1024 * 1) to get audio values
+        uniform float     uAudioStrength; // Strength multiplyer 
+        attribute float   aId;            // Its an unique ID for each bar (1.0 / totalBars * actualBar)
+        varying vec2      vUv;
+        
+        void main() {
+            
+            vec4 modelPosition      = modelMatrix       * vec4(position , 1.0);
+            // If the point is from superior part
+            vec4 data = texture2D(uAudioTexture, vec2(aId, 0.0));
+            if (uv.y > 0.1) {
+                // Add the red channel intensity to the Y of the model
+                modelPosition.y +=  data.r * uAudioStrength;
+            }
+            else {
+                modelPosition.y -=  data.r * uAudioStrength;
+            }
+         
+            vec4 viewPosition       = viewMatrix        * modelPosition;
+            vec4 projectionPosition = projectionMatrix  * viewPosition;
+        
+            gl_Position = projectionPosition;
+        
+            vUv = uv;
+        }
+    </script>
+
+    <script id="BarsFragmentShader" type="x-shader/x-fragment">
+        varying vec2 vUv;
+
+        void main() {
+            float dist = length(vUv - vec2(0.5)) * 0.25;
+
+
+            // Fill the bar with red
+            gl_FragColor = vec4(0.35 + dist, 0.25 - dist, 0.0, 1.0);
+        }
+    </script>
+
+    <script id="BarsDepthVertexShader" type="x-shader/x-vertex">
+        uniform sampler2D uAudioTexture;  // Linear texture (1024 * 1) to get audio values
+        uniform float     uAudioStrength; // Strength multiplyer 
+        attribute float   aId;            // Its an unique ID for each bar (1.0 / totalBars * actualBar)
+        
+        
+        #include <common>
+        #include <uv_pars_vertex>
+        #include <displacementmap_pars_vertex>
+        #include <morphtarget_pars_vertex>
+        #include <skinning_pars_vertex>
+        #include <logdepthbuf_pars_vertex>
+        #include <clipping_planes_pars_vertex>
+        varying vec2 vHighPrecisionZW;
+        void main() {
+            #include <uv_vertex>
+            #include <skinbase_vertex>
+            #ifdef USE_DISPLACEMENTMAP
+                #include <beginnormal_vertex>
+                #include <morphnormal_vertex>
+                #include <skinnormal_vertex>
+            #endif
+            #include <begin_vertex>
+        
+        //vec4 audioValue = vec4(1.0);
+            vec4 audioValue = texture2D(uAudioTexture, vec2(aId, 0.0));
+        
+            if (uv.y > 0.5) {
+                // Add the red channel intensity to the Y of the model
+                transformed.y +=  audioValue.r * uAudioStrength;
+            }
+            else {
+                transformed.y -=  audioValue.r * uAudioStrength;
+            }
+            
+        
+            #include <morphtarget_vertex>
+            #include <skinning_vertex>
+            #include <displacementmap_vertex>
+            #include <project_vertex>
+            #include <logdepthbuf_vertex>
+            #include <clipping_planes_vertex>
+            vHighPrecisionZW = gl_Position.zw;
+        }
+    </script>
+
+    <script id="SphereStandardVertextShader" type="x-shader/x-vertex">
+        uniform sampler2D uAudioTexture;
+        uniform float uTime;
+        uniform float uAudioStrength;
+        uniform float uAudioZoom;
+        
+        
+        /* 
+         * Three.js globals
+         */
+        #define STANDARD
+        varying vec3 vViewPosition;
+        #ifdef USE_TRANSMISSION
+            varying vec3 vWorldPosition;
+        #endif
+        #include <common>
+        #include <uv_pars_vertex>
+        #include <displacementmap_pars_vertex>
+        #include <color_pars_vertex>
+        #include <fog_pars_vertex>
+        #include <normal_pars_vertex>
+        #include <morphtarget_pars_vertex>
+        #include <skinning_pars_vertex>
+        #include <shadowmap_pars_vertex>
+        #include <logdepthbuf_pars_vertex>
+        #include <clipping_planes_pars_vertex>
+        
+        /*  * Three.js main
+         */
+        void main() {
+            #include <uv_vertex>
+            #include <color_vertex>
+            #include <morphcolor_vertex>
+            #include <beginnormal_vertex>
+            #include <morphnormal_vertex>
+            #include <skinbase_vertex>
+            #include <skinnormal_vertex>
+            #include <defaultnormal_vertex>
+            #include <normal_vertex>
+            #include <begin_vertex>
+        
+            // Audio value on Y axis
+        //    float posX = (uv.x < 0.5) ? 0.0 + uv.x * 2.0 : 1.0 - uv.x;
+        //    float posY = (uv.y < 0.5) ? 0.0 + uv.y * 2.0 : 1.0 - uv.y;
+        //    float audioValue = ((texture2D(uAudioTexture, vec2(posX * uAudioZoom, posY * uAudioZoom)).r) * uAudioStrength);
+        
+            float audioValue = 0.0;
+            float zoom = 1.0 - (1.0 / uAudioZoom);
+            if (uv.x > 0.001 && uv.x < 0.999 && uv.y > 0.001 && uv.y < 0.999)  {
+        //        audioValue = ((texture2D(uAudioTexture, vec2(uv.x * uAudioZoom, uv.y * uAudioZoom)).g - 0.5) * 0.55) * uAudioStrength;
+                audioValue = ((texture2D(uAudioTexture, vec2(zoom + (uv.x / uAudioZoom), zoom + (uv.y / uAudioZoom))).r) * uAudioStrength);
+            }
+            // On the edges of the shape use a medium value 
+            else {
+        //        audioValue = ((texture2D(uAudioTexture, vec2(0.0, uv.y * uAudioZoom)).g - 0.5) * 0.55) * uAudioStrength;
+                audioValue = ((texture2D(uAudioTexture, vec2(0.5, zoom + (uv.y / uAudioZoom))).r) * uAudioStrength);
+            }
+        
+            transformed.z = transformed.z + (transformed.z * audioValue * uAudioStrength);
+            transformed.x = transformed.x + (transformed.x * audioValue * uAudioStrength);
+            transformed.y = transformed.y + (transformed.y * audioValue * uAudioStrength);
+        
+        
+            /*
+             * Three.js main end
+             */
+        
+        
+            #include <morphtarget_vertex>
+            #include <skinning_vertex>
+            #include <displacementmap_vertex>
+            #include <project_vertex>
+            #include <logdepthbuf_vertex>
+            #include <clipping_planes_vertex>
+            vViewPosition = - mvPosition.xyz;
+            #include <worldpos_vertex>
+            #include <shadowmap_vertex>
+            #include <fog_vertex>
+          #ifdef USE_TRANSMISSION
+            vWorldPosition = worldPosition.xyz;
+          #endif
+        }                
+    </script>
+
+    <script id="SphereDepthVertexShader" type="x-shader/x-vertex">
+        uniform sampler2D uAudioTexture;
+        uniform float uTime;
+        uniform float uAudioStrength;
+        uniform float uAudioZoom;
+        
+        
+        #include <common>
+        #include <uv_pars_vertex>
+        #include <displacementmap_pars_vertex>
+        #include <morphtarget_pars_vertex>
+        #include <skinning_pars_vertex>
+        #include <logdepthbuf_pars_vertex>
+        #include <clipping_planes_pars_vertex>
+        varying vec2 vHighPrecisionZW;
+        void main() {
+            #include <uv_vertex>
+            #include <skinbase_vertex>
+            #ifdef USE_DISPLACEMENTMAP
+                #include <beginnormal_vertex>
+                #include <morphnormal_vertex>
+                #include <skinnormal_vertex>
+            #endif
+            #include <begin_vertex>
+        
+        
+        
+            float audioValue = 0.0;
+            float zoom = 1.0 - (1.0 / uAudioZoom);
+            if (uv.x > 0.001 && uv.x < 0.999 && uv.y > 0.001 && uv.y < 0.999)  {
+                audioValue = ((texture2D(uAudioTexture, vec2(uv.x / uAudioZoom, uv.y / uAudioZoom)).r) * uAudioStrength);
+            }
+            // On the edges of the shape use a medium value 
+            else {
+                audioValue = ((texture2D(uAudioTexture, vec2(0.5, uv.y / uAudioZoom)).r) * uAudioStrength);
+            }
+        
+            transformed.z = transformed.z + (transformed.z * audioValue);
+            transformed.x = transformed.x + (transformed.x * audioValue);
+            transformed.y = transformed.y + (transformed.y * audioValue);
+        
+        
+        
+        
+        
+            #include <morphtarget_vertex>
+            #include <skinning_vertex>
+            #include <displacementmap_vertex>
+            #include <project_vertex>
+            #include <logdepthbuf_vertex>
+            #include <clipping_planes_vertex>
+            vHighPrecisionZW = gl_Position.zw;
+        }
+    </script>
+    
+
+    <script id="SSPerlinSunFragmentShader" type="x-shader/x-fragment">
+        uniform float     uAlpha;
+        uniform sampler2D uAudioTexture;
+        uniform float     uTime;
+        uniform float     uHover;
+        uniform float     uNoiseStrength;
+        uniform float     uNoiseSpeed;
+        //uniform float     uLowFrequency;
+        uniform vec3      uColorFrequency;
+        uniform vec3      uColorSin;
+        
+        varying vec2      vUv; // Coordenadas UV del fragmento
+        
+        #define PI   3.14159265
+        #define TAU  PI * 2.0
+        
+        //	Classic Perlin 3D Noise 
+        //	by Stefan Gustavson
+        //
+        vec4 permute(vec4 x)       { return mod(((x*34.0)+1.0)*x, 289.0);            }
+        vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+        vec3 fade(vec3 t)          { return t*t*t*(t*(t*6.0-15.0)+10.0);             }
+        
+        float cnoise(vec3 P){
+            vec3 Pi0 = floor(P); // Integer part for indexing
+            vec3 Pi1 = Pi0 + vec3(1.0); // Integer part + 1
+            Pi0 = mod(Pi0, 289.0);
+            Pi1 = mod(Pi1, 289.0);
+            vec3 Pf0 = fract(P); // Fractional part for interpolation
+            vec3 Pf1 = Pf0 - vec3(1.0); // Fractional part - 1.0
+            vec4 ix = vec4(Pi0.x, Pi1.x, Pi0.x, Pi1.x);
+            vec4 iy = vec4(Pi0.yy, Pi1.yy);
+            vec4 iz0 = Pi0.zzzz;
+            vec4 iz1 = Pi1.zzzz;
+        
+            vec4 ixy = permute(permute(ix) + iy);
+            vec4 ixy0 = permute(ixy + iz0);
+            vec4 ixy1 = permute(ixy + iz1);
+        
+            vec4 gx0 = ixy0 / 7.0;
+            vec4 gy0 = fract(floor(gx0) / 7.0) - 0.5;
+            gx0 = fract(gx0);
+            vec4 gz0 = vec4(0.5) - abs(gx0) - abs(gy0);
+            vec4 sz0 = step(gz0, vec4(0.0));
+            gx0 -= sz0 * (step(0.0, gx0) - 0.5);
+            gy0 -= sz0 * (step(0.0, gy0) - 0.5);
+        
+            vec4 gx1 = ixy1 / 7.0;
+            vec4 gy1 = fract(floor(gx1) / 7.0) - 0.5;
+            gx1 = fract(gx1);
+            vec4 gz1 = vec4(0.5) - abs(gx1) - abs(gy1);
+            vec4 sz1 = step(gz1, vec4(0.0));
+            gx1 -= sz1 * (step(0.0, gx1) - 0.5);
+            gy1 -= sz1 * (step(0.0, gy1) - 0.5);
+        
+            vec3 g000 = vec3(gx0.x,gy0.x,gz0.x);
+            vec3 g100 = vec3(gx0.y,gy0.y,gz0.y);
+            vec3 g010 = vec3(gx0.z,gy0.z,gz0.z);
+            vec3 g110 = vec3(gx0.w,gy0.w,gz0.w);
+            vec3 g001 = vec3(gx1.x,gy1.x,gz1.x);
+            vec3 g101 = vec3(gx1.y,gy1.y,gz1.y);
+            vec3 g011 = vec3(gx1.z,gy1.z,gz1.z);
+            vec3 g111 = vec3(gx1.w,gy1.w,gz1.w);
+        
+            vec4 norm0 = taylorInvSqrt(vec4(dot(g000, g000), dot(g010, g010), dot(g100, g100), dot(g110, g110)));
+            g000 *= norm0.x;
+            g010 *= norm0.y;
+            g100 *= norm0.z;
+            g110 *= norm0.w;
+            vec4 norm1 = taylorInvSqrt(vec4(dot(g001, g001), dot(g011, g011), dot(g101, g101), dot(g111, g111)));
+            g001 *= norm1.x;
+            g011 *= norm1.y;
+            g101 *= norm1.z;
+            g111 *= norm1.w;
+        
+            float n000 = dot(g000, Pf0);
+            float n100 = dot(g100, vec3(Pf1.x, Pf0.yz));
+            float n010 = dot(g010, vec3(Pf0.x, Pf1.y, Pf0.z));
+            float n110 = dot(g110, vec3(Pf1.xy, Pf0.z));
+            float n001 = dot(g001, vec3(Pf0.xy, Pf1.z));
+            float n101 = dot(g101, vec3(Pf1.x, Pf0.y, Pf1.z));
+            float n011 = dot(g011, vec3(Pf0.x, Pf1.yz));
+            float n111 = dot(g111, Pf1);
+        
+            vec3 fade_xyz = fade(Pf0);
+            vec4 n_z = mix(vec4(n000, n100, n010, n110), vec4(n001, n101, n011, n111), fade_xyz.z);
+            vec2 n_yz = mix(n_z.xy, n_z.zw, fade_xyz.y);
+            float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x); 
+            return 2.2 * n_xyz;
+        }
+        
+        // Function to make a round rectangle when the 2d plane is hover
+        vec4 borderRoundRect(vec4 currentColor, vec2 size, float radius) {
+            vec2  position   = vUv * size;
+            vec2  rounded    = vec2(clamp(position.x, radius, size.x - radius), clamp(position.y, radius, size.y - radius));
+            vec2  difference = position - rounded;
+            float dist       = length(difference);
+            vec4  color      = vec4(1.0, 1.0, 1.0, uHover); // Border color
+            float borderSize = 0.015;                 // Border size (half because its two times larger)
+            float alpha      = step(0.2, smoothstep(radius - borderSize, radius- borderSize, dist) - smoothstep(radius, radius + borderSize, dist));
+            color.a = alpha * uHover;
+            // Its inside
+            if (dist > radius - borderSize) {
+                return color;
+            }
+            // Its outside
+            return currentColor;
+        }
+        
+        /*
+        vec3 getColor(float time) {
+          float t = fract(time);  // Fracción de tiempo entre 0 y 1
+          
+          // Red, green y blue varían en ciclos independientes de tiempo
+          float red = cos(t * 6.2831);  // Variación sinusoidal en el rango [-1, 1]
+          float green = cos(t * 6.2831); // Variación cosinusoidal en el rango [-1, 1]
+          float blue = sin(t * 6.2831 * 2.0); // Variación sinusoidal rápida en el rango [-1, 1]
+          
+          // Normalización y asignación del color resultante
+          vec3 color = vec3(red, green, blue) * 0.5 + 0.75;
+          
+          return color;
+        }*/
+        
+        // Make a circle with the frequency data
+        vec4 circleFreq(vec4 currentColor, vec2 center, float radius, vec3 color) {
+            vec2 pos = vec2(0.55, 0.5);
+            float dist = length(vUv - pos);
+            float rad = atan(vUv.y - pos.y, vUv.x - pos.x);
+        
+            float normAngle = 0.0;
+            if (rad < 0.0) {
+                normAngle = ((rad + PI) / PI);
+            } else {
+                normAngle = 1.0 - (1.0 + ((rad - PI) / PI));
+            }
+        
+            float audioValue = (texture2D(uAudioTexture, vec2(normAngle, 0.0)).r - 0.5) * .25;
+            // Perlin noise
+            float strength = cnoise(vec3(rad * 2.0, dist * uNoiseStrength,  uTime + color.b * uNoiseSpeed)) * radius * 0.1;
+        
+            if (dist - audioValue + strength < radius) {
+        //        color.rgb += audioValue * 0.5;
+        //        color.rgb = color.rgb + audioValue * 0.5;
+                return vec4(color, 1.0);
+        
+        //        return vec4(getColor(uTime * 0.05) , 0.0 + (2.0 * dist) - sin(uTime) * 0.25);
+            } 
+            return currentColor;
+        }
+        
+        
+        // // Make a circle with the time domain data
+        vec4 circleSin(vec4 currentColor, vec2 center, float radius, vec3 color) {
+            vec2 pos1 = vec2(0.4, 0.5);
+            float dist = length(vUv - center);
+            float rad = atan(vUv.y - center.y, vUv.x - center.x);
+        
+            float normAngle = 0.0;
+            if (rad < 0.0) {
+                normAngle = ((rad + PI) / PI);
+            } else {
+                normAngle = (1.0 + ((rad - PI) / PI));
+            }
+        
+            float audioValue = (texture2D(uAudioTexture, vec2(normAngle, 0.0)).g - 0.5) * .5;
+            // Perlin noise
+            float strength = 0.0; //cnoise(vec3(rad * TAU * 5.0, dist * 100.0,  uTime + color.b)) * radius * 0.1;
+        
+            if (dist - audioValue + strength < radius) {
+                color.rgb += audioValue * 0.25;
+                return vec4(color, 0.5 + audioValue);
+            } 
+            return currentColor;
+        }
+        
+        
+        
+        void main() {
+        
+            // Center of the plane
+            vec2 center = vec2(0.5, 0.5);
+            // Base color
+            vec4 color = vec4(0.0, 0.0, 0.0, (uAlpha + uHover) * 0.80);
+        
+        //    color = circleNoise(color, center, 0.25, vec3(0.0, 0.0, 1.0));
+        //    color = circleNoise(color, center, 0.125, vec3(0.5, 0.5, 0.25));
+        
+            color = circleFreq(color, center, 0.4, uColorFrequency);
+            color = circleSin(color, center, 0.25, uColorSin);
+        
+            // Apply the round hover border
+            color = borderRoundRect(color, vec2(1.0, 1.0), 0.125);
+        
+        
+            gl_FragColor = color;
+        }
+    </script>
+
+    <script id="SSPerlinSunDepthFragmentShader" type="x-shader/x-fragment">
+        uniform float     uAlpha;
+        uniform sampler2D uAudioTexture;
+        uniform float     uTime;
+        //uniform float     uHover;
+        uniform float     uNoiseStrength;
+        uniform float     uNoiseSpeed;
+        //uniform vec3      uColorFrequency;
+        //uniform vec3      uColorSin;
+        
+        varying vec2      vUv; // Coordenadas UV del fragmento
+        
+        #define NPI   3.14159265 // idk what happens with THREE js PI, and im finishing for today...
+        #define TAU  PI * 2.0
+        
+        //	Classic Perlin 3D Noise 
+        //	by Stefan Gustavson
+        //
+        vec4 permute(vec4 x)       { return mod(((x*34.0)+1.0)*x, 289.0);            }
+        vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+        vec3 fade(vec3 t)          { return t*t*t*(t*(t*6.0-15.0)+10.0);             }
+        
+        float cnoise(vec3 P){
+            vec3 Pi0 = floor(P); // Integer part for indexing
+            vec3 Pi1 = Pi0 + vec3(1.0); // Integer part + 1
+            Pi0 = mod(Pi0, 289.0);
+            Pi1 = mod(Pi1, 289.0);
+            vec3 Pf0 = fract(P); // Fractional part for interpolation
+            vec3 Pf1 = Pf0 - vec3(1.0); // Fractional part - 1.0
+            vec4 ix = vec4(Pi0.x, Pi1.x, Pi0.x, Pi1.x);
+            vec4 iy = vec4(Pi0.yy, Pi1.yy);
+            vec4 iz0 = Pi0.zzzz;
+            vec4 iz1 = Pi1.zzzz;
+        
+            vec4 ixy = permute(permute(ix) + iy);
+            vec4 ixy0 = permute(ixy + iz0);
+            vec4 ixy1 = permute(ixy + iz1);
+        
+            vec4 gx0 = ixy0 / 7.0;
+            vec4 gy0 = fract(floor(gx0) / 7.0) - 0.5;
+            gx0 = fract(gx0);
+            vec4 gz0 = vec4(0.5) - abs(gx0) - abs(gy0);
+            vec4 sz0 = step(gz0, vec4(0.0));
+            gx0 -= sz0 * (step(0.0, gx0) - 0.5);
+            gy0 -= sz0 * (step(0.0, gy0) - 0.5);
+        
+            vec4 gx1 = ixy1 / 7.0;
+            vec4 gy1 = fract(floor(gx1) / 7.0) - 0.5;
+            gx1 = fract(gx1);
+            vec4 gz1 = vec4(0.5) - abs(gx1) - abs(gy1);
+            vec4 sz1 = step(gz1, vec4(0.0));
+            gx1 -= sz1 * (step(0.0, gx1) - 0.5);
+            gy1 -= sz1 * (step(0.0, gy1) - 0.5);
+        
+            vec3 g000 = vec3(gx0.x,gy0.x,gz0.x);
+            vec3 g100 = vec3(gx0.y,gy0.y,gz0.y);
+            vec3 g010 = vec3(gx0.z,gy0.z,gz0.z);
+            vec3 g110 = vec3(gx0.w,gy0.w,gz0.w);
+            vec3 g001 = vec3(gx1.x,gy1.x,gz1.x);
+            vec3 g101 = vec3(gx1.y,gy1.y,gz1.y);
+            vec3 g011 = vec3(gx1.z,gy1.z,gz1.z);
+            vec3 g111 = vec3(gx1.w,gy1.w,gz1.w);
+        
+            vec4 norm0 = taylorInvSqrt(vec4(dot(g000, g000), dot(g010, g010), dot(g100, g100), dot(g110, g110)));
+            g000 *= norm0.x;
+            g010 *= norm0.y;
+            g100 *= norm0.z;
+            g110 *= norm0.w;
+            vec4 norm1 = taylorInvSqrt(vec4(dot(g001, g001), dot(g011, g011), dot(g101, g101), dot(g111, g111)));
+            g001 *= norm1.x;
+            g011 *= norm1.y;
+            g101 *= norm1.z;
+            g111 *= norm1.w;
+        
+            float n000 = dot(g000, Pf0);
+            float n100 = dot(g100, vec3(Pf1.x, Pf0.yz));
+            float n010 = dot(g010, vec3(Pf0.x, Pf1.y, Pf0.z));
+            float n110 = dot(g110, vec3(Pf1.xy, Pf0.z));
+            float n001 = dot(g001, vec3(Pf0.xy, Pf1.z));
+            float n101 = dot(g101, vec3(Pf1.x, Pf0.y, Pf1.z));
+            float n011 = dot(g011, vec3(Pf0.x, Pf1.yz));
+            float n111 = dot(g111, Pf1);
+        
+            vec3 fade_xyz = fade(Pf0);
+            vec4 n_z = mix(vec4(n000, n100, n010, n110), vec4(n001, n101, n011, n111), fade_xyz.z);
+            vec2 n_yz = mix(n_z.xy, n_z.zw, fade_xyz.y);
+            float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x); 
+            return 2.2 * n_xyz;
+        }
+        
+        // Function to make a round rectangle when the 2d plane is hover
+        /*vec4 borderRoundRect(vec4 currentColor, vec2 size, float radius) {
+            vec2  position   = vUv * size;
+            vec2  rounded    = vec2(clamp(position.x, radius, size.x - radius), clamp(position.y, radius, size.y - radius));
+            vec2  difference = position - rounded;
+            float dist       = length(difference);
+            vec4  color      = vec4(1.0, 1.0, 1.0, uHover); // Border color
+            float borderSize = 0.015;                       // Border size
+            float alpha      = step(0.2, smoothstep(radius - borderSize, radius- borderSize, dist) - smoothstep(radius, radius + borderSize, dist));
+            color.a = alpha * uHover;
+            // Its inside
+            if (dist > radius - borderSize) {
+                return color;
+            }
+            // Its outside
+            return currentColor;
+        }*/
+        
+        
+        // Make a circle with the frequency data
+        vec4 circleFreq(vec4 currentColor, vec2 center, float radius, vec3 color) {
+            vec2 pos = vec2(0.55, 0.5);
+            float dist = length(vUv - pos);
+            float rad = atan(vUv.y - pos.y, vUv.x - pos.x);
+        
+            float normAngle = 0.0;
+            if (rad < 0.0) {
+                normAngle = ((rad + NPI) / NPI);
+            } else {
+                normAngle = 1.0 - (1.0 + ((rad - NPI) / NPI));
+            }
+        
+            float audioValue = (texture2D(uAudioTexture, vec2(normAngle, 0.0)).r - 0.5) * .25;
+            // Perlin noise
+            float strength = cnoise(vec3(rad * 2.0, dist * uNoiseStrength,  uTime + color.b * uNoiseSpeed)) * radius * 0.1;
+        
+            if (dist - audioValue + strength < radius) {
+                color.r += audioValue * 0.5;
+                color.b += audioValue * 0.5;
+                return vec4(color, 1.0);
+            } 
+            return currentColor;
+        }
+        
+        
+        // // Make a circle with the time domain data
+        vec4 circleSin(vec4 currentColor, vec2 center, float radius, vec3 color) {
+            vec2 pos1 = vec2(0.4, 0.5);
+            float dist = length(vUv - center);
+            float rad = atan(vUv.y - center.y, vUv.x - center.x);
+        
+            float normAngle = 0.0;
+            if (rad < 0.0) {
+                normAngle = ((rad + NPI) / NPI);
+            } else {
+                normAngle = (1.0 + ((rad - NPI) / NPI));
+            }
+        
+            float audioValue = (texture2D(uAudioTexture, vec2(normAngle, 0.0)).g - 0.5) * .5;
+            // Perlin noise
+            float strength = 0.0; //cnoise(vec3(rad * TAU * 5.0, dist * 100.0,  uTime + color.b)) * radius * 0.1;
+        
+            if (dist - audioValue + strength < radius) {
+                color.g += 1.0 - audioValue;
+                return vec4(color, 1.0);
+            } 
+            return currentColor;
+        }
+        
+        
+        
+        
+        #if DEPTH_PACKING == 3200
+            uniform float opacity;
+        #endif
+        #include <common>
+        #include <packing>
+        #include <uv_pars_fragment>
+        #include <map_pars_fragment>
+        #include <alphamap_pars_fragment>
+        #include <alphatest_pars_fragment>
+        #include <logdepthbuf_pars_fragment>
+        #include <clipping_planes_pars_fragment>
+        varying vec2 vHighPrecisionZW;
+        void main() {
+            #include <clipping_planes_fragment>
+            vec4 diffuseColor = vec4( 1.0 );
+            #if DEPTH_PACKING == 3200
+                diffuseColor.a = opacity;
+            #endif
+        
+        
+        
+            // Center of the plane
+            vec2 center = vec2(0.5, 0.5);
+            // Base color
+            vec4 color = vec4(0.0, 0.0, 0.0, (uAlpha) * 0.80);
+        
+        //    color = circleNoise(color, center, 0.25, vec3(0.0, 0.0, 1.0));
+        //    color = circleNoise(color, center, 0.125, vec3(0.5, 0.5, 0.25));
+        
+            color = circleFreq(color, center, 0.4, vec3(1.0));
+            color = circleSin(color, center, 0.25, vec3(1.0));
+        
+            // Apply the round hover border
+        //    color = borderRoundRect(color, vec2(1.0, 1.0), 0.125);
+        
+        
+            diffuseColor = color;
+        //    gl_FragColor = vec4(color.r);
+            if (color.a == 0.0) discard;
+        
+        
+        
+            #include <map_fragment>
+            #include <alphamap_fragment>
+            #include <alphatest_fragment>
+            #include <logdepthbuf_fragment>
+            float fragCoordZ = 0.5 * vHighPrecisionZW[0] / vHighPrecisionZW[1] + 0.5;
+            
+            #if DEPTH_PACKING == 3200
+                gl_FragColor = vec4( vec3( 1.0 - fragCoordZ ), opacity );
+            #elif DEPTH_PACKING == 3201
+                gl_FragColor = packDepthToRGBA( fragCoordZ );
+            #endif
+        
+        }
+    </script>
+    
+
+    <script id="YinYangSinFragmentShader" type="x-shader/x-fragment">
+        uniform float     uAlpha;
+        uniform sampler2D uAudioTexture;
+        uniform float     uTime;
+        uniform float     uHighFrequency;
+        uniform float     uLowFrequency;
+        uniform float     uColorStrength;
+        uniform float     uHover;
+        uniform float     uRotate;
+        varying vec2      vUv; // Coordenadas UV del fragmento
+        
+        #define PI   3.14159265
+        
+        // Make a black and white circle
+        vec4 circleBW(vec4 currentColor, vec2 st, vec2 center, float radius) {
+            float dist = length(st - center);
+        
+            if (dist < radius) {
+                vec3 color = vec3(0.0);
+                if (st.y > center.y) {
+                    color += vec3(1.0);
+                }
+                if (st.y < center.y) {
+                    color += vec3(0.0, uColorStrength, 0.0);
+                }
+                return vec4(color, 1.0);
+            } 
+            return currentColor;    
+        }
+        
+        // Make a circle
+        vec4 circle(vec4 currentColor, vec2 st, vec2 center, float radius, vec3 color) {
+            float dist = length(st - center);
+        
+            if (dist < radius) {
+                return vec4(color, 1.0);
+            } 
+            return currentColor;
+        }
+        
+        // Function to make a round rectangle when the 2d plane is hover
+        vec4 borderRoundRect(vec4 currentColor, vec2 size, float radius) {
+            vec2  position   = vUv * size;
+            vec2  rounded    = vec2(clamp(position.x, radius, size.x - radius), clamp(position.y, radius, size.y - radius));
+            vec2  difference = position - rounded;
+            float dist       = length(difference);
+            vec4  color      = vec4(1.0, 1.0, 1.0, uHover); // Border color
+            float borderSize = 0.015;                       // Border size
+            float alpha      = step(0.2, smoothstep(radius - borderSize, radius- borderSize, dist) - smoothstep(radius, radius + borderSize, dist));
+            color.a = alpha * uHover;
+            // Its inside
+            if (dist > radius - borderSize) {
+                return color;
+            }
+            // Its outside
+            return currentColor;
+        }
+        
+        
+        
+        void main() {
+        
+            // Center of the plane
+            vec2 center = vec2(0.5, 0.5);
+        
+            // Calculate rotation matrix based on uTime (do 16 cycles and then reverse)
+            float angle = sin(uTime * 0.025) * 32.0 * 3.14159265 * uRotate;  // 2pi radiants are 360deg, so whe are rotating 16 times
+            mat2 rotation = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
+            // Translate coordinates to the center of the object
+            vec2 translated = vUv - center;
+            // Rotate coordinates
+            vec2 rotated = rotation * translated;    
+            // Translate coordinates to their original position
+            vec2 finalCoords = rotated + center;
+        
+            // yin yang circle radius
+            float radius = 0.25;
+            // Base color
+            vec4 color = vec4(0.0, 0.0, 0.0, (uAlpha + uHover) * 0.80);
+        
+        
+            float dist = length(finalCoords - center);
+            // get angle in rads of current position from center
+            float rad = atan(finalCoords.y - center.y, finalCoords.x - center.x);
+            float normAngle = 0.0;
+        
+        //    rad = -PI + mod(uTime, TAU);
+        
+            // Divide the circle into two halfs and make a mirror 
+            // I use linear audio textute form 0 to 1 in one half and in the other half i use the audio texture from 1 to 0.
+            if (rad < 0.0) {
+                normAngle = ((rad + PI) / PI);
+            } else {
+                normAngle = (((rad - PI) / PI));
+            }
+        
+            normAngle = mod(normAngle + uTime * 0.25, 1.0);
+            
+            // Use the audio texture to obtain the radius based in the angle
+            float audioValue = (texture2D(uAudioTexture, vec2(normAngle, 0.0)).g - 0.5) * 0.55;
+        //    float audioValue = texture2D(uAudioTexture, vec2(normAngle, 0.0)).r * 0.25;
+            dist -= audioValue;
+        
+            if (dist < radius) { // fill
+            //if (dist > radius - 0.3 && dist < radius) { // Line
+                if (rad >= 0.0) {
+                    color = vec4(1.0, 1.0, 1.0, 1.0);
+                }
+                else {
+                    color = vec4(0.0, uColorStrength, 0.0, 1.0);
+                }
+            } 
+        
+            // First big circle black / white
+           // color = circleBW(color, finalCoords, center, 0.25);    
+            // White left circle 
+            color = circle(color, finalCoords, vec2(0.25 + 0.125, 0.5), 0.125, vec3(1.0, 1.0, 1.0));
+            // Black right circle
+            color = circle(color, finalCoords, vec2(0.75 - 0.125, 0.5), 0.125, vec3(0.0, uColorStrength, 0.0));
+            // Black left mini circle 
+            float miniRadiusB = 0.0625 * 0.35 + uHighFrequency;
+            color = circle(color, finalCoords, vec2(0.25 + 0.125, 0.5), miniRadiusB, vec3(0.0, uColorStrength, 0.0));
+            // White right mini circle
+            float miniRadiusW = 0.0625 * 0.35 + uLowFrequency;
+            color = circle(color, finalCoords, vec2(0.75 - 0.125, 0.5), miniRadiusW, vec3(1.0, 1.0, 1.0));
+            
+            
+            // Apply the round hover border
+            color = borderRoundRect(color, vec2(1.0, 1.0), 0.125);
+            
+            
+            // Set the final color
+            gl_FragColor = color;
+        }
+    </script>
+    
+    <script id="YinYangSinDepthFragmentShader" type="x-shader/x-fragment">
+        uniform float     uAlpha;
+        uniform sampler2D uAudioTexture;
+        uniform float     uTime;
+        uniform float     uHighFrequency;
+        uniform float     uLowFrequency;
+        uniform float     uColorStrength;
+        uniform float     uHover;
+        uniform float     uRotate;
+        varying vec2      vUv; // Coordenadas UV del fragmento
+        
+        
+        
+        // Make a black and white circle
+        vec4 circleBW(vec4 currentColor, vec2 st, vec2 center, float radius) {
+            float dist = length(st - center);
+        
+            if (dist < radius) {
+                vec3 color = vec3(0.0);
+                if (st.y > center.y) {
+                    color += vec3(1.0);
+                }
+                if (st.y < center.y) {
+                    color += vec3(0.0, uColorStrength, 0.0);
+                }
+                return vec4(color, 1.0);
+            } 
+            return currentColor;    
+        }
+        
+        // Make a circle
+        vec4 circle(vec4 currentColor, vec2 st, vec2 center, float radius, vec3 color) {
+            float dist = length(st - center);
+        
+            if (dist < radius) {
+                return vec4(color, 1.0);
+            } 
+            return currentColor;
+        }
+        
+        
+        
+        #if DEPTH_PACKING == 3200
+            uniform float opacity;
+        #endif
+        #include <common>
+        #include <packing>
+        #include <uv_pars_fragment>
+        #include <map_pars_fragment>
+        #include <alphamap_pars_fragment>
+        #include <alphatest_pars_fragment>
+        #include <logdepthbuf_pars_fragment>
+        #include <clipping_planes_pars_fragment>
+        varying vec2 vHighPrecisionZW;
+        void main() {
+            #include <clipping_planes_fragment>
+            vec4 diffuseColor = vec4( 1.0 );
+            #if DEPTH_PACKING == 3200
+                diffuseColor.a = opacity;
+            #endif
+        
+        
+        
+            // Center of the plane
+            vec2 center = vec2(0.5, 0.5);
+        
+            // Calculate rotation matrix based on uTime (do 16 cycles and then reverse)
+            float angle = sin(uTime * 0.025) * 32.0 * 3.14159265 * uRotate;  // 2pi radiants are 360deg, so whe are rotating 16 times
+            mat2 rotation = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
+            // Translate coordinates to the center of the object
+            vec2 translated = vUv - center;
+            // Rotate coordinates
+            vec2 rotated = rotation * translated;    
+            // Translate coordinates to their original position
+            vec2 finalCoords = rotated + center;
+        
+            // yin yang circle radius
+            float radius = 0.25;
+            // Base color
+            vec4 color = vec4(0.0, 0.0, 0.0, (uAlpha + uHover) * 0.80);
+        
+        
+            float dist = length(finalCoords - center);
+            // get angle in rads of current position from center
+            float rad = atan(finalCoords.y - center.y, finalCoords.x - center.x);
+            float normAngle = 0.0;
+        
+        //    rad = -PI + mod(uTime, TAU);
+        
+            // Divide the circle into two halfs and make a mirror 
+            // I use linear audio textute form 0 to 1 in one half and in the other half i use the audio texture from 1 to 0.
+            if (rad < 0.0) {
+                normAngle = ((rad + PI) / PI);
+            } else {
+                normAngle = (((rad - PI) / PI));
+            }
+        
+            normAngle = mod(normAngle + uTime * 0.25, 1.0);
+            
+            // Use the audio texture to obtain the radius based in the angle
+            float audioValue = (texture2D(uAudioTexture, vec2(normAngle, 0.0)).g - 0.5) * 0.55;
+        //    float audioValue = texture2D(uAudioTexture, vec2(normAngle, 0.0)).r * 0.25;
+            dist -= audioValue;
+        
+            if (dist < radius) { // fill
+            //if (dist > radius - 0.3 && dist < radius) { // Line
+                if (rad >= 0.0) {
+                    color = vec4(1.0, 1.0, 1.0, 1.0);
+                }
+                else {
+                    color = vec4(0.0, uColorStrength, 0.0, 1.0);
+                }
+            } 
+        
+            // First big circle black / white
+           // color = circleBW(color, finalCoords, center, 0.25);    
+            // White left circle 
+            color = circle(color, finalCoords, vec2(0.25 + 0.125, 0.5), 0.125, vec3(1.0, 1.0, 1.0));
+            // Black right circle
+            color = circle(color, finalCoords, vec2(0.75 - 0.125, 0.5), 0.125, vec3(0.0, uColorStrength, 0.0));
+            // Black left mini circle 
+            float miniRadiusB = 0.0625 * 0.35 + uHighFrequency;
+            color = circle(color, finalCoords, vec2(0.25 + 0.125, 0.5), miniRadiusB, vec3(0.0, uColorStrength, 0.0));
+            // White right mini circle
+            float miniRadiusW = 0.0625 * 0.35 + uLowFrequency;
+            color = circle(color, finalCoords, vec2(0.75 - 0.125, 0.5), miniRadiusW, vec3(1.0, 1.0, 1.0));
+            
+            
+            // Apply the round hover border
+        //    color = borderRoundRect(color, vec2(1.0, 1.0), 0.125);
+        
+        
+            diffuseColor = color;
+        //    gl_FragColor = vec4(color.r);
+            if (color.a == 0.0) discard;
+        
+        
+        
+            #include <map_fragment>
+            #include <alphamap_fragment>
+            #include <alphatest_fragment>
+            #include <logdepthbuf_fragment>
+            float fragCoordZ = 0.5 * vHighPrecisionZW[0] / vHighPrecisionZW[1] + 0.5;
+            
+            #if DEPTH_PACKING == 3200
+                gl_FragColor = vec4( vec3( 1.0 - fragCoordZ ), opacity );
+            #elif DEPTH_PACKING == 3201
+                gl_FragColor = packDepthToRGBA( fragCoordZ );
+            #endif
+        
+        }
+    </script>
+
+
+    <script id="YinYangFragmentShader" type="x-shader/x-fragment">
+        uniform float     uAlpha;
+        uniform sampler2D uAudioTexture;
+        uniform float     uTime;
+        uniform float     uHighFrequency;
+        uniform float     uLowFrequency;
+        uniform float     uColorStrength;
+        uniform float     uHover;
+        uniform float     uRotate;
+        varying vec2      vUv; // Coordenadas UV del fragmento
+        
+        #define PI   3.14159265
+        
+        
+        // Make a circle
+        vec4 circle(vec4 currentColor, vec2 st, vec2 center, float radius, vec3 color) {
+            float dist = length(st - center);
+        
+            if (dist < radius) {
+                return vec4(color, 1.0);
+            } 
+            return currentColor;
+        }
+        
+        // Function to make a round rectangle when the 2d plane is hover
+        vec4 borderRoundRect(vec4 currentColor, vec2 size, float radius) {
+            vec2  position   = vUv * size;
+            vec2  rounded    = vec2(clamp(position.x, radius, size.x - radius), clamp(position.y, radius, size.y - radius));
+            vec2  difference = position - rounded;
+            float dist       = length(difference);
+            vec4  color      = vec4(1.0, 1.0, 1.0, uHover); // Border color
+            float borderSize = 0.015;                       // Border size
+            float alpha      = step(0.2, smoothstep(radius - borderSize, radius- borderSize, dist) - smoothstep(radius, radius + borderSize, dist));
+            color.a = alpha * uHover;
+            // Its inside
+            if (dist > radius - borderSize) {
+                return color;
+            }
+            // Its outside
+            return currentColor;
+        }
+        
+        /*
+        vec4 arc(vec4 currentColor, float radius, float startAngle, float endAngle, vec4 color) {
+            vec2 fragmentToCenter = vUv - vec2(0.5, 0.5);
+            float distanceToCenter = length(fragmentToCenter);
+        
+            if (distanceToCenter < radius) {
+                float angle = atan(fragmentToCenter.y, fragmentToCenter.x);
+                angle = mod(angle - startAngle, 2.0 * 3.14159265358979323846); // normalize angle
+                if (angle <= (endAngle - startAngle)) {
+                    return color;
+                }
+            }
+            return currentColor;
+        }
+        */
+        
+        void main() {
+        
+            // Center of the plane
+            vec2 center = vec2(0.5, 0.5);
+        
+            // Calculate rotation matrix based on uTime (do 16 cycles and then reverse)
+            float angle = -sin(uTime * 0.025) * 32.0 * 3.14159265 * uRotate;  // 2pi radiants are 360deg, so whe are rotating 16 times
+            mat2 rotation = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
+            // Translate coordinates to the center of the object
+            vec2 translated = vUv - center;
+            // Rotate coordinates
+            vec2 rotated = rotation * translated;    
+            // Translate coordinates to their original position
+            vec2 finalCoords = rotated + center;
+        
+            // yin yang circle radius
+            float radius = 0.25;
+            // Base color
+            vec4 color = vec4(0.0, 0.0, 0.0, (uAlpha + uHover) * 0.80);
+        
+            float dist = length(finalCoords - center);
+            // get angle in rads of current position from center
+            float rad = atan(finalCoords.y - center.y, finalCoords.x - center.x);
+            float normAngle = 0.0;
+        
+            // Divide the circle into two halfs and make a mirror 
+            // I use linear audio textute form 0 to 1 in one half and in the other half i use the audio texture from 1 to 0.
+            if (rad < 0.0) {
+                normAngle = (rad + PI) / PI;            // red part
+            } 
+            else {
+                normAngle = (1.0 + ((rad - PI) / PI));  // white part
+            }
+        
+            
+            // Use the audio texture to obtain the radius based in the angle
+            float audioValue = texture2D(uAudioTexture, vec2(normAngle, 0.0)).r * 0.25;
+            dist -= audioValue;
+        
+            if (dist < radius) { // fill
+            //if (dist > radius - 0.3 && dist < radius) { // Line
+                // red part
+                if (rad < 0.0) {
+                    color = vec4(uColorStrength, 0.0, 0.0, 1.0);
+        //            color = arc(color, audioValue * 5.0, rad, rad + (PI * 0.25), vec4(uColorStrength, 0.0, 0.0, 1.0));
+                }
+                // white part
+                else {
+                    color = vec4(1.0, 1.0, 1.0, 1.0);
+        //            color = arc(color, audioValue * 5.0, rad, rad + (PI * 0.25), vec4(1.0, 1.0, 1.0, 1.0));
+                }
+            } 
+        
+            // White left circle 
+            color = circle(color, finalCoords, vec2(0.25 + 0.125, 0.5), 0.125, vec3(1.0, 1.0, 1.0));
+            // Black right circle
+            color = circle(color, finalCoords, vec2(0.75 - 0.125, 0.5), 0.125, vec3(uColorStrength, 0.0, 0.0));
+            // Black left mini circle 
+            float miniRadiusB = 0.0625 * 0.35 + uHighFrequency;
+            color = circle(color, finalCoords, vec2(0.25 + 0.125, 0.5), miniRadiusB, vec3(uColorStrength, 0.0, 0.0));
+            // White right mini circle
+            float miniRadiusW = 0.0625 * 0.35 + uLowFrequency;
+            color = circle(color, finalCoords, vec2(0.75 - 0.125, 0.5), miniRadiusW, vec3(1.0, 1.0, 1.0));
+            
+            
+            // Apply the round hover border
+            color = borderRoundRect(color, vec2(1.0, 1.0), 0.125);
+            
+        //    color = arc(color, 1.0, rad, rad + (PI * 0.5), vec4(0, uColorStrength, uColorStrength, 1.0));
+        
+            // Set the final color
+            gl_FragColor = color;
+        }
+    </script>
+
+    <script id="YinYangDepthFragmentShader" type="x-shader/x-fragment">
+        uniform float     uAlpha;
+        uniform sampler2D uAudioTexture;
+        uniform float     uTime;
+        uniform float     uHighFrequency;
+        uniform float     uLowFrequency;
+        uniform float     uColorStrength;
+        uniform float     uHover;
+        uniform float     uRotate;
+        varying vec2      vUv; // Coordenadas UV del fragmento
+        
+        
+        
+        
+        // Make a circle
+        vec4 circle(vec4 currentColor, vec2 st, vec2 center, float radius, vec3 color) {
+            float dist = length(st - center);
+        
+            if (dist < radius) {
+                return vec4(color, 1.0);
+            } 
+            return currentColor;
+        }
+        
+        #if DEPTH_PACKING == 3200
+            uniform float opacity;
+        #endif
+        #include <common>
+        #include <packing>
+        #include <uv_pars_fragment>
+        #include <map_pars_fragment>
+        #include <alphamap_pars_fragment>
+        #include <alphatest_pars_fragment>
+        #include <logdepthbuf_pars_fragment>
+        #include <clipping_planes_pars_fragment>
+        varying vec2 vHighPrecisionZW;
+        void main() {
+            #include <clipping_planes_fragment>
+            vec4 diffuseColor = vec4( 1.0 );
+            #if DEPTH_PACKING == 3200
+                diffuseColor.a = opacity;
+            #endif
+        
+        
+        
+            // Center of the plane
+            vec2 center = vec2(0.5, 0.5);
+        
+            // Calculate rotation matrix based on uTime (do 16 cycles and then reverse)
+            float angle = -sin(uTime * 0.025) * 32.0 * 3.14159265 * uRotate;  // 2pi radiants are 360deg, so whe are rotating 16 times
+            mat2 rotation = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
+            // Translate coordinates to the center of the object
+            vec2 translated = vUv - center;
+            // Rotate coordinates
+            vec2 rotated = rotation * translated;    
+            // Translate coordinates to their original position
+            vec2 finalCoords = rotated + center;
+        
+            // yin yang circle radius
+            float radius = 0.25;
+            // Base color
+            vec4 color = vec4(0.0, 0.0, 0.0, (uAlpha + uHover) * 0.80);
+        
+            float dist = length(finalCoords - center);
+            // get angle in rads of current position from center
+            float rad = atan(finalCoords.y - center.y, finalCoords.x - center.x);
+            float normAngle = 0.0;
+        
+            // Divide the circle into two halfs and make a mirror 
+            // I use linear audio textute form 0 to 1 in one half and in the other half i use the audio texture from 1 to 0.
+            if (rad < 0.0) {
+                normAngle = (rad + PI) / PI;            // red part
+            } 
+            else {
+                normAngle = (1.0 + ((rad - PI) / PI));  // white part
+            }
+        
+            
+            // Use the audio texture to obtain the radius based in the angle
+            float audioValue = texture2D(uAudioTexture, vec2(normAngle, 0.0)).r * 0.25;
+            dist -= audioValue;
+        
+            if (dist < radius) { // fill
+            //if (dist > radius - 0.3 && dist < radius) { // Line
+                // red part
+                if (rad < 0.0) {
+                    color = vec4(uColorStrength, 0.0, 0.0, 1.0);
+        //            color = arc(color, audioValue * 5.0, rad, rad + (PI * 0.25), vec4(uColorStrength, 0.0, 0.0, 1.0));
+                }
+                // white part
+                else {
+                    color = vec4(1.0, 1.0, 1.0, 1.0);
+        //            color = arc(color, audioValue * 5.0, rad, rad + (PI * 0.25), vec4(1.0, 1.0, 1.0, 1.0));
+                }
+            } 
+        
+            // White left circle 
+            color = circle(color, finalCoords, vec2(0.25 + 0.125, 0.5), 0.125, vec3(1.0, 1.0, 1.0));
+            // Black right circle
+            color = circle(color, finalCoords, vec2(0.75 - 0.125, 0.5), 0.125, vec3(uColorStrength, 0.0, 0.0));
+            // Black left mini circle 
+            float miniRadiusB = 0.0625 * 0.35 + uHighFrequency;
+            color = circle(color, finalCoords, vec2(0.25 + 0.125, 0.5), miniRadiusB, vec3(uColorStrength, 0.0, 0.0));
+            // White right mini circle
+            float miniRadiusW = 0.0625 * 0.35 + uLowFrequency;
+            color = circle(color, finalCoords, vec2(0.75 - 0.125, 0.5), miniRadiusW, vec3(1.0, 1.0, 1.0));
+            
+            
+            // Apply the round hover border
+        //    color = borderRoundRect(color, vec2(1.0, 1.0), 0.125);
+        
+            diffuseColor = color;
+        //    gl_FragColor = vec4(color.r);
+            if (color.a == 0.0) discard;
+        
+        
+        
+            #include <map_fragment>
+            #include <alphamap_fragment>
+            #include <alphatest_fragment>
+            #include <logdepthbuf_fragment>
+            float fragCoordZ = 0.5 * vHighPrecisionZW[0] / vHighPrecisionZW[1] + 0.5;
+            
+            #if DEPTH_PACKING == 3200
+                gl_FragColor = vec4( vec3( 1.0 - fragCoordZ ), opacity );
+            #elif DEPTH_PACKING == 3201
+                gl_FragColor = packDepthToRGBA( fragCoordZ );
+            #endif
+        
+        }
+    </script>
+    
+    
+    
+    <script id="OsciloscopeFragmentShader" type="x-shader/x-fragment">
+        //uniform float     uTime;
+        //uniform vec2      uResolution;
+        uniform float     uSize;
+        uniform float     uAlpha;
+        uniform sampler2D uAudioTexture;
+        uniform float     uAudioStrength;
+        uniform float     uAudioZoom;
+        uniform float     uHover;
+        varying vec2      vUv; // Coordenadas UV del fragmento
+        
+        
+        
+        // Function to make a round rectangle when the 2d plane is hover
+        vec4 borderRoundRect(vec4 currentColor, vec2 size, float radius) {
+            vec2  position   = vUv * size;
+            vec2  rounded    = vec2(clamp(position.x, radius, size.x - radius), clamp(position.y, radius, size.y - radius));
+            vec2  difference = position - rounded;
+            float dist       = length(difference);
+            vec4  color      = vec4(1.0, 1.0, 1.0, uHover); // Border color
+            float borderSize = 0.015;                       // Border size
+            float alpha      = step(0.2, smoothstep(radius - borderSize, radius- borderSize, dist) - smoothstep(radius, radius + borderSize, dist));
+            color.a = alpha * uHover;
+            // Its inside
+            if (dist > radius - borderSize) {
+                return color;
+            }
+            // Its outside
+            return currentColor;
+        }
+        
+        
+        void main() {
+            // Get the audio value from texture green channel
+            float audioValue = ((texture2D(uAudioTexture, vec2(vUv.x / uAudioZoom, 0.0)).g - .5) * uAudioStrength) + .5;
+        
+            // Base color
+            vec4 color = vec4(0.0, 0.0, 0.0, (uAlpha + uHover) * 0.80);
+        
+            if (abs(vUv.y - audioValue) < uSize) {
+                color = vec4(0.0, 0.75, 0.0, 1.0);
+            }
+        
+            // Apply the round hover border
+            color = borderRoundRect(color, vec2(1.0, 1.0), 0.125);
+        
+            gl_FragColor = color;
+        }        
+    </script>
+
+    <script id="OsciloscopeDepthFragmentShader" type="x-shader/x-fragment">
+        uniform float     uSize;
+        uniform float     uAlpha;
+        uniform sampler2D uAudioTexture;
+        uniform float     uAudioStrength;
+        uniform float     uAudioZoom;
+        uniform float     uHover;
+        varying vec2      vUv; // Coordenadas UV del fragmento
+        
+        //#define PI   3.14159265
+        
+        /*
+        // Function to make a round rectangle when the 2d plane is hover
+        vec4 borderRoundRect(vec4 currentColor, vec2 size, float radius) {
+            vec2  position   = vUv * size;
+            vec2  rounded    = vec2(clamp(position.x, radius, size.x - radius), clamp(position.y, radius, size.y - radius));
+            vec2  difference = position - rounded;
+            float dist       = length(difference);
+            vec4  color      = vec4(1.0, 1.0, 1.0, uHover); // Border color
+            float borderSize = 0.015;                       // Border size
+            float alpha      = step(0.2, smoothstep(radius - borderSize, radius- borderSize, dist) - smoothstep(radius, radius + borderSize, dist));
+            color.a = alpha * uHover;
+            // Its inside
+            if (dist > radius - borderSize) {
+                return color;
+            }
+            // Its outside
+            return currentColor;
+        }*/
+        
+        
+        #if DEPTH_PACKING == 3200
+            uniform float opacity;
+        #endif
+        #include <common>
+        #include <packing>
+        #include <uv_pars_fragment>
+        #include <map_pars_fragment>
+        #include <alphamap_pars_fragment>
+        #include <alphatest_pars_fragment>
+        #include <logdepthbuf_pars_fragment>
+        #include <clipping_planes_pars_fragment>
+        varying vec2 vHighPrecisionZW;
+        void main() {
+            #include <clipping_planes_fragment>
+            vec4 diffuseColor = vec4( 1.0 );
+            #if DEPTH_PACKING == 3200
+                diffuseColor.a = opacity;
+            #endif
+        
+            // Get the audio value from texture green channel
+            float audioValue = ((texture2D(uAudioTexture, vec2(vUv.x / uAudioZoom, 0.0)).g - .5) * uAudioStrength) + .5;
+        
+            // Base color
+            vec4 color = vec4(0.0, 0.0, 0.0, (uAlpha + uHover) * 0.80);
+        
+            if (abs(vUv.y - audioValue) < uSize) {
+                color = vec4(0.0, 0.75, 0.0, 1.0);
+            }
+            else {
+                discard;
+            }
+        
+            diffuseColor = color;
+        //    gl_FragColor = vec4(color.r);
+        //    if (color.a == 0.0) discard;
+        
+        
+        
+            #include <map_fragment>
+            #include <alphamap_fragment>
+            #include <alphatest_fragment>
+            #include <logdepthbuf_fragment>
+            float fragCoordZ = 0.5 * vHighPrecisionZW[0] / vHighPrecisionZW[1] + 0.5;
+            
+            #if DEPTH_PACKING == 3200
+                gl_FragColor = vec4( vec3( 1.0 - fragCoordZ ), opacity );
+            #elif DEPTH_PACKING == 3201
+                gl_FragColor = packDepthToRGBA( fragCoordZ );
+            #endif
+        
+        }
+    </script>
+    
+
+    <script id="FloorStandardVertexShader" type="x-shader/x-vertex">
+        /* 
+        * Perlin noise audio floor globals
+        */
+       uniform sampler2D uAudioTexture;
+       uniform float uTime;
+       uniform float uAudioStrength;
+       varying vec2  vUv;
+       
+       
+       //	Classic Perlin 3D Noise 
+       //	by Stefan Gustavson
+       //
+       /*vec4 permute(vec4 x)       { return mod(((x*34.0)+1.0)*x, 289.0);            }
+       vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+       vec3 fade(vec3 t)          { return t*t*t*(t*(t*6.0-15.0)+10.0);             }
+       
+       float cnoise(vec3 P) {
+         vec3 Pi0 = floor(P); // Integer part for indexing
+         vec3 Pi1 = Pi0 + vec3(1.0); // Integer part + 1
+         Pi0 = mod(Pi0, 289.0);
+         Pi1 = mod(Pi1, 289.0);
+         vec3 Pf0 = fract(P); // Fractional part for interpolation
+         vec3 Pf1 = Pf0 - vec3(1.0); // Fractional part - 1.0
+         vec4 ix = vec4(Pi0.x, Pi1.x, Pi0.x, Pi1.x);
+         vec4 iy = vec4(Pi0.yy, Pi1.yy);
+         vec4 iz0 = Pi0.zzzz;
+         vec4 iz1 = Pi1.zzzz;
+       
+         vec4 ixy = permute(permute(ix) + iy);
+         vec4 ixy0 = permute(ixy + iz0);
+         vec4 ixy1 = permute(ixy + iz1);
+       
+         vec4 gx0 = ixy0 / 7.0;
+         vec4 gy0 = fract(floor(gx0) / 7.0) - 0.5;
+         gx0 = fract(gx0);
+         vec4 gz0 = vec4(0.5) - abs(gx0) - abs(gy0);
+         vec4 sz0 = step(gz0, vec4(0.0));
+         gx0 -= sz0 * (step(0.0, gx0) - 0.5);
+         gy0 -= sz0 * (step(0.0, gy0) - 0.5);
+       
+         vec4 gx1 = ixy1 / 7.0;
+         vec4 gy1 = fract(floor(gx1) / 7.0) - 0.5;
+         gx1 = fract(gx1);
+         vec4 gz1 = vec4(0.5) - abs(gx1) - abs(gy1);
+         vec4 sz1 = step(gz1, vec4(0.0));
+         gx1 -= sz1 * (step(0.0, gx1) - 0.5);
+         gy1 -= sz1 * (step(0.0, gy1) - 0.5);
+       
+         vec3 g000 = vec3(gx0.x,gy0.x,gz0.x);
+         vec3 g100 = vec3(gx0.y,gy0.y,gz0.y);
+         vec3 g010 = vec3(gx0.z,gy0.z,gz0.z);
+         vec3 g110 = vec3(gx0.w,gy0.w,gz0.w);
+         vec3 g001 = vec3(gx1.x,gy1.x,gz1.x);
+         vec3 g101 = vec3(gx1.y,gy1.y,gz1.y);
+         vec3 g011 = vec3(gx1.z,gy1.z,gz1.z);
+         vec3 g111 = vec3(gx1.w,gy1.w,gz1.w);
+       
+         vec4 norm0 = taylorInvSqrt(vec4(dot(g000, g000), dot(g010, g010), dot(g100, g100), dot(g110, g110)));
+         g000 *= norm0.x;
+         g010 *= norm0.y;
+         g100 *= norm0.z;
+         g110 *= norm0.w;
+         vec4 norm1 = taylorInvSqrt(vec4(dot(g001, g001), dot(g011, g011), dot(g101, g101), dot(g111, g111)));
+         g001 *= norm1.x;
+         g011 *= norm1.y;
+         g101 *= norm1.z;
+         g111 *= norm1.w;
+       
+         float n000 = dot(g000, Pf0);
+         float n100 = dot(g100, vec3(Pf1.x, Pf0.yz));
+         float n010 = dot(g010, vec3(Pf0.x, Pf1.y, Pf0.z));
+         float n110 = dot(g110, vec3(Pf1.xy, Pf0.z));
+         float n001 = dot(g001, vec3(Pf0.xy, Pf1.z));
+         float n101 = dot(g101, vec3(Pf1.x, Pf0.y, Pf1.z));
+         float n011 = dot(g011, vec3(Pf0.x, Pf1.yz));
+         float n111 = dot(g111, Pf1);
+       
+         vec3 fade_xyz = fade(Pf0);
+         vec4 n_z = mix(vec4(n000, n100, n010, n110), vec4(n001, n101, n011, n111), fade_xyz.z);
+         vec2 n_yz = mix(n_z.xy, n_z.zw, fade_xyz.y);
+         float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x); 
+         return 2.2 * n_xyz;
+       }*/
+       
+       /* 
+        * Three.js globals
+        */
+       #define STANDARD
+       varying vec3 vViewPosition;
+       #ifdef USE_TRANSMISSION
+           varying vec3 vWorldPosition;
+       #endif
+       #include <common>
+       #include <uv_pars_vertex>
+       #include <displacementmap_pars_vertex>
+       #include <color_pars_vertex>
+       #include <fog_pars_vertex>
+       #include <normal_pars_vertex>
+       #include <morphtarget_pars_vertex>
+       #include <skinning_pars_vertex>
+       #include <shadowmap_pars_vertex>
+       #include <logdepthbuf_pars_vertex>
+       #include <clipping_planes_pars_vertex>
+       
+       /* 
+        * Three.js main
+        */
+       void main() {
+           #include <uv_vertex>
+           #include <color_vertex>
+           #include <morphcolor_vertex>
+           #include <beginnormal_vertex>
+           #include <morphnormal_vertex>
+           #include <skinbase_vertex>
+           #include <skinnormal_vertex>
+           #include <defaultnormal_vertex>
+           #include <normal_vertex>
+           #include <begin_vertex>
+       
+           /* 
+            * Perlin noise audio floor main
+            */
+           // Audio value on Y axis
+           vec4 textureColor = texture2D(uAudioTexture, uv);
+           transformed.z += textureColor.r * uAudioStrength;
+       
+           vUv = uv;
+       
+           // Perlin noise displacement
+       /*    vec2 displacement = uv + cnoise(vec3(uv * .3, uTime * 0.0001)) * 1.0;
+           float strength = cnoise(vec3(displacement, uTime *0.0004));
+           transformed.x += strength;
+           transformed.y += strength;*/
+       
+           /*
+            * Three.js main end
+            */
+       
+       
+           #include <morphtarget_vertex>
+           #include <skinning_vertex>
+           #include <displacementmap_vertex>
+           #include <project_vertex>
+           #include <logdepthbuf_vertex>
+           #include <clipping_planes_vertex>
+           vViewPosition = - mvPosition.xyz;
+           #include <worldpos_vertex>
+           #include <shadowmap_vertex>
+           #include <fog_vertex>
+         #ifdef USE_TRANSMISSION
+           vWorldPosition = worldPosition.xyz;
+         #endif
+       }
+       
+       
+       
+    </script>
+    
+    <script id="FloorStandardFragmentShader" type="x-shader/x-fragment">
+        uniform vec3  uColorGrid;
+        varying vec2  vUv;
+        
+        #define STANDARD
+        #ifdef PHYSICAL
+            #define IOR
+            #define USE_SPECULAR
+        #endif
+        uniform vec3 diffuse;
+        uniform vec3 emissive;
+        uniform float roughness;
+        uniform float metalness;
+        uniform float opacity;
+        #ifdef IOR
+            uniform float ior;
+        #endif
+        #ifdef USE_SPECULAR
+            uniform float specularIntensity;
+            uniform vec3 specularColor;
+            #ifdef USE_SPECULAR_COLORMAP
+                uniform sampler2D specularColorMap;
+            #endif
+            #ifdef USE_SPECULAR_INTENSITYMAP
+                uniform sampler2D specularIntensityMap;
+            #endif
+        #endif
+        #ifdef USE_CLEARCOAT
+            uniform float clearcoat;
+            uniform float clearcoatRoughness;
+        #endif
+        #ifdef USE_IRIDESCENCE
+            uniform float iridescence;
+            uniform float iridescenceIOR;
+            uniform float iridescenceThicknessMinimum;
+            uniform float iridescenceThicknessMaximum;
+        #endif
+        #ifdef USE_SHEEN
+            uniform vec3 sheenColor;
+            uniform float sheenRoughness;
+            #ifdef USE_SHEEN_COLORMAP
+                uniform sampler2D sheenColorMap;
+            #endif
+            #ifdef USE_SHEEN_ROUGHNESSMAP
+                uniform sampler2D sheenRoughnessMap;
+            #endif
+        #endif
+        varying vec3 vViewPosition;
+        #include <common>
+        #include <packing>
+        #include <dithering_pars_fragment>
+        #include <color_pars_fragment>
+        #include <uv_pars_fragment>
+        #include <map_pars_fragment>
+        #include <alphamap_pars_fragment>
+        #include <alphatest_pars_fragment>
+        #include <aomap_pars_fragment>
+        #include <lightmap_pars_fragment>
+        #include <emissivemap_pars_fragment>
+        #include <iridescence_fragment>
+        #include <cube_uv_reflection_fragment>
+        #include <envmap_common_pars_fragment>
+        #include <envmap_physical_pars_fragment>
+        #include <fog_pars_fragment>
+        #include <lights_pars_begin>
+        #include <normal_pars_fragment>
+        #include <lights_physical_pars_fragment>
+        #include <transmission_pars_fragment>
+        #include <shadowmap_pars_fragment>
+        #include <bumpmap_pars_fragment>
+        #include <normalmap_pars_fragment>
+        #include <clearcoat_pars_fragment>
+        #include <iridescence_pars_fragment>
+        #include <roughnessmap_pars_fragment>
+        #include <metalnessmap_pars_fragment>
+        #include <logdepthbuf_pars_fragment>
+        #include <clipping_planes_pars_fragment>
+        void main() {
+            #include <clipping_planes_fragment>
+            vec4 diffuseColor = vec4( diffuse, opacity );
+            ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
+            vec3 totalEmissiveRadiance = emissive;
+            #include <logdepthbuf_fragment>
+            #include <map_fragment>
+            #include <color_fragment>
+        
+            #define GRID_SIZE   32.0
+            #define BORDER_SIZE  0.5
+        
+            // Calculate the position of the grid
+            vec2 position = mod((vUv * GRID_SIZE * GRID_SIZE), vec2(GRID_SIZE)) / GRID_SIZE;
+            // Calculate the ratio of each row
+            float ratio = BORDER_SIZE / GRID_SIZE;
+            // Calculate the border of the grid
+            float border =  step(position.x, ratio) + 
+                            step(position.y, ratio) + 
+                            step(1.0 - position.x, ratio) + 
+                            step(1.0 - position.y, ratio);
+            
+            // Mix colors
+            vec3 color = mix(diffuse, uColorGrid, step(position.x, ratio) + step(position.y, ratio));
+            color = mix(color, uColorGrid, border);
+                
+            // Set the final grid color
+            diffuseColor = vec4(color, opacity);
+        
+            #include <alphamap_fragment>
+            #include <alphatest_fragment>
+            #include <roughnessmap_fragment>
+            #include <metalnessmap_fragment>
+            #include <normal_fragment_begin>
+            #include <normal_fragment_maps>
+            #include <clearcoat_normal_fragment_begin>
+            #include <clearcoat_normal_fragment_maps>
+            #include <emissivemap_fragment>
+            #include <lights_physical_fragment>
+            #include <lights_fragment_begin>
+            #include <lights_fragment_maps>
+            #include <lights_fragment_end>
+            #include <aomap_fragment>
+            vec3 totalDiffuse = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse;
+            vec3 totalSpecular = reflectedLight.directSpecular + reflectedLight.indirectSpecular;
+            #include <transmission_fragment>
+            vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;
+            #ifdef USE_SHEEN
+                float sheenEnergyComp = 1.0 - 0.157 * max3( material.sheenColor );
+                outgoingLight = outgoingLight * sheenEnergyComp + sheenSpecular;
+            #endif
+            #ifdef USE_CLEARCOAT
+                float dotNVcc = saturate( dot( geometry.clearcoatNormal, geometry.viewDir ) );
+                vec3 Fcc = F_Schlick( material.clearcoatF0, material.clearcoatF90, dotNVcc );
+                outgoingLight = outgoingLight * ( 1.0 - material.clearcoat * Fcc ) + clearcoatSpecular * material.clearcoat;
+            #endif
+            #include <opaque_fragment>
+            #include <tonemapping_fragment>
+            #include <colorspace_fragment>
+            #include <fog_fragment>
+            #include <premultiplied_alpha_fragment>
+            #include <dithering_fragment>
+        }    
+    </script>
+
+    <script id="FloorDepthVertexShader" type="x-shader/x-fragment">
+        uniform sampler2D uAudioTexture;
+        uniform float     uAudioStrength;
+        
+        
+        #include <common>
+        #include <uv_pars_vertex>
+        #include <displacementmap_pars_vertex>
+        #include <morphtarget_pars_vertex>
+        #include <skinning_pars_vertex>
+        #include <logdepthbuf_pars_vertex>
+        #include <clipping_planes_pars_vertex>
+        varying vec2 vHighPrecisionZW;
+        void main() {
+            #include <uv_vertex>
+            #include <skinbase_vertex>
+            #ifdef USE_DISPLACEMENTMAP
+                #include <beginnormal_vertex>
+                #include <morphnormal_vertex>
+                #include <skinnormal_vertex>
+            #endif
+            #include <begin_vertex>
+        
+        //vec4 audioValue = vec4(1.0);
+            vec4 audioValue = texture2D(uAudioTexture, uv);
+        
+            if (uv.y > 0.5) {
+                // Add the red channel intensity to the Y of the model
+                transformed.y +=  audioValue.r * uAudioStrength;
+            }
+            else {
+                transformed.y -=  audioValue.r * uAudioStrength;
+            }
+            
+        
+            #include <morphtarget_vertex>
+            #include <skinning_vertex>
+            #include <displacementmap_vertex>
+            #include <project_vertex>
+            #include <logdepthbuf_vertex>
+            #include <clipping_planes_vertex>
+            vHighPrecisionZW = gl_Position.zw;
+        }
+    </script>
+
+
+    <script id="CircularSinFragmentShader" type="x-shader/x-fragment">
+        uniform sampler2D uAudioTexture;
+        uniform float     uAudioStrength;
+        uniform float     uSize;
+        uniform float     uAlpha;
+        uniform float     uHover;
+        varying vec2      vUv;
+
+        #define PI   3.14159265
+
+        // Function to make a round rectangle when the 2d plane is hover
+        vec4 borderRoundRect(vec4 currentColor, vec2 size, float radius) {
+            vec2  position   = vUv * size;
+            vec2  rounded    = vec2(clamp(position.x, radius, size.x - radius), clamp(position.y, radius, size.y - radius));
+            vec2  difference = position - rounded;
+            float dist       = length(difference);
+            vec4  color      = vec4(1.0, 1.0, 1.0, uHover); // Border color
+            float borderSize = 0.015;                       // Border size
+            float alpha      = step(0.2, smoothstep(radius - borderSize, radius- borderSize, dist) - smoothstep(radius, radius + borderSize, dist));
+            color.a = alpha * uHover;
+            // Its inside
+            if (dist > radius - borderSize) {
+                return color;
+            }
+            // Its outside
+            return currentColor;
+        }
+
+        void main() {
+            float radius    = 0.2;
+            float thickness = uSize;
+            float space     = 0.5 - (thickness * 2.0) - radius;
+            vec2  center    = vec2(vUv.x - 0.5, vUv.y - 0.5);
+            float dist      = length(center);
+
+            float rad = atan(vUv.y - 0.5, vUv.x - 0.5);
+            // normalize angle 0 to 1    
+            float normAngle = 0.0;
+            // rad its greater than 0
+            if (rad < 0.0) {
+                normAngle = (rad + PI) / PI;
+            }
+            // rad its below 0
+            else {
+                // Invert the normalized angle        
+                normAngle = 1.0 - (1.0 + ((rad - PI) / PI));
+            }
+        
+            // Get the audio value from linear audio data texture (1024*1)
+            // Red channel has the frequency that starts from 0 to 1
+            float audioValue = texture2D(uAudioTexture, vec2(normAngle, 0.0)).g; 
+            dist -= audioValue * uAudioStrength;
+
+            vec4 color = vec4(0.0, 0.0, 0.0, (uAlpha + uHover) * 0.80);
+
+            if (dist > radius - thickness && dist < radius) {
+                color = vec4(0.0, 0.75, 0.0, 1.0);
+            }
+
+            // Apply the round hover border
+            color = borderRoundRect(color, vec2(1.0, 1.0), 0.125);
+
+        //    if (color.r == 0.0 && color.g == 0.0 && color.b == 0.0 && color.a == 0.0) discard;
+
+            gl_FragColor = color;
+        }
+    </script>
+
+    <script id="CircularSinDepthFragmentShader" type="x-shader/x-fragment">
+        uniform sampler2D uAudioTexture;
+        uniform float     uAudioStrength;
+        uniform float     uSize;
+        uniform float     uAlpha;
+        uniform float     uTime;
+        uniform float     uHover;
+        varying vec2      vUv;
+        
+        
+        
+        
+        #if DEPTH_PACKING == 3200
+            uniform float opacity;
+        #endif
+        #include <common>
+        #include <packing>
+        #include <uv_pars_fragment>
+        #include <map_pars_fragment>
+        #include <alphamap_pars_fragment>
+        #include <alphatest_pars_fragment>
+        #include <logdepthbuf_pars_fragment>
+        #include <clipping_planes_pars_fragment>
+        varying vec2 vHighPrecisionZW;
+        void main() {
+            #include <clipping_planes_fragment>
+            vec4 diffuseColor = vec4( 1.0 );
+            #if DEPTH_PACKING == 3200
+                diffuseColor.a = opacity;
+            #endif
+        
+        
+            float radius    = 0.2;
+            float thickness = uSize;
+            float space     = 0.5 - (thickness * 2.0) - radius;
+            vec2  center    = vec2(vUv.x - 0.5, vUv.y - 0.5);
+            float dist      = length(center);
+        
+            float rad = atan(vUv.y - 0.5, vUv.x - 0.5);
+            // normalize angle 0 to 1    
+            float normAngle = 0.0;
+            // rad its greater than 0
+            if (rad < 0.0) {
+                normAngle = (rad + PI) / PI;
+            }
+            // rad its below 0
+            else {
+                // Invert the normalized angle        
+                normAngle = 1.0 - (1.0 + ((rad - PI) / PI));
+            }
+         
+            // Get the audio value from linear audio data texture (1024*1)
+            // Red channel has the frequency that starts from 0 to 1
+            float audioValue = texture2D(uAudioTexture, vec2(normAngle, 0.0)).g; 
+            dist -= audioValue * uAudioStrength;
+        
+            vec4 color = vec4(0.0, 0.0, 0.0, (uAlpha + uHover) * 0.80);
+        
+            if (dist > radius - thickness && dist < radius) {
+                color = vec4(0.0, 0.75, 0.0, 1.0);
+            }
+            else {
+                discard;
+            }
+        
+            diffuseColor = color;
+        //    gl_FragColor = vec4(color.r);
+        //    if (color.a == 0.0) discard;
+        
+        
+        
+            #include <map_fragment>
+            #include <alphamap_fragment>
+            #include <alphatest_fragment>
+            #include <logdepthbuf_fragment>
+            float fragCoordZ = 0.5 * vHighPrecisionZW[0] / vHighPrecisionZW[1] + 0.5;
+            
+            #if DEPTH_PACKING == 3200
+                gl_FragColor = vec4( vec3( 1.0 - fragCoordZ ), opacity );
+            #elif DEPTH_PACKING == 3201
+                gl_FragColor = packDepthToRGBA( fragCoordZ );
+            #endif
+        
+        }
+    </script>
+
+    <script id="CircularDistorisionDepthFragmentShader" type="x-shader/x-fragment">
+        uniform sampler2D uAudioTexture;
+        uniform float     uAudioStrength;
+        uniform float     uSize;
+        uniform float     uAlpha;
+        uniform float     uTime;
+        uniform float     uHover;
+        varying vec2      vUv;
+        
+        
+        
+        
+        #if DEPTH_PACKING == 3200
+            uniform float opacity;
+        #endif
+        #include <common>
+        #include <packing>
+        #include <uv_pars_fragment>
+        #include <map_pars_fragment>
+        #include <alphamap_pars_fragment>
+        #include <alphatest_pars_fragment>
+        #include <logdepthbuf_pars_fragment>
+        #include <clipping_planes_pars_fragment>
+        varying vec2 vHighPrecisionZW;
+        void main() {
+            #include <clipping_planes_fragment>
+            vec4 diffuseColor = vec4( 1.0 );
+            #if DEPTH_PACKING == 3200
+                diffuseColor.a = opacity;
+            #endif
+        
+            float radius    = 0.20;
+            float thickness = uSize;
+            vec2  center    = vUv - 0.5;
+            float dist      = length(center);
+        
+            float audioValue = texture2D(uAudioTexture, vec2(vUv.x * radius, 0.5)).r; // Obtiene el valor del canal rojo de la textura
+            dist -= audioValue * uAudioStrength;
+        
+            // base color
+            vec4 color = vec4(0.0, 0.0, 0.0, (uAlpha + uHover) * 0.80);
+        
+        
+            if (dist > radius - thickness && dist < radius) {
+                color = vec4(0.75, 0.0, 0.0, 1.0);
+            }
+            else {
+                discard;
+            }
+        
+            diffuseColor = color;
+        //    gl_FragColor = vec4(color.r);
+        //    if (color.a == 0.0) discard;
+        
+        
+        
+            #include <map_fragment>
+            #include <alphamap_fragment>
+            #include <alphatest_fragment>
+            #include <logdepthbuf_fragment>
+            float fragCoordZ = 0.5 * vHighPrecisionZW[0] / vHighPrecisionZW[1] + 0.5;
+            
+            #if DEPTH_PACKING == 3200
+                gl_FragColor = vec4( vec3( 1.0 - fragCoordZ ), opacity );
+            #elif DEPTH_PACKING == 3201
+                gl_FragColor = packDepthToRGBA( fragCoordZ );
+            #endif
+        
+        }        
+    </script>
+
+    <script id="CircularDistorsionFragmentShader" type="x-shader/x-fragment">
+        uniform sampler2D uAudioTexture;
+        uniform float     uAudioStrength;
+        uniform float     uSize;
+        uniform float     uAlpha;
+        uniform float     uHover;
+        varying vec2      vUv;
+
+
+        // Function to make a round rectangle when the 2d plane is hover
+        vec4 borderRoundRect(vec4 currentColor, vec2 size, float radius) {
+            vec2  position   = vUv * size;
+            vec2  rounded    = vec2(clamp(position.x, radius, size.x - radius), clamp(position.y, radius, size.y - radius));
+            vec2  difference = position - rounded;
+            float dist       = length(difference);
+            vec4  color      = vec4(1.0, 1.0, 1.0, uHover); // Border color
+            float borderSize = 0.015;                       // Border size
+            float alpha      = step(0.2, smoothstep(radius - borderSize, radius- borderSize, dist) - smoothstep(radius, radius + borderSize, dist));
+            color.a = alpha * uHover;
+            // Its inside
+            if (dist > radius - borderSize) {
+                return color;
+            }
+            // Its outside
+            return currentColor;
+        }
+
+        void main() {
+            float radius    = 0.25;
+            float thickness = uSize;
+            vec2  center    = vUv - 0.5;
+            float dist      = length(center);
+
+            float audioValue = texture2D(uAudioTexture, vec2(vUv.x * radius, 0.5)).r; // Obtiene el valor del canal rojo de la textura
+            dist -= audioValue * uAudioStrength;
+
+            // base color
+            vec4 color = vec4(0.0, 0.0, 0.0, (uAlpha + uHover) * 0.80);
+
+            
+            if (dist > radius - thickness && dist < radius) {
+                color = vec4(0.75, 0.0, 0.0, 1.0);
+            }
+
+            // Apply the round hover border
+            color = borderRoundRect(color, vec2(1.0, 1.0), 0.125);
+
+            gl_FragColor = color;
+
+        }
+
+    </script>
+    
+
+    <script id="DepthVertexShader" type="x-shader/x-vertex">
+        /* Basic DepthVertexShader with vUv */
+        varying vec2 vUv;
+        
+        #include <common>
+        #include <uv_pars_vertex>
+        #include <displacementmap_pars_vertex>
+        #include <morphtarget_pars_vertex>
+        #include <skinning_pars_vertex>
+        #include <logdepthbuf_pars_vertex>
+        #include <clipping_planes_pars_vertex>
+        varying vec2 vHighPrecisionZW;
+        void main() {
+            #include <uv_vertex>
+            #include <skinbase_vertex>
+            #ifdef USE_DISPLACEMENTMAP
+                #include <beginnormal_vertex>
+                #include <morphnormal_vertex>
+                #include <skinnormal_vertex>
+            #endif
+            #include <begin_vertex>
+        
+        
+            #include <morphtarget_vertex>
+            #include <skinning_vertex>
+            #include <displacementmap_vertex>
+            #include <project_vertex>
+            #include <logdepthbuf_vertex>
+            #include <clipping_planes_vertex>
+            vHighPrecisionZW = gl_Position.zw;
+        
+            vUv = uv;
+        }
+    </script>
+
+    <script id="CircularDepthFragmentShader" type="x-shader/x-fragment">
+        uniform sampler2D uAudioTexture;
+        uniform float     uAudioStrength;
+        uniform float     uSize;
+        uniform float     uAlpha;
+        uniform float     uTime;
+        uniform float     uHover;
+        varying vec2      vUv;
+               
+        
+        #if DEPTH_PACKING == 3200
+            uniform float opacity;
+        #endif
+        #include <common>
+        #include <packing>
+        #include <uv_pars_fragment>
+        #include <map_pars_fragment>
+        #include <alphamap_pars_fragment>
+        #include <alphatest_pars_fragment>
+        #include <logdepthbuf_pars_fragment>
+        #include <clipping_planes_pars_fragment>
+        varying vec2 vHighPrecisionZW;
+        void main() {
+            #include <clipping_planes_fragment>
+            vec4 diffuseColor = vec4( 1.0 );
+            #if DEPTH_PACKING == 3200
+                diffuseColor.a = opacity;
+            #endif
+        
+        
+        
+            vec2  center       = vec2(0.65, 0.5); // projected center of the circle a bit down of the uv center
+            float radius       = 0.2;
+            float thickness    = uSize;
+            //  float centerRadius = 0.2;
+        
+            float dist = length(vUv - center);
+            // get angle in rads of current position from center
+            float rad = atan(vUv.y - center.y, vUv.x - center.x);
+            float normAngle = 0.0;
+        
+            // Divide the circle into two halfs and make a mirror 
+            // I use linear audio textute form 0 to 1 in one half and in the other half i use the audio texture from 1 to 0.
+            if (rad < 0.0) {
+                normAngle = (rad + PI) / PI;
+            } else {
+                normAngle = 1.0 - (1.0 + ((rad - PI) / PI));
+            }
+        
+            // Usar la textura para obtener el radio basado en el ángulo
+            float audioValue = texture2D(uAudioTexture, vec2(normAngle, 0.0)).r * uAudioStrength;
+            dist -= audioValue;
+        
+            // Base color
+            vec4 color = vec4(0.0, 0.0, 0.0, (uAlpha + uHover) * 0.80);
+        
+        
+            //if (dist < radius) { // fill
+            if (dist > radius - thickness && dist < radius) { // Line
+                color = vec4(1.0, 0.0, 0.0, 1.0);
+            } 
+            // Apply the round hover border
+        //    color = borderRoundRect(color, vec2(1.0, 1.0), 0.125);
+            
+            diffuseColor = color;
+        //    gl_FragColor = vec4(color.r);
+            if (color.a == 0.0) discard;
+        
+        
+        
+            #include <map_fragment>
+            #include <alphamap_fragment>
+            #include <alphatest_fragment>
+            #include <logdepthbuf_fragment>
+            float fragCoordZ = 0.5 * vHighPrecisionZW[0] / vHighPrecisionZW[1] + 0.5;
+            
+            #if DEPTH_PACKING == 3200
+                gl_FragColor = vec4( vec3( 1.0 - fragCoordZ ), opacity );
+            #elif DEPTH_PACKING == 3201
+                gl_FragColor = packDepthToRGBA( fragCoordZ );
+            #endif
+        
+        }
+    </script>
+
+    <script id="BasicVertexShader" type="x-shader/x-vertex">
+        varying vec2 vUv;
+
+        void main() {
+            
+            vec4 modelPosition      = modelMatrix       * vec4(position , 1.0);
+            vec4 viewPosition       = viewMatrix        * modelPosition;
+            vec4 projectionPosition = projectionMatrix  * viewPosition;
+        
+            gl_Position = projectionPosition;
+        
+            vUv = uv;
+        }
+    </script>
+
+
+    <script id="CircularFragmentShader" type="x-shader/x-fragment">
+        uniform sampler2D uAudioTexture;
+        uniform float     uAudioStrength;
+        uniform float     uSize;
+        uniform float     uAlpha;
+        uniform float     uTime;
+        uniform float     uHover;
+        varying vec2      vUv;
+
+        #define PI   3.14159265
+
+        // Function to make a round rectangle when the 2d plane is hover
+        vec4 borderRoundRect(vec4 currentColor, vec2 size, float radius) {
+            vec2  position   = vUv * size;
+            vec2  rounded    = vec2(clamp(position.x, radius, size.x - radius), clamp(position.y, radius, size.y - radius));
+            vec2  difference = position - rounded;
+            float dist       = length(difference);
+            vec4  color      = vec4(1.0, 1.0, 1.0, uHover); // Border color
+            float borderSize = 0.015;                       // Border size
+            float alpha      = step(0.2, smoothstep(radius - borderSize, radius- borderSize, dist) - smoothstep(radius, radius + borderSize, dist));
+            color.a = alpha * uHover;
+            // Its inside
+            if (dist > radius - borderSize) {
+                return color;
+            }
+            // Its outside
+            return currentColor;
+        }
+
+
+        void main() {
+            vec2  center       = vec2(0.65, 0.5); // projected center of the circle a bit down of the uv center
+            float radius       = 0.2;
+            float thickness    = uSize;
+            //  float centerRadius = 0.2;
+
+            float dist = length(vUv - center);
+            // get angle in rads of current position from center
+            float rad = atan(vUv.y - center.y, vUv.x - center.x);
+            float normAngle = 0.0;
+
+            // Divide the circle into two halfs and make a mirror 
+            // I use linear audio textute form 0 to 1 in one half and in the other half i use the audio texture from 1 to 0.
+            if (rad < 0.0) {
+                normAngle = (rad + PI) / PI;
+            } else {
+                normAngle = 1.0 - (1.0 + ((rad - PI) / PI));
+            }
+
+            // Usar la textura para obtener el radio basado en el ángulo
+            float audioValue = texture2D(uAudioTexture, vec2(normAngle, 0.0)).r * uAudioStrength;
+            dist -= audioValue;
+
+            // Base color
+            vec4 color = vec4(0.0, 0.0, 0.0, (uAlpha + uHover) * 0.80);
+
+
+            //if (dist < radius) { // fill
+            if (dist > radius - thickness && dist < radius) { // Line
+                color = vec4(1.0, 0.0, 0.0, 1.0);
+            } 
+
+            // Apply the round hover border
+            color = borderRoundRect(color, vec2(1.0, 1.0), 0.125);
+
+            gl_FragColor = color;
+        }
+    
+    </script>
+
+
+    <script id="DisplacementVertexShader" type="x-shader/x-vertex">
+        varying vec2 vUv;
+
+        void main() {
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            vUv = uv;
+        }        
+    </script>
+    
+    <script id="DisplacementFragmentShader" type="x-shader/x-fragment">
+        uniform sampler2D tDiffuse;
+        uniform float uTime;
+        uniform vec2 uAmplitude;
+        uniform vec2 uFrequency;
+        
+        varying vec2 vUv;
+        
+        void main() {
+            vec2 newUv = vec2(
+                vUv.x + sin(vUv.y * uFrequency.y + uTime) * uAmplitude.y,
+                vUv.y + -sin(vUv.x * uFrequency.x + uTime) * uAmplitude.x
+            );
+        
+            vec4 color = vec4(0.0, 0.0, 0.0, 1.0);
+            if ((newUv.x > 0.0 && newUv.x < 1.0) && (newUv.y > 0.0 && newUv.y < 1.0)) {
+                color = texture2D(tDiffuse, newUv);
+            }
+        
+            gl_FragColor = color;
+        }        
+    </script>
+
+</head>
+<body>
+    <script type="module" src="./script.js"></script>
+</body>
+
+</html>
