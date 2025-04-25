@@ -2118,7 +2118,8 @@ class AudioInfo {
             curveSegments: 4,
             bevelThickness: 0.02,
             bevelSize: 0.05,
-            bevelEnabled: true
+            bevelEnabled: true,
+            depth: 0.21
         });
 
         this.geometry.computeBoundingBox();
